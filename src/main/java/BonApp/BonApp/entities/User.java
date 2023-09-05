@@ -11,12 +11,15 @@ import org.springframework.security.core.userdetails.UserDetails;
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
 import BonApp.BonApp.Enum.Role;
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -37,20 +40,26 @@ public class User implements UserDetails {
 	private String surname;
 	@Column(nullable = false, unique = true)
 	private String email;
+	@OneToOne(cascade = CascadeType.ALL)
+	@JoinColumn(name = "address_id")
+    private Indirizzo indirizzo;
 	@JsonIgnore
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
+	
 
 	@SuppressWarnings("static-access")
-	public User(String username, String name, String surname, String email, String password) {
+	public User(String username, String name, String surname, String email, Indirizzo indirizzo, String password) {
 
 		this.username = username;
 		this.name = name;
 		this.surname = surname;
 		this.email = email;
 		this.password = password;
+		this.indirizzo = indirizzo;
 		this.role = role.USER;
+		
 	}
 
 	@Override

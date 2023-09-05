@@ -4,6 +4,7 @@ package BonApp.BonApp.payload;
 
 
 
+import BonApp.BonApp.entities.Indirizzo;
 import BonApp.BonApp.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
 import jakarta.validation.constraints.NotNull;
@@ -27,6 +28,8 @@ public class NewUserPayload {
 	@NotNull(message = "L'email è obbligatoria")
 	@Email(message = "La password inserita non è valida")
 	private String email;
+	@NotNull(message = "L'indirizzo e' obbligatorio")
+	private Indirizzo indirizzo;
 	@NotNull(message = "La password è obbligatoria")
 	@StrongPassword(message = "La password non soddisfa i requisiti di sicurezza")
 	private String password;
