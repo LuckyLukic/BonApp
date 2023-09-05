@@ -26,6 +26,7 @@ public class Prodotto {
     private String name;
     private String description;
     private double price;
+    private String imgUrl;
 
     @Enumerated(EnumType.STRING)
     private Categoria categoria ;
@@ -38,13 +39,14 @@ public class Prodotto {
     )
     private List<Ingredienti> ingredients;
 
-	public Prodotto(String name, String description, double price, Categoria categoria, List<Ingredienti> ingredients) {
+	public Prodotto(String name, String description, double price, Categoria categoria, List<Ingredienti> ingredients, String imgUrl) {
 		
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.categoria = categoria;
 		this.ingredients = ingredients;
+		this.imgUrl = imgUrl;
 	}
     
     

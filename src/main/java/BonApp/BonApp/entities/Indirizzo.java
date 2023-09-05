@@ -26,7 +26,7 @@ public class Indirizzo {
 	private String cap;
 	private String comune;
 	@OneToOne(mappedBy = "indirizzo")
-	@JoinColumn(name = "cliente_id")
+	@JoinColumn(name = "user_id")
 	private User user;
 	
 
