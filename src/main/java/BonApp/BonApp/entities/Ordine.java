@@ -6,17 +6,21 @@ import java.util.List;
 import java.util.UUID;
 
 import jakarta.persistence.Entity;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Ordine {
     @Id
+    @GeneratedValue
     private UUID id;
 
     @ManyToOne
@@ -25,12 +29,22 @@ public class Ordine {
     private LocalDate dataOrdine;
     private LocalTime oraOrdine;
 
-    @ManyToMany
+   @ManyToMany
     @JoinTable(
         name = "order_product",
         joinColumns = @JoinColumn(name = "order_id"),
         inverseJoinColumns = @JoinColumn(name = "product_id")
     )
     private List<Prodotto> prodotto;
+
+	public Ordine(User user, LocalDate dataOrdine, LocalTime oraOrdine, List<Prodotto> prodotto) {
+		super();
+		this.user = user;
+		this.dataOrdine = dataOrdine;
+		this.oraOrdine = oraOrdine;
+		this.prodotto = prodotto;
+	}
+    
+    
 
 }

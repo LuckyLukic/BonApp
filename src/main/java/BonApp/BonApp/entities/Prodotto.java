@@ -5,25 +5,30 @@ import java.util.UUID;
 
 import BonApp.BonApp.Enum.Categoria;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 @Entity
 @Data
+@NoArgsConstructor
 public class Prodotto {
     @Id
+    @GeneratedValue
     private UUID id;
     private String name;
     private String description;
     private double price;
 
-    @ManyToOne
-    @JoinColumn(name = "categoria_id")
-    private Categoria categoria;
+    @Enumerated(EnumType.STRING)
+    private Categoria categoria ;
 
     @ManyToMany
     @JoinTable(
@@ -32,6 +37,17 @@ public class Prodotto {
         inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
     private List<Ingredienti> ingredients;
+
+	public Prodotto(String name, String description, double price, Categoria categoria, List<Ingredienti> ingredients) {
+		
+		this.name = name;
+		this.description = description;
+		this.price = price;
+		this.categoria = categoria;
+		this.ingredients = ingredients;
+	}
+    
+    
 
 }
 
