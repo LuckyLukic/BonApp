@@ -4,6 +4,7 @@ package BonApp.BonApp;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.time.ZoneId;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
@@ -89,26 +90,38 @@ public class Runner implements CommandLineRunner {
 
                 // Save the user and address objects to your database
                 userRepository.save(user);
+                
+                User savedUser = userRepository.save(user);
 
-			}
-			
-		}
-			
-			List<Ingredienti> ingredientiDb = ingredienteRepository.findAll();
-			if (ingredientiDb.isEmpty()) {
+                // Check if the user doesn't have any preferred products
+                if (savedUser.getProdottiPreferiti() == null || savedUser.getProdottiPreferiti().isEmpty()) {
+                    // Generate some fake preferred products using JavaFaker
+                    List<Prodotto> fakePreferredProducts = new ArrayList<>();
+                    for (int j = 0; j < 3; j++) {
+                        Prodotto fakeProduct = new Prodotto();
+                        fakeProduct.setName(faker.food().ingredient());
+                        fakeProduct.setDescription(faker.lorem().sentence());
+                        fakeProduct.setPrice(faker.number().randomDouble(2, 1, 100));
+                        fakeProduct.setCategoria(Categoria.ANTIPASTO);
+                        fakeProduct.setImgUrl(null);  // Set imgUrl to null for now
+                        fakePreferredProducts.add(fakeProduct);
+                        fakePreferredProducts.add(fakeProduct);
+                    }
+
+                    // Save the generated preferred products
+                    prodottoRepository.saveAll(fakePreferredProducts);
+
+                    // Add the generated preferred products to the user
+                    savedUser.setProdottiPreferiti(fakePreferredProducts);
+
+                    // Save the user with the new preferred products
+                    userRepository.save(savedUser);
+                }
+            }
+        }
+
 		
-		    
-			
-			for (int i = 0; i < 30; i++) {
-		        String nomeIngrediente = faker.food().ingredient();
-		        
-		        // Create a new Ingredienti instance
-		        Ingredienti ingrediente = new Ingredienti(nomeIngrediente);	
-		        
-		        ingredienteRepository.save(ingrediente);
 		
-	}
-}
 			
 			List<Prodotto> prodottiDb = prodottoRepository.findAll();
 			if (prodottiDb.isEmpty()) {
