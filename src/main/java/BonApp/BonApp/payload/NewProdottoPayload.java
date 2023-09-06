@@ -27,6 +27,8 @@ public class NewProdottoPayload {
 
     @NotNull(message = "La categoria del prodotto è obbligatoria")
     private Categoria categoria;
+    
+    private String imgUrl;
 
   
 }

@@ -4,6 +4,8 @@ package BonApp.BonApp.payload;
 
 
 
+import java.time.LocalDate;
+
 import BonApp.BonApp.entities.Indirizzo;
 import BonApp.BonApp.validation.StrongPassword;
 import jakarta.validation.constraints.Email;
@@ -33,5 +35,7 @@ public class NewUserPayload {
 	@NotNull(message = "La password è obbligatoria")
 	@StrongPassword(message = "La password non soddisfa i requisiti di sicurezza")
 	private String password;
+	
+	private LocalDate dataRegistrazione;
 
 }

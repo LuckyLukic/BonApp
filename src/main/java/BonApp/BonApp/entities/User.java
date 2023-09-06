@@ -1,5 +1,6 @@
 package BonApp.BonApp.entities;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -54,6 +55,7 @@ public class User implements UserDetails {
 	private Role role;
 	@OneToMany(mappedBy = "user")
     private List<Ordine> orders;
+	private LocalDate dataRegistrazione;
 	
 	
 
@@ -68,7 +70,7 @@ public class User implements UserDetails {
 		this.indirizzo = indirizzo;
 		this.role = role.USER;
 		this.orders = new ArrayList<>();
-		
+		this.dataRegistrazione = LocalDate.now();
 	}
 
 	@Override
