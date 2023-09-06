@@ -109,6 +109,7 @@ public class Runner implements CommandLineRunner {
 		
 	}
 }
+			
 			List<Prodotto> prodottiDb = prodottoRepository.findAll();
 			if (prodottiDb.isEmpty()) {
 				
@@ -138,6 +139,7 @@ public class Runner implements CommandLineRunner {
 			        }
 			}
 			
+			
 			List<Ordine> ordineDb = ordineRepository.findAll();
 			if (ordineDb.isEmpty()) {
 				
@@ -151,8 +153,8 @@ public class Runner implements CommandLineRunner {
 			        
 			        for (int i = 0; i < numOrders; i++) {
 			        	
-			        	LocalDate orderDate = faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Generate a random order date within the past year
-			            LocalTime orderTime = LocalTime.of(faker.number().numberBetween(0, 23), faker.number().numberBetween(0, 59)); // Generate a random order time
+			        	//LocalDate orderDate = faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Generate a random order date within the past year
+			            //LocalTime orderTime = LocalTime.of(faker.number().numberBetween(0, 23), faker.number().numberBetween(0, 59)); // Generate a random order time
 
 			            // Fetch all available products from the database
 			            List<Prodotto> allProducts = prodottoRepository.findAll();
@@ -167,7 +169,7 @@ public class Runner implements CommandLineRunner {
 			            List<Prodotto> orderProducts = allProducts.subList(0, numProducts);
 
 			            // Create a new Ordine instance
-			            Ordine order = new Ordine(user, orderDate, orderTime, orderProducts);
+			            Ordine order = new Ordine(user, orderProducts);
 
 			            // Save the order to the database
 			            ordineRepository.save(order);

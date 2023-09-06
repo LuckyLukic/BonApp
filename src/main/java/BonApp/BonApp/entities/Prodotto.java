@@ -37,15 +37,15 @@ public class Prodotto {
         joinColumns = @JoinColumn(name = "product_id"),
         inverseJoinColumns = @JoinColumn(name = "ingredient_id")
     )
-    private List<Ingredienti> ingredients;
+    private List<Ingredienti> ingredienti;
 
-	public Prodotto(String name, String description, double price, Categoria categoria, List<Ingredienti> ingredients, String imgUrl) {
+	public Prodotto(String name, String description, double price, Categoria categoria, List<Ingredienti> ingredienti, String imgUrl) {
 		
 		this.name = name;
 		this.description = description;
 		this.price = price;
 		this.categoria = categoria;
-		this.ingredients = ingredients;
+		this.ingredienti = ingredienti;
 		this.imgUrl = imgUrl;
 	}
     

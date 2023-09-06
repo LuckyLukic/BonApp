@@ -7,8 +7,10 @@ import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.Setter;
 
+import java.util.List;
 
 import BonApp.BonApp.Enum.Categoria;
+import BonApp.BonApp.entities.Ingredienti;
 
 @AllArgsConstructor
 @Getter
@@ -27,6 +29,9 @@ public class NewProdottoPayload {
 
     @NotNull(message = "La categoria del prodotto è obbligatoria")
     private Categoria categoria;
+    
+    @NotNull(message = "Il prodotto deve avere almeno un ingrediente")
+    private List<Ingredienti> ingredienti;
     
     private String imgUrl;
 

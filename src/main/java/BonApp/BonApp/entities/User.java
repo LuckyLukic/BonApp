@@ -23,6 +23,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.JoinTable;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -57,6 +59,14 @@ public class User implements UserDetails {
     private List<Ordine> orders;
 	private LocalDate dataRegistrazione;
 	
+	@ManyToMany
+	@JoinTable(
+	    name = "user_preferred_products",
+	    joinColumns = @JoinColumn(name = "user_id"),
+	    inverseJoinColumns = @JoinColumn(name = "product_id")
+	)
+	private List<Prodotto> prodottiPreferiti;
+	
 	
 
 	@SuppressWarnings("static-access")
@@ -71,6 +81,7 @@ public class User implements UserDetails {
 		this.role = role.USER;
 		this.orders = new ArrayList<>();
 		this.dataRegistrazione = LocalDate.now();
+		this.prodottiPreferiti = new ArrayList<>();
 	}
 
 	@Override

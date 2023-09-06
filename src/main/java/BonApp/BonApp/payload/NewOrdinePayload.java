@@ -24,7 +24,7 @@ public class NewOrdinePayload {
 	@NotNull(message = "devi aggiungere una data")
 	private LocalDate data;
 	@NotNull(message = "devi aggiungere un orario")
-	private LocalTime ora;
+	private LocalTime ora; 
 	
 
 }

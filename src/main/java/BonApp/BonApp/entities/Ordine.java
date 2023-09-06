@@ -37,14 +37,11 @@ public class Ordine {
     )
     private List<Prodotto> prodotto;
 
-	public Ordine(User user, LocalDate dataOrdine, LocalTime oraOrdine, List<Prodotto> prodotto) {
-		super();
+	public Ordine(User user, List<Prodotto> prodotto) {
 		this.user = user;
-		this.dataOrdine = dataOrdine;
-		this.oraOrdine = oraOrdine;
+		this.dataOrdine = LocalDate.now();
+		this.oraOrdine = LocalTime.now();
 		this.prodotto = prodotto;
 	}
-    
-    
 
 }
