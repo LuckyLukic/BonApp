@@ -9,7 +9,9 @@ import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
 
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.JsonIgnore;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import BonApp.BonApp.Enum.Role;
 import jakarta.persistence.CascadeType;
@@ -31,6 +33,7 @@ import lombok.NoArgsConstructor;
 @Table(name = "users")
 @Data
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class User implements UserDetails {
 
 	@Id

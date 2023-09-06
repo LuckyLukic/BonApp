@@ -32,11 +32,10 @@ public class SecurityConfig {
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/clienti/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/fatture/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/prodotti/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzi/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/comuni/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/province/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordini/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ingredienti/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/import/**").permitAll());
 

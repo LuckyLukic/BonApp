@@ -22,8 +22,5 @@ public class Ingredienti {
 		this.name = name;
 	}
     
-    
-
-   
 }
 

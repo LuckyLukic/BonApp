@@ -17,50 +17,49 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import BonApp.BonApp.entities.User;
-import BonApp.BonApp.payload.NewUserPayload;
-import BonApp.BonApp.service.UsersService;
-import jakarta.validation.Valid;
+import BonApp.BonApp.entities.Indirizzo;
+import BonApp.BonApp.payload.NewIndirizzoPayload;
+import BonApp.BonApp.service.IndirizzoService;
 
 
 
 @RestController
-@RequestMapping("/users")
-public class UsersController {
+@RequestMapping("/indirizzi")
+public class IndirizzoController {
 
 	@Autowired
-	UsersService userService;
+	IndirizzoService indirizzoService;
 
 	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
-	public User saveUser(@Valid @RequestBody NewUserPayload body) {
-		User createdUser = userService.save(body);
-		return createdUser;
+	public Indirizzo saveIndirizzi(@RequestBody NewIndirizzoPayload body) {
+		Indirizzo createdIndirizzo = indirizzoService.save(body);
+		return createdIndirizzo;
 	}
 
 	@GetMapping("")
 //	@PreAuthorize("hasAuthority('ADMIN')")
-	public Page<User> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-			@RequestParam(defaultValue = "id") String sortBy) {
-		return userService.find(page, size, sortBy);
+	public Page<Indirizzo> getIndirizzi(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "via") String sortBy) {
+		return indirizzoService.find(page, size, sortBy);
 	}
 
-	@GetMapping("/{userId}")
+	@GetMapping("/{indirizzoId}")
 	//@PreAuthorize("hasAuthority('ADMIN')")
-	public User findById(@PathVariable UUID userId) {
-		return userService.findById(userId);
+	public Indirizzo findById(@PathVariable UUID indirizzoId) {
+		return indirizzoService.findById(indirizzoId);
 	}
 
-	@PutMapping("/{userId}")
+	@PutMapping("/{indirizzoId}")
 	//@PreAuthorize("hasAuthority('ADMIN')")
-	public User updateUser(@PathVariable UUID userId, @RequestBody NewUserPayload body) {
-		return userService.findByIdAndUpdate(userId, body);
+	public Indirizzo updateIndirizzo(@PathVariable UUID indirizzoId, @RequestBody NewIndirizzoPayload body) {
+		return indirizzoService.findByIdAndUpdate(indirizzoId, body);
 	}
 
-	@DeleteMapping("/{userId}")
+	@DeleteMapping("/{indirizzoId}")
 	//@PreAuthorize("hasAuthority('ADMIN')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteUser(@PathVariable UUID userId) {
-		userService.findByIdAndDelete(userId);
+	public void deleteIndirizzo(@PathVariable UUID indirizzoId) {
+		indirizzoService.findByIdAndDelete(indirizzoId);
 	}
 }
