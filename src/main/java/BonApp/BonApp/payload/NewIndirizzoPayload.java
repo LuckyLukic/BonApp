@@ -25,7 +25,7 @@ import lombok.Setter;
 		private String cap;
 		@NotNull(message = "Il comune è obbligatorio")
 		private String comune;
-		@NotNull(message = "Il comune è obbligatorio")
+		@NotNull(message = "L'utente è obbligatorio")
 		private User user;
 
 
