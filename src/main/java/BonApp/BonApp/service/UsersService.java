@@ -1,6 +1,8 @@
 package BonApp.BonApp.service;
 
 import java.util.List;
+import java.util.Map;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -14,6 +16,7 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+import BonApp.BonApp.TopFavoriteProductDTO;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.BadRequestException;
@@ -117,8 +120,8 @@ public class UsersService {
 	    }
 
 	    
-	 // TORNA LA LISTA DELLE GASTRONOMIE PREFERITE
-	    public Page<Prodotto> getUsergGastronomiePreferite(int page, int size) {
+	 // TORNA LA LISTA DEI PREFERITI
+	    public Page<Prodotto> getUserPreferiti(int page, int size) {
 	        User currentUser = getCurrentUser();
 	        Pageable pageable = PageRequest.of(page, size);
 	        Page<Prodotto> favorites = userRepository.findProdottiFavoritiByUserId(currentUser.getId(), pageable);
@@ -129,4 +132,30 @@ public class UsersService {
 
 	        return favorites;
 	    }
+	    
+	    public Page<TopFavoriteProductDTO> getTopFavoriteProducts(int page, int size) {
+	        Pageable pageable = PageRequest.of(page, size);
+	        Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
+
+	        // Map the result to Prodotto and favorite count
+	        Page<TopFavoriteProductDTO> topProducts = result.map(row -> {
+	            UUID productId = (UUID) row[0];
+	            Long favoriteCount = (Long) row[1];
+
+	            Optional<Prodotto> productOptional = pr.findById(productId);
+	            if (productOptional.isPresent()) {
+	                Prodotto product = productOptional.get();
+	                Map<Prodotto, Long> productFavoriteCount = Map.of(product, favoriteCount);
+	                
+	                return new TopFavoriteProductDTO(product, favoriteCount);
+	                
+	            } else {
+	                return null; // Handle the case where the product doesn't exist
+	            }
+	        });
+
+	        return topProducts;
+	    }
+	    
+	    
 }

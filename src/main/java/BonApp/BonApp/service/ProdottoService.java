@@ -10,9 +10,11 @@ import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 import org.springframework.data.domain.Pageable;
 import BonApp.BonApp.entities.Prodotto;
+
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewProdottoPayload;
 import BonApp.BonApp.repositories.ProdottoRepository;
+
 
 @Service
 public class ProdottoService {
@@ -57,5 +59,10 @@ public class ProdottoService {
     public void findByIdAndDelete(UUID id) throws NotFoundException {
         Prodotto existingProdotto = findById(id);
         prodottoRepository.delete(existingProdotto);
+    }
+    
+    public Page<Prodotto> findByPartialName(String partialName, int page, int size, String sortBy) {
+        Pageable prodottiPageable = PageRequest.of(page, size, Sort.by(sortBy));
+        return prodottoRepository.findByNameContainingIgnoreCase(partialName, prodottiPageable);
     }
 }

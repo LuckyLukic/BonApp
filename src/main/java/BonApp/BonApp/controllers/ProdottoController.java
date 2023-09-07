@@ -16,10 +16,14 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
 import BonApp.BonApp.entities.Prodotto;
+
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewProdottoPayload;
 import BonApp.BonApp.service.ProdottoService;
+
+
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
 
 @RestController
 @RequestMapping("/prodotti")
@@ -61,4 +65,18 @@ public class ProdottoController {
     public void deleteProdotto(@PathVariable UUID prodottoId) throws NotFoundException {
         prodottoService.findByIdAndDelete(prodottoId);
     }
+    
+    @GetMapping("/partialName")
+    public ResponseEntity<Page<Prodotto>> getProdottoByPartialName(@RequestParam String partialName,
+            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "name") String sortBy) {
+        Page<Prodotto> prodottoByPartialName = prodottoService.findByPartialName(partialName, page, size, sortBy);
+
+        if (prodottoByPartialName.isEmpty()) {
+            return ResponseEntity.notFound().build();
+        } else {
+            return ResponseEntity.ok(prodottoByPartialName);
+        }
+    }
+
 }
