@@ -1,200 +1,179 @@
 package BonApp.BonApp;
 
-
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.time.ZoneId;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import java.util.Locale;
-import java.util.concurrent.TimeUnit;
+import java.util.Random;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.stereotype.Component;
 
-
 import com.github.javafaker.Faker;
 
-import BonApp.BonApp.Enum.Categoria;
 import BonApp.BonApp.Enum.Role;
 import BonApp.BonApp.entities.Indirizzo;
-import BonApp.BonApp.entities.Ingredienti;
-import BonApp.BonApp.entities.Ordine;
+import BonApp.BonApp.entities.Ingrediente;
+import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
-
 import BonApp.BonApp.repositories.IndirizzoRepository;
 import BonApp.BonApp.repositories.IngredienteRepository;
-import BonApp.BonApp.repositories.OrdineRepository;
+import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.UserRepository;
-import BonApp.BonApp.security.AuthController;
-
-
 import jakarta.transaction.Transactional;
 
-
 @Component
-public class Runner implements CommandLineRunner {
+public class Runner implements CommandLineRunner{
+
+	@Autowired
+	IndirizzoRepository indirizzoRepository;
 	
 	@Autowired
 	UserRepository userRepository;
 	
 	@Autowired
-	IndirizzoRepository indirizzoRepository;
-	
-	@Autowired
-	OrdineRepository ordineRepository;
+	IngredienteRepository ingredienteRepository;
 	
 	@Autowired
 	ProdottoRepository prodottoRepository;
 	
 	@Autowired
-	IngredienteRepository ingredienteRepository;
+	OrdineSingoloRepository ordineSingoloRepository;
 	
-	@Autowired
-	AuthController authController;
+	private Faker faker = new Faker(new Locale("it"));
 
 	
-
-	@Transactional
 	@Override
 	public void run(String... args) throws Exception {
-		Faker faker = new Faker(new Locale("it"));
-
-		
-
-		List<User> utentiDb = userRepository.findAll();
-		if (utentiDb.isEmpty()) {
-
-			for (int i = 0; i < 10; i++) {
-                String username = faker.name().username();
-                String name = faker.name().firstName();
-                String surname = faker.name().lastName();
-                String email = faker.internet().emailAddress();
-                String password = "Infedele1980!";
-                String via = faker.address().streetAddress();
-                int civico = faker.number().numberBetween(1, 100); // Adjust the range as needed
-                String localita = faker.address().city();
-                String cap = faker.number().digits(5); // 5-digit postal code
-                String comune = faker.address().state();
-
-                // Create a User object and an associated Address object
-                User user = new User(username, name, surname, email, null, password);
-                Indirizzo address = new Indirizzo(cap, civico, localita, via, user, comune);
-
-                user.setIndirizzo(address);
-                user.setRole(Role.USER); // Set the user's role
-
-                // Save the user and address objects to your database
-                userRepository.save(user);
-                
-                User savedUser = userRepository.save(user);
-
-                // Check if the user doesn't have any preferred products
-                if (savedUser.getProdottiPreferiti() == null || savedUser.getProdottiPreferiti().isEmpty()) {
-                    // Generate some fake preferred products using JavaFaker
-                    List<Prodotto> fakePreferredProducts = new ArrayList<>();
-                    for (int j = 0; j < 3; j++) {
-                        Prodotto fakeProduct = new Prodotto();
-                        fakeProduct.setName(faker.food().ingredient());
-                        fakeProduct.setDescription(faker.lorem().sentence());
-                        fakeProduct.setPrice(faker.number().randomDouble(2, 1, 100));
-                        fakeProduct.setCategoria(Categoria.ANTIPASTO);
-                        fakeProduct.setImgUrl(null);  // Set imgUrl to null for now
-                        fakePreferredProducts.add(fakeProduct);
-                        fakePreferredProducts.add(fakeProduct);
-                    }
-
-                    // Save the generated preferred products
-                    prodottoRepository.saveAll(fakePreferredProducts);
-
-                    // Add the generated preferred products to the user
-                    savedUser.setProdottiPreferiti(fakePreferredProducts);
-
-                    // Save the user with the new preferred products
-                    userRepository.save(savedUser);
-                }
-            }
-        }
-
-		
-		
-			
-			List<Prodotto> prodottiDb = prodottoRepository.findAll();
-			if (prodottiDb.isEmpty()) {
-				
-				// Fetch all available ingredients from the database
-			    List<Ingredienti> allIngredients = ingredienteRepository.findAll();
-				
-				for (int i = 0; i < 20; i++) {
-			        String productName = faker.food().dish();
-			        String productDescription = faker.lorem().sentence();
-			        double productPrice = faker.number().randomDouble(2, 1, 100); // Generate a random price
-			        Categoria productCategory = Categoria.values()[faker.number().numberBetween(0, Categoria.values().length)]; // Generate a random category
-
-			        // Generate a random number of ingredients between 3 and 6
-			        int numIngredients = faker.number().numberBetween(3, 7);
-			        
-			        // Shuffle the list of all ingredients randomly
-			        Collections.shuffle(allIngredients);
-
-			        // Select the first numIngredients from the shuffled list to get unique ingredient IDs
-			        List<Ingredienti> productIngredients = allIngredients.subList(0, numIngredients);
-
-			        // Create a new Prodotto instance
-			        Prodotto prodotto = new Prodotto(productName, productDescription, productPrice, productCategory, productIngredients, "");
-			        
-			        // Save the product to the database
-			        prodottoRepository.save(prodotto);			 
-			        }
-			}
-			
-			
-			List<Ordine> ordineDb = ordineRepository.findAll();
-			if (ordineDb.isEmpty()) {
-				
-				
-				// Fetch all users from the database
-			    List<User> allUsers = userRepository.findAll();
-
-			    // Create orders for each user
-			    for (User user : allUsers) {
-			        int numOrders = faker.number().numberBetween(2, 6); // Generate a random number of orders between 2 and 5
-			        
-			        for (int i = 0; i < numOrders; i++) {
-			        	
-			        	//LocalDate orderDate = faker.date().past(365, TimeUnit.DAYS).toInstant().atZone(ZoneId.systemDefault()).toLocalDate(); // Generate a random order date within the past year
-			            //LocalTime orderTime = LocalTime.of(faker.number().numberBetween(0, 23), faker.number().numberBetween(0, 59)); // Generate a random order time
-
-			            // Fetch all available products from the database
-			            List<Prodotto> allProducts = prodottoRepository.findAll();
-
-			            // Generate a random number of products between 1 and 5 for the order
-			            int numProducts = faker.number().numberBetween(1, 6);
-
-			            // Shuffle the list of all products randomly
-			            Collections.shuffle(allProducts);
-
-			            // Select the first numProducts from the shuffled list to get unique product IDs
-			            List<Prodotto> orderProducts = allProducts.subList(0, numProducts);
-
-			            // Create a new Ordine instance
-			            Ordine order = new Ordine(user, orderProducts);
-
-			            // Save the order to the database
-			            ordineRepository.save(order);
-			        }
-			    }
-			
-			
+		try {
+            seedIngredients();
+            seedProducts();
+            seedUsersAndOrders();
+        } catch (Exception e) {
+          e.printStackTrace();
+		}
 	}
-}
-}
-			
 	
+	@Transactional
+	private void seedIngredients() {
+	    if (ingredienteRepository.count() == 0) {
+	        List<Ingrediente> ingredients = new ArrayList<>();
+	        for (int i = 0; i < 20; i++) {
+	            Ingrediente ingrediente = new Ingrediente();
+	            ingrediente.setNome(faker.food().ingredient());
+	            ingredients.add(ingrediente);
+	        }
+	        ingredienteRepository.saveAll(ingredients);
+	    } }
+
+
+	  @Transactional
+	  private void seedProducts() {
+		  
+		  if (prodottoRepository.count() == 0) {
+	      List<Ingrediente> ingredients = ingredienteRepository.findAll();
+	      List<Prodotto> prodottoList = new ArrayList<>();
+	  
+	      for (int i = 0; i < 10; i++) {
+	          int numberOfIngredients = faker.number().numberBetween(2, 5);
+	          Collections.shuffle(ingredients);
+	          List<Ingrediente> selectedIngredients = ingredients.subList(0, numberOfIngredients);
+
+	          Prodotto prodotto = new Prodotto();
+	          prodotto.setNome(faker.commerce().productName());
+	          prodotto.setPrezzo(Double.parseDouble(faker.commerce().price().replace(",", ".")));
+	          prodotto.setIngredienti(new ArrayList<>(selectedIngredients));
+	          prodottoList.add(prodotto);
+	      }
+	      prodottoRepository.saveAll(prodottoList);
+	  }}
+
 		
-		
-		
+	  @Transactional
+	  private void seedUsersAndOrders() {
+	      if (userRepository.count() == 0) {
+	          List<Indirizzo> indirizzi = new ArrayList<>();
+	          List<User> users = new ArrayList<>();
+	          List<Prodotto> products = prodottoRepository.findAll();
+	          
+	          Random random = new Random();
+
+	          for (int i = 0; i < 15; i++) {
+	              Indirizzo indirizzo = new Indirizzo();
+	              indirizzo.setVia(faker.address().streetAddress());
+	              indirizzo.setCivico(faker.number().numberBetween(1, 100));
+	              indirizzo.setLocalità(faker.address().city());
+	              indirizzo.setCap(faker.address().zipCode());
+	              indirizzo.setComune(faker.address().cityName());
+	              indirizzi.add(indirizzo);
+	          }
+	          
+	          indirizzoRepository.saveAll(indirizzi);
+	          indirizzoRepository.flush();
+
+	          for (int i = 0; i < 15; i++) {
+	              User user = new User();
+	              user.setUsername(faker.name().username());
+	              user.setName(faker.name().firstName());
+	              user.setSurname(faker.name().lastName());
+	              user.setEmail(faker.internet().emailAddress());
+	              user.setPassword(faker.internet().password());
+	              user.setDataRegistrazione(LocalDate.now());
+	              user.setRole(Role.USER);
+
+	              Indirizzo indirizzo = indirizzi.get(i);
+	              user.setIndirizzo(indirizzo);
+	              indirizzo.addUser(user);
+	              
+	              Collections.shuffle(products);
+	              int numPreferredProducts = random.nextInt(5);
+	              for (int k = 0; k < numPreferredProducts; k++) {
+	                  user.getProdottiPreferiti().add(products.get(k));
+	              }
+
+
+	              // Create 0 to 3 single orders for each user
+	              for (int j = 0; j < random.nextInt(4); j++) {
+	                  OrdineSingolo ordineSingolo = new OrdineSingolo();
+	                  ordineSingolo.setUser(user);
+
+	                  // Add 1 to 3 products to each single order
+	                 
+	                  for (int k = 0; k < random.nextInt(3) + 1; k++) {
+	                      Collections.shuffle(products);
+	                      ordineSingolo.addProduct(products.get(0));
+	                      
+	                  }
+
+	                  // Calculate the total price for the order
+	                  ordineSingolo.setTotalPrice(ordineSingolo.getTotalPrice());
+
+	                  // Set the order date and time
+	                  ordineSingolo.setDataOrdine(LocalDate.now());
+	                  ordineSingolo.setOraOrdine(LocalTime.now());
+
+	                  user.addSingleOrder(ordineSingolo);
+	              }
+
+	              users.add(user);
+	          }
+	          
+	          userRepository.saveAll(users);
+	      }
+	  }
+
+}
+
+
+
+
+
+
+
+	

@@ -20,8 +20,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import BonApp.BonApp.TopFavoriteProductDTO;
-import BonApp.BonApp.entities.Prodotto;
+
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewUserPayload;
@@ -71,36 +70,35 @@ public class UsersController {
 	}
 	
 	
-	@PostMapping("/{userId}/add-preferred-products")
-	public User addPreferredProducts(@PathVariable UUID userId, @RequestBody List<Prodotto> prodottiPreferiti) throws NotFoundException {
-	     return userService.addPreferredProducts(userId, prodottiPreferiti);
-	}
-
-	@PostMapping("/{userId}/remove-preferred-products")
-	public User removePreferredProducts(@PathVariable UUID userId, @RequestBody List<Prodotto> prodottiPreferiti) throws NotFoundException {
-	     return userService.removePreferredProducts(userId, prodottiPreferiti);
-	}
-
-	@GetMapping("/{userId}/user-preferred-products")
-	public Page<Prodotto> getUserPreferiti(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page,
-	        @RequestParam(defaultValue = "10") int size) {
-	    return userService.getUserPreferiti(page, size);
+//	@PostMapping("/{userId}/add-preferred-products")
+//	public User addPreferredProducts(@PathVariable UUID userId, @RequestBody List<Prodotto> prodottiPreferiti) throws NotFoundException {
+//	     return userService.addPreferredProducts(userId, prodottiPreferiti);
+//	}
+//
+//	@PostMapping("/{userId}/remove-preferred-products")
+//	public User removePreferredProducts(@PathVariable UUID userId, @RequestBody List<Prodotto> prodottiPreferiti) throws NotFoundException {
+//	     return userService.removePreferredProducts(userId, prodottiPreferiti);
+//	}
+//
+//	@GetMapping("/{userId}/user-preferred-products")
+//	public Page<Prodotto> getUserPreferiti(@PathVariable UUID userId, @RequestParam(defaultValue = "0") int page,
+//	        @RequestParam(defaultValue = "10") int size) {
+//	    return userService.getUserPreferiti(page, size);
 	    		 	
-	}
+//	}
 	
-	@GetMapping("/topFavoriteProducts")
-    public ResponseEntity<Page<TopFavoriteProductDTO>> getTopFavoriteProducts(
-            @RequestParam(defaultValue = "0") int page,
-            @RequestParam(defaultValue = "10") int size) {
-        Page<TopFavoriteProductDTO> topFavoriteProducts = userService.getTopFavoriteProducts(page, size);
-
-        if (topFavoriteProducts.isEmpty()) {
-            return ResponseEntity.noContent().build();
-        } else {
-            return ResponseEntity.ok(topFavoriteProducts);
-        }
-    }
-	
-	
+//	@GetMapping("/topFavoriteProducts")
+//    public ResponseEntity<Page<TopFavoriteProductDTO>> getTopFavoriteProducts(
+//            @RequestParam(defaultValue = "0") int page,
+//            @RequestParam(defaultValue = "10") int size) {
+//        Page<TopFavoriteProductDTO> topFavoriteProducts = userService.getTopFavoriteProducts(page, size);
+//
+//        if (topFavoriteProducts.isEmpty()) {
+//            return ResponseEntity.noContent().build();
+//        } else {
+//            return ResponseEntity.ok(topFavoriteProducts);
+//        }
+//    }
 	
 }
+

@@ -20,11 +20,13 @@ import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
@@ -46,31 +48,36 @@ public class User implements UserDetails {
 	private String username;
 	private String name;
 	private String surname;
-	@Column(nullable = false, unique = true)
+	
 	private String email;
-	@OneToOne(cascade = CascadeType.ALL)
-	@JoinColumn(name = "address_id")
+	
+	@ManyToOne(cascade = CascadeType.MERGE)
+    @JoinColumn(name = "indirizzo_id", nullable = true)
     private Indirizzo indirizzo;
+	
 	@JsonIgnore
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
-	@OneToMany(mappedBy = "user")
-    private List<Ordine> orders;
+
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<OrdineSingolo> singleOrders = new ArrayList<>();
+	
 	private LocalDate dataRegistrazione;
 	
 	@ManyToMany
 	@JoinTable(
-	    name = "user_preferred_products",
-	    joinColumns = @JoinColumn(name = "user_id"),
-	    inverseJoinColumns = @JoinColumn(name = "product_id")
-	)
-	private List<Prodotto> prodottiPreferiti;
+	    name = "user_prodotti_preferiti", 
+	    joinColumns = @JoinColumn(name = "user_id"), 
+	    inverseJoinColumns = @JoinColumn(name = "prodotto_id")
+	)	private List<Prodotto> prodottiPreferiti = new ArrayList<>();
 	
 	
 
 	@SuppressWarnings("static-access")
-	public User(String username, String name, String surname, String email, Indirizzo indirizzo, String password) {
+	public User(String username, String name, String surname, String email, 
+			Indirizzo indirizzo, 
+			String password) {
 
 		this.username = username;
 		this.name = name;
@@ -79,9 +86,9 @@ public class User implements UserDetails {
 		this.password = password;
 		this.indirizzo = indirizzo;
 		this.role = role.USER;
-		this.orders = new ArrayList<>();
+		
 		this.dataRegistrazione = LocalDate.now();
-		this.prodottiPreferiti = new ArrayList<>();
+		
 	}
 
 	@Override
@@ -113,5 +120,18 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
+	
+	public void addSingleOrder(OrdineSingolo ordineSingolo) {
+        this.singleOrders.add(ordineSingolo);
+    }
+	
+	public void addPreferredProduct(Prodotto prodotto) {
+	    this.prodottiPreferiti.add(prodotto);
+	    prodotto.getUsersFavouriteProducts().add(this);
+	}
 
+	public void removePreferredProduct(Prodotto prodotto) {
+	    this.prodottiPreferiti.remove(prodotto);
+	    prodotto.getUsersFavouriteProducts().remove(this);
+	}
 }

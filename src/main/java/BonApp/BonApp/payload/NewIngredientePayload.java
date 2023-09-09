@@ -3,14 +3,17 @@ package BonApp.BonApp.payload;
 import jakarta.validation.constraints.NotNull;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
+import lombok.NoArgsConstructor;
 import lombok.Setter;
 
-@AllArgsConstructor
 @Getter
 @Setter
+@AllArgsConstructor
+@NoArgsConstructor
 public class NewIngredientePayload {
 	
-	    @NotNull(message = "Il nome dell'ingrediente è obbligatorio")
-	    private String nome;
-
+	
+	@NotNull(message = "The ingredient name is required")
+	private String nome;
+	
 }

@@ -1,5 +1,6 @@
 package BonApp.BonApp.repositories;
 
+import java.util.List;
 import java.util.Optional;
 import org.springframework.data.domain.Pageable;
 import java.util.UUID;
@@ -18,6 +19,8 @@ import BonApp.BonApp.entities.User;
 public interface UserRepository extends JpaRepository<User, UUID> {
 
 	Optional<User> findByEmail(String email);
+	List<User> findByProdottiPreferitiContaining(Prodotto prodotto);
+	
 	
 	@Query("SELECT g FROM User u JOIN u.prodottiPreferiti g WHERE u.id = ?1")
     Page<Prodotto> findProdottiFavoritiByUserId(UUID userId, Pageable pageable);
@@ -32,7 +35,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                  "JOIN prodotto p ON upp.product_id = p.id",
     nativeQuery = true)
     Page<Object[]> findTopFavoriteProducts(Pageable pageable);
-
-	
-	
 }
+	
+	
+

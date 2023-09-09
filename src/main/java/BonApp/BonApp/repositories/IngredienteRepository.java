@@ -3,11 +3,10 @@ package BonApp.BonApp.repositories;
 import java.util.UUID;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import org.springframework.stereotype.Repository;
 
-import BonApp.BonApp.entities.Ingredienti;
+import BonApp.BonApp.entities.Ingrediente;
 
-@Repository
-public interface IngredienteRepository extends JpaRepository<Ingredienti, UUID> {
+
+public interface IngredienteRepository extends JpaRepository<Ingrediente, UUID>{
 
 }

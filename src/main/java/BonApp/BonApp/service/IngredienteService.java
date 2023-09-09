@@ -1,5 +1,8 @@
 package BonApp.BonApp.service;
 
+import java.util.List;
+import java.util.UUID;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -7,59 +10,75 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
-import java.util.List;
-import java.util.UUID;
-
-
-import BonApp.BonApp.entities.Ingredienti;
+import BonApp.BonApp.entities.Ingrediente;
+import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewIngredientePayload;
 import BonApp.BonApp.repositories.IngredienteRepository;
+import BonApp.BonApp.repositories.ProdottoRepository;
+
+    @Service
+	public class IngredienteService {
+
+	    @Autowired
+	    IngredienteRepository ingredienteRepository;
+	    
+	    @Autowired
+	    ProdottoRepository prodottoRepository;
+
+	    // Create and save a new ingredient
+	    public Ingrediente save(NewIngredientePayload body) {
+	    	
+	    	Ingrediente newIngrediente = new Ingrediente(body.getNome());
+	        return ingredienteRepository.save(newIngrediente);
+	    }
+
+	    // Get a list of all ingredients
+	    public List<Ingrediente> getAllIngredienti() {
+	        return ingredienteRepository.findAll();
+	    }
+	    
+	   // Torna la lista degli ingredienti impaginata
+	 	public Page<Ingrediente> find(int page, int size, String sort) {
+	 		Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+
+	 		return ingredienteRepository.findAll(pageable);
+	 	}
+
+	    // Get an ingredient by its ID
+	    public Ingrediente findById(UUID id) throws NotFoundException {
+	        return ingredienteRepository.findById(id)
+	                .orElseThrow(() -> new NotFoundException(id));
+	    }
+
+	    // Update an ingredient by its ID
+	    public Ingrediente findByIdAndUpdate(UUID id, NewIngredientePayload body) throws NotFoundException {
+	    	
+	        Ingrediente found = findById(id);
+	        found.setNome(body.getNome());
+	 
+	        return ingredienteRepository.save(found);
+	    }
+
+	    // Delete an ingredient by its ID
+	    public void findByIdAndDelete(UUID id) throws NotFoundException {
+	        Ingrediente existingIngredient = findById(id);
+	        
+	     // Get all Prodottos that contain this Ingrediente
+	        List<Prodotto> prodotti = existingIngredient.getProdotti();
+
+	        // Remove the Ingrediente from each Prodotto
+	        for (Prodotto prodotto : prodotti) {
+	            prodotto.getIngredienti().remove(existingIngredient);
+	        }
+
+	        // Save the updated Prodottos
+	        for (Prodotto prodotto : prodotti) {
+	            prodottoRepository.save(prodotto);
+	        }
+	        ingredienteRepository.delete(existingIngredient);
+	    }
+	}
 
 
-@Service
-public class IngredienteService {
 
-    @Autowired
-    IngredienteRepository ingredienteRepository;
-
-    // Create and save a new ingredient
-    public Ingredienti save(NewIngredientePayload body) {
-    	
-    	Ingredienti newIngrediente = new Ingredienti(body.getNome());
-        return ingredienteRepository.save(newIngrediente);
-    }
-
-    // Get a list of all ingredients
-    public List<Ingredienti> getAllIngredienti() {
-        return ingredienteRepository.findAll();
-    }
-    
-   // Torna la lista degli ingredienti impaginata
- 	public Page<Ingredienti> find(int page, int size, String sort) {
- 		Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-
- 		return ingredienteRepository.findAll(pageable);
- 	}
-
-    // Get an ingredient by its ID
-    public Ingredienti findById(UUID id) throws NotFoundException {
-        return ingredienteRepository.findById(id)
-                .orElseThrow(() -> new NotFoundException(id));
-    }
-
-    // Update an ingredient by its ID
-    public Ingredienti findByIdAndUpdate(UUID id, Ingredienti updatedIngredient) throws NotFoundException {
-        Ingredienti existingIngrediente = findById(id);
-        // Update the properties of the existing ingredient with the values from updatedIngredient
-        existingIngrediente.setName(updatedIngredient.getName());
-        // You can update other properties here as needed
-        return ingredienteRepository.save(existingIngrediente);
-    }
-
-    // Delete an ingredient by its ID
-    public void findByIdAndDelete(UUID id) throws NotFoundException {
-        Ingredienti existingIngredient = findById(id);
-        ingredienteRepository.delete(existingIngredient);
-    }
-}

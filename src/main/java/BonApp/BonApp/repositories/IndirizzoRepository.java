@@ -7,8 +7,8 @@ import org.springframework.stereotype.Repository;
 
 import BonApp.BonApp.entities.Indirizzo;
 
-
 @Repository
 public interface IndirizzoRepository extends JpaRepository<Indirizzo, UUID> {
 	
 }
+
