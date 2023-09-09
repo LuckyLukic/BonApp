@@ -36,6 +36,7 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzi/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordine-singolo/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ingredienti/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 		
 

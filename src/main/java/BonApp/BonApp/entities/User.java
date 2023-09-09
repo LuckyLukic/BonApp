@@ -72,6 +72,8 @@ public class User implements UserDetails {
 	    inverseJoinColumns = @JoinColumn(name = "prodotto_id")
 	)	private List<Prodotto> prodottiPreferiti = new ArrayList<>();
 	
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
+	private List<Review> reviews = new ArrayList<>();
 	
 
 	@SuppressWarnings("static-access")
@@ -130,8 +132,18 @@ public class User implements UserDetails {
 	    prodotto.getUsersFavouriteProducts().add(this);
 	}
 
-	public void removePreferredProduct(Prodotto prodotto) {
-	    this.prodottiPreferiti.remove(prodotto);
-	    prodotto.getUsersFavouriteProducts().remove(this);
-	}
+//	public void removePreferredProduct(Prodotto prodotto) {
+//	    this.prodottiPreferiti.remove(prodotto);
+//	    prodotto.getUsersFavouriteProducts().remove(this);
+//	}
+	
+	 public void addReview(Review review) {
+	        this.reviews.add(review);
+	        review.setUser(this);
+	    }
+	   
+//	public void removeReview(Review review) {
+//	        this.reviews.remove(review);
+//	        review.setUser(null);
+//	    }
 }

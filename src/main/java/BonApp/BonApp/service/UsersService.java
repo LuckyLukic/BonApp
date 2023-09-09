@@ -16,32 +16,31 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
-
+import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.BadRequestException;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewUserPayload;
-
+import BonApp.BonApp.payload.TopFavoritePayload;
+import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.UserRepository;
-
 
 @Service
 public class UsersService {
 
 	@Autowired
-	UserRepository userRepository;
-	
-//	@Autowired
-//	ProdottoRepository pr;
+	private UserRepository userRepository;
+
+	@Autowired
+	private ProdottoRepository prodottoRepository;
 
 	// SALVA NUOVO UTENTE + ECCEZIONE SE VIENE USATA LA STESSA EMAIL
 	public User save(NewUserPayload body) {
 		userRepository.findByEmail(body.getEmail()).ifPresent(user -> {
 			throw new BadRequestException("L'email " + body.getEmail() + " è gia stata utilizzata");
 		});
-		User newUser = new User(body.getUsername(), body.getName(), body.getSurname(), body.getEmail(), 
-				body.getIndirizzo(),
-				body.getPassword());
+		User newUser = new User(body.getUsername(), body.getName(), body.getSurname(), body.getEmail(),
+				body.getIndirizzo(), body.getPassword());
 		return userRepository.save(newUser);
 	}
 
@@ -81,82 +80,79 @@ public class UsersService {
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
 	}
-	
-	//METODO PER IL TEST LOGIN
-	 public static boolean authenticateUser(User inputUser, User userFromDatabase, BCryptPasswordEncoder passwordEncoder) {
-	        if (inputUser == null || userFromDatabase == null) {
-	            return false;
-	        }
 
-	        if (!inputUser.getEmail().equals(userFromDatabase.getEmail())) {
-	            return false;
-	        }
+	// METODO PER IL TEST LOGIN
+	public static boolean authenticateUser(User inputUser, User userFromDatabase,
+			BCryptPasswordEncoder passwordEncoder) {
+		if (inputUser == null || userFromDatabase == null) {
+			return false;
+		}
 
-	        String rawPassword = inputUser.getPassword();
-	        String encryptedPasswordFromDatabase = userFromDatabase.getPassword();
+		if (!inputUser.getEmail().equals(userFromDatabase.getEmail())) {
+			return false;
+		}
 
-	        return passwordEncoder.matches(rawPassword, encryptedPasswordFromDatabase);
-	    }
-	 
+		String rawPassword = inputUser.getPassword();
+		String encryptedPasswordFromDatabase = userFromDatabase.getPassword();
+
+		return passwordEncoder.matches(rawPassword, encryptedPasswordFromDatabase);
+	}
+
 	// PRENDI L'ID DELL'UTENTE LOGGATO
-	    public User getCurrentUser() {
-	        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-	        String currentUserName = authentication.getName();
-	        return userRepository.findByEmail(currentUserName)
-	                .orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
-	    }
+	public User getCurrentUser() {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		String currentUserName = authentication.getName();
+		return userRepository.findByEmail(currentUserName)
+				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
+	}
 
-//	// AGGIUNGO UN PRODOTTO AI PREFERITI DELL'UTENTE  
-//	    public User addPreferredProducts(UUID userId, List<Prodotto> prodottiPreferiti) throws NotFoundException {
-//	        User user = findById(userId);
-//	        user.getProdottiPreferiti().addAll(prodottiPreferiti);
-//	        return userRepository.save(user);
-//	    }
-//
-//    // ELIMINO UN PRODOTTO DAI PREFERITI DELL'UTENTE
-//	    public User removePreferredProducts(UUID userId, List<Prodotto> prodottiPreferiti) throws NotFoundException {
-//	        User user = findById(userId);
-//	        user.getProdottiPreferiti().removeAll(prodottiPreferiti);
-//	        return userRepository.save(user);
-//	    }
-//
-//	    
-//	 // TORNA LA LISTA DEI PREFERITI
-//	    public Page<Prodotto> getUserPreferiti(int page, int size) {
-//	        User currentUser = getCurrentUser();
-//	        Pageable pageable = PageRequest.of(page, size);
-//	        Page<Prodotto> favorites = userRepository.findProdottiFavoritiByUserId(currentUser.getId(), pageable);
-//
-//	        if (favorites.isEmpty()) {
-//	            throw new NotFoundException("La tua lista dei preferiti è vuota");
-//	        }
-//
-//	        return favorites;
-//	    }
-//	    
-//	    public Page<TopFavoriteProductDTO> getTopFavoriteProducts(int page, int size) {
-//	        Pageable pageable = PageRequest.of(page, size);
-//	        Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
-//
-//	        // Map the result to Prodotto and favorite count
-//	        Page<TopFavoriteProductDTO> topProducts = result.map(row -> {
-//	            UUID productId = (UUID) row[0];
-//	            Long favoriteCount = (Long) row[1];
-//
-//	            Optional<Prodotto> productOptional = pr.findById(productId);
-//	            if (productOptional.isPresent()) {
-//	                Prodotto product = productOptional.get();
-//	                Map<Prodotto, Long> productFavoriteCount = Map.of(product, favoriteCount);
-//	                
-//	                return new TopFavoriteProductDTO(product, favoriteCount);
-//	                
-//	            } else {
-//	                return null; // Handle the case where the product doesn't exist
-//	            }
-//	        });
-//
-//	        return topProducts;
-//	    }
-	    
-	    
+	public void addProductToFavorites(UUID userId, UUID productId) throws NotFoundException {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+		Prodotto product = prodottoRepository.findById(productId)
+				.orElseThrow(() -> new NotFoundException("Product not found"));
+
+		user.getProdottiPreferiti().add(product);
+		userRepository.save(user);
+	}
+
+	public void removeProductFromFavorites(UUID userId, UUID productId) throws NotFoundException {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+		Prodotto product = prodottoRepository.findById(productId)
+				.orElseThrow(() -> new NotFoundException("Product not found"));
+
+		user.getProdottiPreferiti().remove(product);
+		userRepository.save(user);
+	}
+
+	public List<Prodotto> getFavoriteProducts(UUID userId) throws NotFoundException {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+
+		return user.getProdottiPreferiti();
+	}
+
+	public Page<TopFavoritePayload> getTopFavoriteProducts(int page, int size) {
+		Pageable pageable = PageRequest.of(page, size);
+		Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
+
+		Page<TopFavoritePayload> topProducts = result.map(row -> {
+			UUID productId = (UUID) row[0];
+			Long favoriteCount = (Long) row[1];
+
+			Optional<Prodotto> productOptional = prodottoRepository.findById(productId);
+			if (productOptional.isPresent()) {
+				Prodotto product = productOptional.get();
+				Map<Prodotto, Long> productFavoriteCount = Map.of(product, favoriteCount);
+
+				return new TopFavoritePayload(product, favoriteCount);
+
+			} else {
+				return null;
+			}
+		});
+
+		return topProducts;
+	}
 }
+	    
+	    
+
