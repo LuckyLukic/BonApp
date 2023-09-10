@@ -25,14 +25,14 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 	@Query("SELECT g FROM User u JOIN u.prodottiPreferiti g WHERE u.id = ?1")
     Page<Prodotto> findProdottiFavoritiByUserId(UUID userId, Pageable pageable);
 	
-	@Query(value = "SELECT p.id AS product_id, COUNT(upp.user_id) AS favorite_count " +
-            "FROM user_preferred_products upp " +
-            "JOIN prodotto p ON upp.product_id = p.id " +
+	@Query(value = "SELECT p.id AS prodotto_id, COUNT(upp.user_id) AS favorite_count " +
+            "FROM user_prodotti_preferiti upp " +
+            "JOIN prodotto p ON upp.prodotto_id = p.id " +
             "GROUP BY p.id " +
             "ORDER BY favorite_count DESC",
     countQuery = "SELECT COUNT(DISTINCT p.id) " +
-                 "FROM user_preferred_products upp " +
-                 "JOIN prodotto p ON upp.product_id = p.id",
+                 "FROM user_prodotti_preferiti upp " +
+                 "JOIN prodotto p ON upp.prodotto_id = p.id",
     nativeQuery = true)
     Page<Object[]> findTopFavoriteProducts(Pageable pageable);
 }

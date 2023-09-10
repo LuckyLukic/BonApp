@@ -13,14 +13,14 @@ import lombok.Setter;
 @Setter
 @AllArgsConstructor
 public class NewReviewPayload {
-	
+
 	@NotNull(message = "Il commento e' obbligatorio")
 	private String comment;
 	@NotNull(message = "Il rating e' obbligatorio")
-    private Integer rating;
+	private Integer rating;
 
-    private String username;
+	private String username;
 
-    private LocalDate reviewDate;
+	private LocalDate reviewDate;
 
 }

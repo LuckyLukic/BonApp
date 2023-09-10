@@ -19,7 +19,9 @@ import org.springframework.stereotype.Service;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.BadRequestException;
+import BonApp.BonApp.exceptions.ForbiddenException;
 import BonApp.BonApp.exceptions.NotFoundException;
+import BonApp.BonApp.payload.NewPreferiti;
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.TopFavoritePayload;
 import BonApp.BonApp.repositories.ProdottoRepository;
@@ -67,6 +69,8 @@ public class UsersService {
 		found.setName(body.getName());
 		found.setSurname(body.getSurname());
 		found.setEmail(body.getEmail());
+		found.setUsername(body.getUsername());
+		found.setIndirizzo(body.getIndirizzo());
 		return userRepository.save(found);
 	}
 
@@ -106,22 +110,42 @@ public class UsersService {
 				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
 	}
 
-	public void addProductToFavorites(UUID userId, UUID productId) throws NotFoundException {
+	public NewPreferiti addProductToFavorites(UUID userId, UUID productId) throws NotFoundException, ForbiddenException {
+
+		User authenticatedUser = getCurrentUser();
+
+		if (!authenticatedUser.getId().equals(userId)) {
+			throw new ForbiddenException(
+					"Access denied: You do not have permission to add products to this user's favorites");
+		}
+
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 		Prodotto product = prodottoRepository.findById(productId)
 				.orElseThrow(() -> new NotFoundException("Product not found"));
 
 		user.getProdottiPreferiti().add(product);
 		userRepository.save(user);
+		
+		return new NewPreferiti(userId, productId, "Product successfully added to favorites");
 	}
 
-	public void removeProductFromFavorites(UUID userId, UUID productId) throws NotFoundException {
+	public NewPreferiti removeProductFromFavorites(UUID userId, UUID productId) throws NotFoundException, ForbiddenException {
+
+		User authenticatedUser = getCurrentUser();
+
+		if (!authenticatedUser.getId().equals(userId)) {
+			throw new ForbiddenException(
+					"Access denied: You do not have permission to remove products from this user's favorites");
+		}
+
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 		Prodotto product = prodottoRepository.findById(productId)
 				.orElseThrow(() -> new NotFoundException("Product not found"));
 
 		user.getProdottiPreferiti().remove(product);
 		userRepository.save(user);
+		
+		return new NewPreferiti(userId, productId, "Product successfully removed from favorites");
 	}
 
 	public List<Prodotto> getFavoriteProducts(UUID userId) throws NotFoundException {
@@ -152,7 +176,6 @@ public class UsersService {
 
 		return topProducts;
 	}
-}
-	    
+}    
 	    
 

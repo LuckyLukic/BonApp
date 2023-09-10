@@ -11,9 +11,9 @@ import BonApp.BonApp.entities.Prodotto;
 
 
 public interface ProdottoRepository extends JpaRepository<Prodotto, UUID> {
-	
-	Page<Prodotto> findByNomeContainingIgnoreCase(String partialName, Pageable page);
-	List<Prodotto> findByIdIn(List<UUID> ids);
 
+	Page<Prodotto> findByNomeContainingIgnoreCase(String partialName, Pageable page);
+
+	List<Prodotto> findByIdIn(List<UUID> ids);
 
 }

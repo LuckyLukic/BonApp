@@ -20,11 +20,13 @@ import BonApp.BonApp.entities.Indirizzo;
 import BonApp.BonApp.entities.Ingrediente;
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
+import BonApp.BonApp.entities.Review;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.repositories.IndirizzoRepository;
 import BonApp.BonApp.repositories.IngredienteRepository;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
+import BonApp.BonApp.repositories.ReviewRepository;
 import BonApp.BonApp.repositories.UserRepository;
 import jakarta.transaction.Transactional;
 
@@ -45,6 +47,9 @@ public class Runner implements CommandLineRunner{
 	
 	@Autowired
 	OrdineSingoloRepository ordineSingoloRepository;
+	
+	@Autowired
+    ReviewRepository reviewRepository;
 	
 	private Faker faker = new Faker(new Locale("it"));
 
@@ -101,16 +106,18 @@ public class Runner implements CommandLineRunner{
 	          List<Indirizzo> indirizzi = new ArrayList<>();
 	          List<User> users = new ArrayList<>();
 	          List<Prodotto> products = prodottoRepository.findAll();
+	          List<Review> reviews = new ArrayList<>();
 	          
 	          Random random = new Random();
 
 	          for (int i = 0; i < 15; i++) {
 	              Indirizzo indirizzo = new Indirizzo();
 	              indirizzo.setVia(faker.address().streetAddress());
-	              indirizzo.setCivico(faker.number().numberBetween(1, 100));
+	              indirizzo.setCivico(String.valueOf(faker.number().numberBetween(1, 100))); 
 	              indirizzo.setLocalità(faker.address().city());
 	              indirizzo.setCap(faker.address().zipCode());
 	              indirizzo.setComune(faker.address().cityName());
+	              indirizzo.setProvincia(faker.address().state()); 
 	              indirizzi.add(indirizzo);
 	          }
 	          
@@ -135,6 +142,19 @@ public class Runner implements CommandLineRunner{
 	              int numPreferredProducts = random.nextInt(5);
 	              for (int k = 0; k < numPreferredProducts; k++) {
 	                  user.getProdottiPreferiti().add(products.get(k));
+	              }
+	              
+	              int reviewCount = faker.number().numberBetween(1, 3);
+	              for (int j = 0; j < reviewCount; j++) {
+	                  Review review = new Review();
+	                  review.setUser(user);
+	                  review.setComment(faker.lorem().paragraph());
+	                  review.setReviewDate(LocalDate.now());
+	                  review.setRating(faker.number().numberBetween(1, 6));
+	                  review.setUsername(user.getUsername());
+	                  reviews.add(review); // Add the review to the list
+	                  
+	                  user.addReview(review);
 	              }
 
 

@@ -11,9 +11,8 @@ import lombok.Setter;
 @AllArgsConstructor
 @NoArgsConstructor
 public class NewIngredientePayload {
-	
-	
+
 	@NotNull(message = "The ingredient name is required")
 	private String nome;
-	
+
 }

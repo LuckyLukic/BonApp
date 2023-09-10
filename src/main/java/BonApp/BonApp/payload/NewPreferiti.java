@@ -1,6 +1,7 @@
 package BonApp.BonApp.payload;
 
-import BonApp.BonApp.entities.Prodotto;
+import java.util.UUID;
+
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -8,10 +9,13 @@ import lombok.Setter;
 
 @Getter
 @Setter
-@AllArgsConstructor
 @NoArgsConstructor
-public class TopFavoritePayload {
+@AllArgsConstructor
+
+public class NewPreferiti {
 	
-	  private Prodotto prodotto;
-	  private Long favoriteCount;
+	private UUID userId;
+    private UUID productId;
+    private String message;
+
 }

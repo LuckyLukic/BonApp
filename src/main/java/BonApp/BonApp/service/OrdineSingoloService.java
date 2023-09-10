@@ -1,5 +1,7 @@
 package BonApp.BonApp.service;
 
+import java.time.LocalDate;
+import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
@@ -42,11 +44,13 @@ public class OrdineSingoloService {
 	        if (prodotti.size() != body.getProdotti().size()) {
 	            throw new NotFoundException("Some products were not found");
 	        }
+	        
+	        double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
 
 	        OrdineSingolo newSingleOrder = new OrdineSingolo(user, prodotti);
-	        newSingleOrder.setTotalPrice(body.getTotalPrice());
-	        newSingleOrder.setDataOrdine(body.getDataOrdine());
-	        newSingleOrder.setOraOrdine(body.getOraOrdine());
+	        newSingleOrder.setTotalPrice(totalPrice);
+	        newSingleOrder.setDataOrdine(LocalDate.now());
+	        newSingleOrder.setOraOrdine(LocalTime.now());
 	        return ordineSingoloRepository.save(newSingleOrder);
 	    }
 	    
@@ -72,12 +76,14 @@ public class OrdineSingoloService {
 	        if (prodotti.size() != body.getProdotti().size()) {
 	            throw new NotFoundException("Some products were not found");
 	        }
+	        
+	        double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
 
 	        existingSingleOrder.setUser(user);
 	        existingSingleOrder.setProdotti(prodotti);
-	        existingSingleOrder.setTotalPrice(body.getTotalPrice());
-	        existingSingleOrder.setDataOrdine(body.getDataOrdine());
-	        existingSingleOrder.setOraOrdine(body.getOraOrdine());
+	        existingSingleOrder.setTotalPrice(totalPrice);
+	        existingSingleOrder.setDataOrdine(body.getDataOrdine() != null ? body.getDataOrdine() : existingSingleOrder.getDataOrdine());
+	        existingSingleOrder.setOraOrdine(body.getOraOrdine() != null ? body.getOraOrdine() : existingSingleOrder.getOraOrdine());
 
 	        OrdineSingolo savedSingleOrder = ordineSingoloRepository.save(existingSingleOrder);
 	    

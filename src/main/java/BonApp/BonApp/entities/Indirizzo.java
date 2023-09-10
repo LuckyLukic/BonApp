@@ -16,40 +16,40 @@ import jakarta.persistence.OneToMany;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-    @Data
-	@Entity
-	@NoArgsConstructor
-	//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
-	public class Indirizzo {
+@Data
+@Entity
+@NoArgsConstructor
+// @JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class,
+// property = "id")
+public class Indirizzo {
 
-		@Id
-		@GeneratedValue
-		private UUID indirizzo_id;
-		private String via;
-		private int civico;
-		private String località;
-		private String cap;
-		private String comune;
-		
-		@OneToMany(mappedBy = "indirizzo", cascade = CascadeType.ALL, orphanRemoval = true)
-		private List<User> users = new ArrayList<>();
-		
+	@Id
+	@GeneratedValue
+	private UUID indirizzo_id;
+	private String via;
+	private String civico;
+	private String località;
+	private String cap;
+	private String comune;
+	private String provincia;
 
-		public Indirizzo(String cap, int civico, String localita, String via, String comune) {
+	@OneToMany(mappedBy = "indirizzo", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<User> users = new ArrayList<>();
 
-			this.cap = cap;
-			this.civico = civico;
-			this.località = localita;
-			this.via = via;
-			this.comune = comune;
-		}
-		
-		public void addUser(User user) {
-	        this.users.add(user);
-	        user.setIndirizzo(this);
-	    }
-		
+	public Indirizzo(String cap, String civico, String localita, String via, String comune, String provincia) {
+
+		this.cap = cap;
+		this.civico = civico;
+		this.località = localita;
+		this.via = via;
+		this.comune = comune;
+		this.provincia = provincia;
 	}
 
+	public void addUser(User user) {
+		this.users.add(user);
+		user.setIndirizzo(this);
+	}
 
+}
 

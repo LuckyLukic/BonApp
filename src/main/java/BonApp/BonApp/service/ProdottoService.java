@@ -24,100 +24,89 @@ import BonApp.BonApp.repositories.UserRepository;
 @Service
 public class ProdottoService {
 
-    @Autowired
-    private ProdottoRepository prodottoRepository;
-    
-    @Autowired
-    private IngredienteRepository ingredienteRepository;
-    
-    @Autowired
-    private OrdineSingoloRepository ordineSingoloRepository;
-    
-    @Autowired
-    private UserRepository userRepository;
-    
+	@Autowired
+	private ProdottoRepository prodottoRepository;
 
-    public Prodotto save(NewProdottoPayload body) {
-    	 if (body.getPrezzo() != null) {
-             double prezzoValue = body.getPrezzo().doubleValue();
-             
-             Prodotto newProdotto = new Prodotto(
-                     body.getNome(),
-                     body.getDescrizione(),
-                     body.getPrezzo(), 
-                     body.getCategoria(),
-                     body.getIngredienti(),
-                     body.getImgUrl()
-             );
-             return prodottoRepository.save(newProdotto);
-         } else {
-             
-             throw new IllegalArgumentException("Prezzo cannot be null");
-         }
-     
-    }
-    
+	@Autowired
+	private IngredienteRepository ingredienteRepository;
 
-    public Page<Prodotto> find(int page, int size, String sort) {
-        Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-        return prodottoRepository.findAll(pageable);
-    }
+	@Autowired
+	private OrdineSingoloRepository ordineSingoloRepository;
 
-    public Prodotto findById(UUID id) throws NotFoundException {
-        return prodottoRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
-    }
+	@Autowired
+	private UserRepository userRepository;
 
-    public Prodotto findByIdAndUpdate(UUID id, Prodotto updatedProdotto) throws NotFoundException {
-        Prodotto existingProdotto = findById(id);
-        
-        existingProdotto.setNome(updatedProdotto.getNome());
-        existingProdotto.setDescrizione(updatedProdotto.getDescrizione());
-        existingProdotto.setPrezzo(updatedProdotto.getPrezzo());
-        existingProdotto.setCategoria(updatedProdotto.getCategoria());
-        existingProdotto.setIngredienti(updatedProdotto.getIngredienti());
-        existingProdotto.setImgUrl(updatedProdotto.getImgUrl());
-        
-        return prodottoRepository.save(existingProdotto);
-    }
+	public Prodotto save(NewProdottoPayload body) {
+		if (body.getPrezzo() == null) {
+			throw new IllegalArgumentException("Prezzo cannot be null");
+		}
 
-    public void findByIdAndDelete(UUID id) throws NotFoundException {
-        Prodotto existingProdotto = findById(id);
-        
-        List<Ingrediente> ingredienti = existingProdotto.getIngredienti();
-        
-        for (Ingrediente ingrediente : ingredienti) {
-            ingrediente.getProdotti().remove(existingProdotto);
-        }
-        
-        for (Ingrediente ingrediente : ingredienti) {
-            ingredienteRepository.save(ingrediente);
-        }
-        
-        
-        List<OrdineSingolo> ordini = ordineSingoloRepository.findByProdottiContaining(existingProdotto);
-        for (OrdineSingolo ordine : ordini) {
-            ordine.getProdotti().remove(existingProdotto);
-            ordineSingoloRepository.save(ordine);
-        }
-        
-       
-        List<User> users = userRepository.findByProdottiPreferitiContaining(existingProdotto);
-        for (User user : users) {
-            user.getProdottiPreferiti().remove(existingProdotto);
-            userRepository.save(user);
-        }
-        
-        
-        prodottoRepository.delete(existingProdotto);
-    }
-    
-    public Page<Prodotto> findByPartialName(String partialName, int page, int size, String sortBy) {
-        Pageable prodottiPageable = PageRequest.of(page, size, Sort.by(sortBy));
-        return prodottoRepository.findByNomeContainingIgnoreCase(partialName, prodottiPageable);
-    }
-    
-    public List<Prodotto> findProductsByIds(List<UUID> ids) {
-        return prodottoRepository.findAllById(ids);
-    }
-   
+		if (body.getNome() == null || body.getDescrizione() == null || body.getCategoria() == null) {
+			throw new IllegalArgumentException("Some other fields are null");
+		}
+
+		Prodotto newProdotto = new Prodotto(body.getNome(), body.getDescrizione(), body.getPrezzo(),
+				body.getCategoria(), body.getIngredienti(), body.getImgUrl());
+		return prodottoRepository.save(newProdotto);
+	}
+
+	public Page<Prodotto> find(int page, int size, String sort) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+		return prodottoRepository.findAll(pageable);
+	}
+
+	public Prodotto findById(UUID id) throws NotFoundException {
+		return prodottoRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
+	}
+
+	public Prodotto findByIdAndUpdate(UUID id, Prodotto updatedProdotto) throws NotFoundException {
+		Prodotto existingProdotto = findById(id);
+
+		existingProdotto.setNome(updatedProdotto.getNome());
+		existingProdotto.setDescrizione(updatedProdotto.getDescrizione());
+		existingProdotto.setPrezzo(updatedProdotto.getPrezzo());
+		existingProdotto.setCategoria(updatedProdotto.getCategoria());
+		existingProdotto.setIngredienti(updatedProdotto.getIngredienti());
+		existingProdotto.setImgUrl(updatedProdotto.getImgUrl());
+
+		return prodottoRepository.save(existingProdotto);
+	}
+
+	public void findByIdAndDelete(UUID id) throws NotFoundException {
+		Prodotto existingProdotto = findById(id);
+
+		List<Ingrediente> ingredienti = existingProdotto.getIngredienti();
+
+		for (Ingrediente ingrediente : ingredienti) {
+			ingrediente.getProdotti().remove(existingProdotto);
+		}
+
+		for (Ingrediente ingrediente : ingredienti) {
+			ingredienteRepository.save(ingrediente);
+		}
+
+		List<OrdineSingolo> ordini = ordineSingoloRepository.findByProdottiContaining(existingProdotto);
+		for (OrdineSingolo ordine : ordini) {
+			ordine.getProdotti().remove(existingProdotto);
+			ordineSingoloRepository.save(ordine);
+		}
+
+		List<User> users = userRepository.findByProdottiPreferitiContaining(existingProdotto);
+		for (User user : users) {
+			user.getProdottiPreferiti().remove(existingProdotto);
+			userRepository.save(user);
+		}
+
+		prodottoRepository.delete(existingProdotto);
+	}
+
+	public Page<Prodotto> findByPartialName(String partialName, int page, int size, String sortBy) {
+		Pageable prodottiPageable = PageRequest.of(page, size, Sort.by(sortBy));
+		return prodottoRepository.findByNomeContainingIgnoreCase(partialName, prodottiPageable);
+	}
+
+	public List<Prodotto> findProductsByIds(List<UUID> ids) {
+		return prodottoRepository.findAllById(ids);
+	}
+
 }

@@ -14,22 +14,17 @@ import lombok.Setter;
 @Getter
 @Setter
 public class NewOrdineSingoloPayload {
-	
-	
-	
 
-	    @NotNull(message = "L'ID dell'utente è obbligatorio")
-	    private UUID userId;
+	@NotNull(message = "L'ID dell'utente è obbligatorio")
+	private UUID userId;
 
-	    @NotNull(message = "Aggiungi almeno 1 prodotto")
-	    private List<UUID> prodotti;
-	    
-	    
-	    private double totalPrice;
-	    
-	    private LocalDate dataOrdine;
+	@NotNull(message = "Aggiungi almeno 1 prodotto")
+	private List<UUID> prodotti;
 
-	    
-	    private LocalTime oraOrdine;
-	      
-	}
+	private double totalPrice;
+
+	private LocalDate dataOrdine;
+
+	private LocalTime oraOrdine;
+
+}

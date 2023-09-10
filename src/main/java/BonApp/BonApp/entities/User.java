@@ -48,13 +48,13 @@ public class User implements UserDetails {
 	private String username;
 	private String name;
 	private String surname;
-	
+
 	private String email;
-	
+
 	@ManyToOne(cascade = CascadeType.MERGE)
-    @JoinColumn(name = "indirizzo_id", nullable = true)
-    private Indirizzo indirizzo;
-	
+	@JoinColumn(name = "indirizzo_id", nullable = true)
+	private Indirizzo indirizzo;
+
 	@JsonIgnore
 	private String password;
 	@Enumerated(EnumType.STRING)
@@ -62,24 +62,18 @@ public class User implements UserDetails {
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrdineSingolo> singleOrders = new ArrayList<>();
-	
+
 	private LocalDate dataRegistrazione;
-	
+
 	@ManyToMany
-	@JoinTable(
-	    name = "user_prodotti_preferiti", 
-	    joinColumns = @JoinColumn(name = "user_id"), 
-	    inverseJoinColumns = @JoinColumn(name = "prodotto_id")
-	)	private List<Prodotto> prodottiPreferiti = new ArrayList<>();
-	
+	@JoinTable(name = "user_prodotti_preferiti", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "prodotto_id"))
+	private List<Prodotto> prodottiPreferiti = new ArrayList<>();
+
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
 	private List<Review> reviews = new ArrayList<>();
-	
 
 	@SuppressWarnings("static-access")
-	public User(String username, String name, String surname, String email, 
-			Indirizzo indirizzo, 
-			String password) {
+	public User(String username, String name, String surname, String email, Indirizzo indirizzo, String password) {
 
 		this.username = username;
 		this.name = name;
@@ -88,9 +82,9 @@ public class User implements UserDetails {
 		this.password = password;
 		this.indirizzo = indirizzo;
 		this.role = role.USER;
-		
+
 		this.dataRegistrazione = LocalDate.now();
-		
+
 	}
 
 	@Override
@@ -122,28 +116,28 @@ public class User implements UserDetails {
 	public boolean isEnabled() {
 		return true;
 	}
-	
+
 	public void addSingleOrder(OrdineSingolo ordineSingolo) {
-        this.singleOrders.add(ordineSingolo);
-    }
-	
-	public void addPreferredProduct(Prodotto prodotto) {
-	    this.prodottiPreferiti.add(prodotto);
-	    prodotto.getUsersFavouriteProducts().add(this);
+		this.singleOrders.add(ordineSingolo);
 	}
 
-//	public void removePreferredProduct(Prodotto prodotto) {
-//	    this.prodottiPreferiti.remove(prodotto);
-//	    prodotto.getUsersFavouriteProducts().remove(this);
-//	}
-	
-	 public void addReview(Review review) {
-	        this.reviews.add(review);
-	        review.setUser(this);
-	    }
-	   
-//	public void removeReview(Review review) {
-//	        this.reviews.remove(review);
-//	        review.setUser(null);
-//	    }
+	public void addPreferredProduct(Prodotto prodotto) {
+		this.prodottiPreferiti.add(prodotto);
+		prodotto.getUsersFavouriteProducts().add(this);
+	}
+
+	public void removePreferredProduct(Prodotto prodotto) {
+		this.prodottiPreferiti.remove(prodotto);
+		prodotto.getUsersFavouriteProducts().remove(this);
+	}
+
+	public void addReview(Review review) {
+		this.reviews.add(review);
+		review.setUser(this);
+	}
+
+	public void removeReview(Review review) {
+		this.reviews.remove(review);
+		review.setUser(null);
+	}
 }

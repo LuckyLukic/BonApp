@@ -43,6 +43,14 @@ public class Review {
 
 	public Review(String comment, Integer rating, User user) {
 		
+		if (comment == null) {
+            throw new IllegalArgumentException("Il commento non può essere nullo");
+        }
+        
+        if (user == null) {
+            throw new IllegalArgumentException("L'utente non può essere nullo");
+        }
+		
 		if(rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5");
 		}

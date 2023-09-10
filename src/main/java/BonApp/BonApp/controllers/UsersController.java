@@ -23,6 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.NotFoundException;
+import BonApp.BonApp.payload.NewPreferiti;
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.TopFavoritePayload;
 import BonApp.BonApp.service.UsersService;
@@ -46,9 +47,12 @@ public class UsersController {
 
 	@GetMapping("")
     //@PreAuthorize("hasAuthority('ADMIN')")
-	public Page<User> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+	public Page<User> getUsers(
+			@RequestParam(defaultValue = "0") int page, 
+			@RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "id") String sortBy) {
 		return userService.find(page, size, sortBy);
+		
 	}
 
 	@GetMapping("/{userId}")
@@ -71,22 +75,21 @@ public class UsersController {
 	}
 	
 	
-	@PostMapping("/{userId}/favorites/{productId}")
-    public ResponseEntity<Void> addProductToFavorites(
-            @PathVariable UUID userId, 
-            @PathVariable UUID productId) {
-        userService.addProductToFavorites(userId, productId);
-        return ResponseEntity.status(HttpStatus.CREATED).build();
-    }
-	
-	
-	@DeleteMapping("/{userId}/remove-preferred-products")
-	public ResponseEntity<Void> removeProductFromFavorites(
-            @PathVariable UUID userId, 
-            @PathVariable UUID productId) {
-        userService.removeProductFromFavorites(userId, productId);
-        return ResponseEntity.noContent().build();
-    }
+	@PostMapping("/{userId}/favorites")
+	public ResponseEntity<NewPreferiti> addProductToFavorites(
+	        @PathVariable UUID userId, 
+	        @RequestBody NewPreferiti newPreferiti) {
+	    NewPreferiti responsePreferiti = userService.addProductToFavorites(userId, newPreferiti.getProductId());
+	    return ResponseEntity.status(HttpStatus.CREATED).body(responsePreferiti);
+	}
+
+	@DeleteMapping("/{userId}/favorites")
+	public ResponseEntity<NewPreferiti> removeProductFromFavorites(
+	        @PathVariable UUID userId, 
+	        @RequestBody NewPreferiti newPreferiti) {
+	    NewPreferiti responsePreferiti = userService.removeProductFromFavorites(userId, newPreferiti.getProductId());
+	    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responsePreferiti);
+	}
 
     @GetMapping("/{userId}/favorites")
     public ResponseEntity<List<Prodotto>> getFavoriteProducts(@PathVariable UUID userId) {
@@ -95,11 +98,10 @@ public class UsersController {
     }
 	
 
-	
 	@GetMapping("/top-favorites")
     public ResponseEntity<Page<TopFavoritePayload>> getTopFavoriteProducts(
-            @RequestParam int page, 
-            @RequestParam int size) {
+    		@RequestParam(defaultValue = "0") int page, 
+			@RequestParam(defaultValue = "10") int size) {
         Page<TopFavoritePayload> topFavoriteProducts = userService.getTopFavoriteProducts(page, size);
         if (topFavoriteProducts.isEmpty()) {
           return ResponseEntity.noContent().build();
