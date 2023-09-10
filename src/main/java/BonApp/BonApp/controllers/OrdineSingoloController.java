@@ -15,7 +15,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+
 import BonApp.BonApp.entities.OrdineSingolo;
+import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewOrdineSingoloPayload;
 import BonApp.BonApp.service.OrdineSingoloService;
 
@@ -59,6 +62,17 @@ public class OrdineSingoloController {
     @ResponseStatus(HttpStatus.NO_CONTENT)
     public void deleteSingleOrder(@PathVariable UUID singleOrderId) {
         ordineSingoloService.findByIdAndDelete(singleOrderId);
+    }
+    
+    @PostMapping("/{userId}/checkout")
+    public ResponseEntity<?> processCheckout(@PathVariable UUID userId, @RequestBody UUID ordineSingoloId) {
+        try {
+            return ResponseEntity.ok(ordineSingoloService.processCheckout(userId, ordineSingoloId));
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
+        } catch (IllegalStateException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(e.getMessage());
+        }
     }
 }
 

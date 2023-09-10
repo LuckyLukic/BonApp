@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
+import BonApp.BonApp.Enum.StatusOrdine;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -14,8 +15,6 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
@@ -23,42 +22,63 @@ import lombok.NoArgsConstructor;
 @Data
 @NoArgsConstructor
 public class OrdineSingolo {
-	
-@Id
-@GeneratedValue
-private UUID id;
 
-@ManyToOne
-@JoinColumn(name = "user_id", nullable = false)
-private User user;
+	@Id
+	@GeneratedValue
+	private UUID id;
 
-private double totalPrice;
+	@ManyToOne
+	@JoinColumn(name = "user_id", nullable = false)
+	private User user;
 
-private LocalDate dataOrdine;
-private LocalTime oraOrdine;
+	private double totalPrice;
 
+	private LocalDate dataOrdine;
+	private LocalTime oraOrdine;
 
-@ManyToMany(cascade = { CascadeType.MERGE })
-@JoinTable(
-		name ="ordinesingolo_prodotto",
-		joinColumns = @JoinColumn(name = "ordinesingolo_id"),
-		inverseJoinColumns = @JoinColumn (name = "prodotto_id"))
-private List<Prodotto> prodotti = new ArrayList<>();
+	private StatusOrdine status;
 
-public OrdineSingolo( User user, List<Prodotto> prodotti) {
-  
-  this.user = user;	
-  this.prodotti = prodotti;
-    this.totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
-   this.dataOrdine = LocalDate.now();
-	this.oraOrdine = LocalTime.now();
-}
+	@ManyToMany(cascade = { CascadeType.MERGE })
+	@JoinTable(name = "ordinesingolo_prodotto", joinColumns = @JoinColumn(name = "ordinesingolo_id"), inverseJoinColumns = @JoinColumn(name = "prodotto_id"))
+	private List<Prodotto> prodotti = new ArrayList<>();
 
-public void addProduct(Prodotto prodotto) {
-    this.prodotti.add(prodotto);
-    this.totalPrice += prodotto.getPrezzo();
-}
+	public OrdineSingolo(User user, List<Prodotto> prodotti) {
 
+		this.user = user;
+		this.prodotti = prodotti;
+		this.totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
+		this.dataOrdine = LocalDate.now();
+		this.oraOrdine = LocalTime.now();
+		this.status = status.IN_CART;
+	}
+
+	public void addProduct(Prodotto prodotto, int quantity) {
+		for (int i = 0; i < quantity; i++) {
+			this.prodotti.add(prodotto);
+			this.totalPrice += prodotto.getPrezzo();
+		}
+	}
+
+	public void removeProduct(Prodotto prodotto, int quantity) {
+		for (int i = 0; i < quantity; i++) {
+			this.prodotti.remove(prodotto);
+			this.totalPrice -= prodotto.getPrezzo();
+		}
+	}
+
+	public void checkout() {
+		if (this.status == status.IN_CART) {
+			this.status = status.COMPLETATO;
+			this.dataOrdine = LocalDate.now();
+			this.oraOrdine = LocalTime.now();
+
+			User user = this.getUser();
+			OrdineSingolo newOrdineSingolo = new OrdineSingolo();
+			user.addSingleOrder(newOrdineSingolo);
+		} else {
+			throw new IllegalStateException("Cannot checkout a cart that is not in IN_CART status");
+		}
+	}
 
 }
 

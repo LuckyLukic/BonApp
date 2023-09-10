@@ -87,8 +87,6 @@ public class OrdineSingoloService {
 
 	        OrdineSingolo savedSingleOrder = ordineSingoloRepository.save(existingSingleOrder);
 	    
-	       
-
 	        return savedSingleOrder;
 	    
 	    }
@@ -96,5 +94,14 @@ public class OrdineSingoloService {
 	    public void findByIdAndDelete(UUID id) throws NotFoundException {
 	       OrdineSingolo existingSingleOrder = findById(id);
 	        ordineSingoloRepository.delete(existingSingleOrder);
+	    }
+	    
+	    public OrdineSingolo processCheckout(UUID userId, UUID ordineSingoloId) throws IllegalStateException {
+	        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+	        OrdineSingolo ordineSingolo = ordineSingoloRepository.findById(ordineSingoloId).orElseThrow(() -> new NotFoundException("Order not found"));
+
+	        ordineSingolo.checkout();
+
+	        return ordineSingoloRepository.save(ordineSingolo);
 	    }
 }

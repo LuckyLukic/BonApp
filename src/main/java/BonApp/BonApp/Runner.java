@@ -167,7 +167,7 @@ public class Runner implements CommandLineRunner{
 	                 
 	                  for (int k = 0; k < random.nextInt(3) + 1; k++) {
 	                      Collections.shuffle(products);
-	                      ordineSingolo.addProduct(products.get(0));
+	                      ordineSingolo.addProduct(products.get(0),1);
 	                      
 	                  }
 
