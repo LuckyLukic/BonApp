@@ -27,7 +27,7 @@ public class Indirizzo {
 	private UUID indirizzo_id;
 	private String via;
 	private String civico;
-	private String località;
+	private String localita;
 	private String cap;
 	private String comune;
 	private String provincia;
@@ -39,7 +39,7 @@ public class Indirizzo {
 
 		this.cap = cap;
 		this.civico = civico;
-		this.località = localita;
+		this.localita = localita;
 		this.via = via;
 		this.comune = comune;
 		this.provincia = provincia;

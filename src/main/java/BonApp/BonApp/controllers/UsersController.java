@@ -6,6 +6,7 @@ import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 
@@ -115,12 +116,18 @@ public class UsersController {
 	public void initializeCart(@PathVariable UUID userId) {
 	    userService.initializeUserCart(userId);
 	}
-
 	
-
-
-
-
+	
+	@GetMapping("/search")
+    public ResponseEntity<Page<User>> searchUsers(
+            @RequestParam (required = false) String  cap, 
+            @RequestParam (required = false) String localita, 
+            @RequestParam (required = false) String comune, 
+            Pageable pageable) {
+        
+        Page<User> users = userService.searchUsers(cap, localita, comune, pageable);
+        return ResponseEntity.ok(users);
+    }
 
 }
 

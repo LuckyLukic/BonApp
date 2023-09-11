@@ -8,9 +8,11 @@ import org.springframework.data.jpa.repository.JpaRepository;
 
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
+import org.springframework.stereotype.Repository;
 
 import BonApp.BonApp.entities.Review;
 
+@Repository
 public interface ReviewRepository extends JpaRepository<Review, UUID> {
 
 	@Query("SELECT r FROM Review r WHERE " + "(:startDate IS NULL OR r.reviewDate >= :startDate) AND "

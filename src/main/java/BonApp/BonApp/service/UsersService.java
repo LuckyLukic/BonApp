@@ -184,6 +184,14 @@ public class UsersService {
 		user.initializeCart();
 		userRepository.save(user);
 	}
+	
+	public Page<User> searchUsers(String cap, String localita, String comune, Pageable pageable) {
+        return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
+    }
+	
+	public Page<User> findUsersByAddress(String cap, String localita, String comune, Pageable pageable) {
+        return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
+    }
 } 
 	    
 

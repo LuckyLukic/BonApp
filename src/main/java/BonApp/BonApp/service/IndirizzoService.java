@@ -24,7 +24,7 @@ public class IndirizzoService {
 	// SALVA NUOVO INDIRIZZO
 	public Indirizzo save(NewIndirizzoPayload body) {
 
-		Indirizzo newIndirizzo = new Indirizzo(body.getCap(), body.getCivico(), body.getLocalità(), body.getVia(),
+		Indirizzo newIndirizzo = new Indirizzo(body.getCap(), body.getCivico(), body.getLocalita(), body.getVia(),
 				body.getComune(), body.getProvincia());
 		return indirizzoRepository.save(newIndirizzo);
 	}
@@ -53,7 +53,7 @@ public class IndirizzoService {
 		Indirizzo found = this.findById(id);
 		found.setCap(body.getCap());
 		found.setCivico(body.getCivico());
-		found.setLocalità(body.getLocalità());
+		found.setLocalita(body.getLocalita());
 		found.setVia(body.getVia());
 		found.setComune(body.getComune());
 		found.setProvincia(body.getProvincia());
@@ -69,7 +69,7 @@ public class IndirizzoService {
 	private void validateIndirizzoPayload(NewIndirizzoPayload body) {
 		// Here you can add further validation logic if necessary
 		if (body == null || body.getCap().trim().isEmpty() || body.getCivico().trim().isEmpty()
-				|| body.getLocalità().trim().isEmpty() || body.getVia().trim().isEmpty()
+				|| body.getLocalita().trim().isEmpty() || body.getVia().trim().isEmpty()
 				|| body.getComune().trim().isEmpty() || body.getProvincia().trim().isEmpty()) {
 			throw new IllegalArgumentException("All fields are required.");
 		}

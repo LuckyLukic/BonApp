@@ -15,7 +15,7 @@ public class NewIndirizzoPayload {
 	@NotNull(message = "Il civico è obbligatorio")
 	private String civico;
 	@NotNull(message = "La località è obbligatorio")
-	private String località;
+	private String localita;
 	@NotNull(message = "Il cap è obbligatorio")
 	private String cap;
 	@NotNull(message = "Il comune è obbligatorio")

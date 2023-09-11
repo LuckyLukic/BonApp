@@ -113,7 +113,7 @@ public class Runner implements CommandLineRunner{
 	              Indirizzo indirizzo = new Indirizzo();
 	              indirizzo.setVia(faker.address().streetAddress());
 	              indirizzo.setCivico(String.valueOf(faker.number().numberBetween(1, 100))); 
-	              indirizzo.setLocalità(faker.address().city());
+	              indirizzo.setLocalita(faker.address().city());
 	              indirizzo.setCap(faker.address().zipCode());
 	              indirizzo.setComune(faker.address().cityName());
 	              indirizzo.setProvincia(faker.address().state()); 
