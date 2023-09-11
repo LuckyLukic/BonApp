@@ -5,7 +5,6 @@ import java.time.LocalTime;
 import java.util.List;
 import java.util.UUID;
 
-
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -25,83 +24,93 @@ import BonApp.BonApp.repositories.UserRepository;
 @Service
 public class OrdineSingoloService {
 
-	 @Autowired
-	    OrdineSingoloRepository ordineSingoloRepository;
-	    
-	    @Autowired
-	    UserRepository userRepository;
-	    
-	    @Autowired
-	    ProdottoRepository prodottoRepository;
-	    
-	   
-	    public OrdineSingolo save(NewOrdineSingoloPayload body) throws NotFoundException {
-	        User user = userRepository.findById(body.getUserId())
-	                .orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
+	@Autowired
+	OrdineSingoloRepository ordineSingoloRepository;
 
-	        List<Prodotto> prodotti = prodottoRepository.findAllById(body.getProdotti());
+	@Autowired
+	UserRepository userRepository;
 
-	        if (prodotti.size() != body.getProdotti().size()) {
-	            throw new NotFoundException("Some products were not found");
-	        }
-	        
-	        double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
+	@Autowired
+	ProdottoRepository prodottoRepository;
 
-	        OrdineSingolo newSingleOrder = new OrdineSingolo(user, prodotti);
-	        newSingleOrder.setTotalPrice(totalPrice);
-	        newSingleOrder.setDataOrdine(LocalDate.now());
-	        newSingleOrder.setOraOrdine(LocalTime.now());
-	        return ordineSingoloRepository.save(newSingleOrder);
-	    }
-	    
+	public OrdineSingolo save(NewOrdineSingoloPayload body) throws NotFoundException {
+		User user = userRepository.findById(body.getUserId())
+				.orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
 
-	    public Page<OrdineSingolo> find(int page, int size, String sort) {
-	    	 Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
-	        return ordineSingoloRepository.findAll(pageable);
-	    }
+		List<Prodotto> prodotti = prodottoRepository.findAllById(body.getProdotti());
 
-	    public OrdineSingolo findById(UUID id) throws NotFoundException {
-	        return ordineSingoloRepository.findById(id)
-	                .orElseThrow(() -> new NotFoundException("Single Order not found with ID: " + id));
-	    }
+		if (prodotti.size() != body.getProdotti().size()) {
+			throw new NotFoundException("Some products were not found");
+		}
 
-	    public OrdineSingolo findByIdAndUpdate(UUID id, NewOrdineSingoloPayload body) throws NotFoundException {
-	    	OrdineSingolo existingSingleOrder = findById(id);
+		double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
 
-	        User user = userRepository.findById(body.getUserId())
-	                .orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
+		OrdineSingolo newSingleOrder = new OrdineSingolo(user, prodotti);
+		newSingleOrder.setTotalPrice(totalPrice);
+		newSingleOrder.setDataOrdine(LocalDate.now());
+		newSingleOrder.setOraOrdine(LocalTime.now());
+		return ordineSingoloRepository.save(newSingleOrder);
+	}
 
-	        List<Prodotto> prodotti = prodottoRepository.findAllById(body.getProdotti());
+	public Page<OrdineSingolo> find(int page, int size, String sort) {
+		Pageable pageable = PageRequest.of(page, size, Sort.by(sort));
+		return ordineSingoloRepository.findAll(pageable);
+	}
 
-	        if (prodotti.size() != body.getProdotti().size()) {
-	            throw new NotFoundException("Some products were not found");
-	        }
-	        
-	        double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
+	public OrdineSingolo findById(UUID id) throws NotFoundException {
+		return ordineSingoloRepository.findById(id)
+				.orElseThrow(() -> new NotFoundException("Single Order not found with ID: " + id));
+	}
 
-	        existingSingleOrder.setUser(user);
-	        existingSingleOrder.setProdotti(prodotti);
-	        existingSingleOrder.setTotalPrice(totalPrice);
-	        existingSingleOrder.setDataOrdine(body.getDataOrdine() != null ? body.getDataOrdine() : existingSingleOrder.getDataOrdine());
-	        existingSingleOrder.setOraOrdine(body.getOraOrdine() != null ? body.getOraOrdine() : existingSingleOrder.getOraOrdine());
+	public OrdineSingolo findByIdAndUpdate(UUID id, NewOrdineSingoloPayload body) throws NotFoundException {
+		OrdineSingolo existingSingleOrder = findById(id);
 
-	        OrdineSingolo savedSingleOrder = ordineSingoloRepository.save(existingSingleOrder);
-	    
-	        return savedSingleOrder;
-	    
-	    }
+		User user = userRepository.findById(body.getUserId())
+				.orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
 
-	    public void findByIdAndDelete(UUID id) throws NotFoundException {
-	       OrdineSingolo existingSingleOrder = findById(id);
-	        ordineSingoloRepository.delete(existingSingleOrder);
-	    }
-	    
-	    public OrdineSingolo processCheckout(UUID userId, UUID ordineSingoloId) throws IllegalStateException {
-	        User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-	        OrdineSingolo ordineSingolo = ordineSingoloRepository.findById(ordineSingoloId).orElseThrow(() -> new NotFoundException("Order not found"));
+		List<Prodotto> prodotti = prodottoRepository.findAllById(body.getProdotti());
 
-	        ordineSingolo.checkout();
+		if (prodotti.size() != body.getProdotti().size()) {
+			throw new NotFoundException("Some products were not found");
+		}
 
-	        return ordineSingoloRepository.save(ordineSingolo);
+		double totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
+
+		existingSingleOrder.setUser(user);
+		existingSingleOrder.setProdotti(prodotti);
+		existingSingleOrder.setTotalPrice(totalPrice);
+		existingSingleOrder.setDataOrdine(
+				body.getDataOrdine() != null ? body.getDataOrdine() : existingSingleOrder.getDataOrdine());
+		existingSingleOrder
+				.setOraOrdine(body.getOraOrdine() != null ? body.getOraOrdine() : existingSingleOrder.getOraOrdine());
+
+		OrdineSingolo savedSingleOrder = ordineSingoloRepository.save(existingSingleOrder);
+
+		return savedSingleOrder;
+
+	}
+
+	public void findByIdAndDelete(UUID id) throws NotFoundException {
+		OrdineSingolo existingSingleOrder = findById(id);
+		ordineSingoloRepository.delete(existingSingleOrder);
+	}
+
+	public OrdineSingolo processCheckout(UUID userId, UUID ordineSingoloId) throws IllegalStateException {
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+		OrdineSingolo ordineSingolo = ordineSingoloRepository.findById(ordineSingoloId)
+				.orElseThrow(() -> new NotFoundException("Order not found"));
+
+		ordineSingolo.checkout();
+
+		return ordineSingoloRepository.save(ordineSingolo);
+	}
+
+	public Page<OrdineSingolo> findByMultipleCriteria(String cap, String localita, String comune, Double minPrice, Double maxPrice, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+	    return ordineSingoloRepository.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate, endDate, pageable);
+	}
+	
+
+	public Page<OrdineSingolo> findOrdersByUserId(UUID userId, Pageable pageable) {
+		return ordineSingoloRepository.findByUserId(userId, pageable);
 	    }
 }
