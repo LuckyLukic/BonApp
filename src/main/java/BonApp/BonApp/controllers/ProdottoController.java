@@ -1,5 +1,6 @@
 package BonApp.BonApp.controllers;
 
+import java.util.List;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -16,6 +17,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
+
+import BonApp.BonApp.Enum.Categoria;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewProdottoPayload;
@@ -65,7 +68,7 @@ public class ProdottoController {
     @GetMapping("/partialName")
     public ResponseEntity<Page<Prodotto>> getProdottoByPartialName(@RequestParam String partialName,
             @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "name") String sortBy) {
+            @RequestParam(defaultValue = "nome") String sortBy) {
         Page<Prodotto> prodottoByPartialName = prodottoService.findByPartialName(partialName, page, size, sortBy);
 
         if (prodottoByPartialName.isEmpty()) {
@@ -73,6 +76,22 @@ public class ProdottoController {
         } else {
             return ResponseEntity.ok(prodottoByPartialName);
         }
+    }
+    
+    @GetMapping("/findByCategoria")
+    public ResponseEntity<List<Prodotto>> findByCategoria(@RequestParam Categoria categoria) {
+        List<Prodotto> prodotti = prodottoService.findByCategoria(categoria);
+        return ResponseEntity.ok(prodotti);
+    }
+    
+    @GetMapping("/search")
+    public ResponseEntity<List<Prodotto>> findByCategoriaAndPriceRange(
+            @RequestParam(value = "categoria", required = false) Categoria categoria, 
+            @RequestParam(value = "minPrice", required = false) Double minPrice, 
+            @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+        
+        List<Prodotto> result = prodottoService.findByCategoriaAndPriceRange(categoria, minPrice, maxPrice);
+        return ResponseEntity.ok(result);
     }
 
 }

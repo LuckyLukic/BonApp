@@ -110,7 +110,8 @@ public class UsersService {
 				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
 	}
 
-	public NewPreferiti addProductToFavorites(UUID userId, UUID productId) throws NotFoundException, ForbiddenException {
+	public NewPreferiti addProductToFavorites(UUID userId, UUID productId)
+			throws NotFoundException, ForbiddenException {
 
 		User authenticatedUser = getCurrentUser();
 
@@ -125,11 +126,12 @@ public class UsersService {
 
 		user.getProdottiPreferiti().add(product);
 		userRepository.save(user);
-		
+
 		return new NewPreferiti(userId, productId, "Product successfully added to favorites");
 	}
 
-	public NewPreferiti removeProductFromFavorites(UUID userId, UUID productId) throws NotFoundException, ForbiddenException {
+	public NewPreferiti removeProductFromFavorites(UUID userId, UUID productId)
+			throws NotFoundException, ForbiddenException {
 
 		User authenticatedUser = getCurrentUser();
 
@@ -144,7 +146,7 @@ public class UsersService {
 
 		user.getProdottiPreferiti().remove(product);
 		userRepository.save(user);
-		
+
 		return new NewPreferiti(userId, productId, "Product successfully removed from favorites");
 	}
 
@@ -176,12 +178,12 @@ public class UsersService {
 
 		return topProducts;
 	}
-	
+
 	public void initializeUserCart(UUID userId) {
-	    User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-	    user.initializeCart();
-	    userRepository.save(user);
+		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
+		user.initializeCart();
+		userRepository.save(user);
 	}
-}    
+} 
 	    
 

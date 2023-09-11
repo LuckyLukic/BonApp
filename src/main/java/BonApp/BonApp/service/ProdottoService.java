@@ -10,6 +10,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import BonApp.BonApp.Enum.Categoria;
 import BonApp.BonApp.entities.Ingrediente;
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
@@ -105,8 +106,12 @@ public class ProdottoService {
 		return prodottoRepository.findByNomeContainingIgnoreCase(partialName, prodottiPageable);
 	}
 
-	public List<Prodotto> findProductsByIds(List<UUID> ids) {
-		return prodottoRepository.findAllById(ids);
+	public List<Prodotto> findByCategoria(Categoria categoria) {
+    return prodottoRepository.findByCategoria(categoria);
 	}
+	
+	public List<Prodotto> findByCategoriaAndPriceRange(Categoria categoria, Double minPrice, Double maxPrice) {
+        return prodottoRepository.findByCategoriaAndPriceRange(categoria, minPrice, maxPrice);
+    }
 
 }
