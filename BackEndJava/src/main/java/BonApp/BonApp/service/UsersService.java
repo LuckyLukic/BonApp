@@ -155,11 +155,12 @@ public class UsersService {
 
 		return user.getProdottiPreferiti();
 	}
+	
 
 	public Page<TopFavoritePayload> getTopFavoriteProducts(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
-
+	
 		Page<TopFavoritePayload> topProducts = result.map(row -> {
 			UUID productId = (UUID) row[0];
 			Long favoriteCount = (Long) row[1];
@@ -178,6 +179,7 @@ public class UsersService {
 
 		return topProducts;
 	}
+	
 
 	public void initializeUserCart(UUID userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));

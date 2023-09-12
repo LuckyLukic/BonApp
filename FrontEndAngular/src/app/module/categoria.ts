@@ -1,0 +1,11 @@
+export enum Categoria {
+
+  ANTIPASTO = "ANTIPASTO",
+  PRIMO = "PRIMO",
+  SECONDO = "SECONDO",
+  INSALATA = "INSALATA",
+  CONTORNO = "CONTORNO",
+  DESSERT = "DESSERT",
+  DRINK = "DRINK"
+
+}

@@ -1,0 +1,48 @@
+<nav class="navbar navbar-expand-md bg-body-tertiary sticky-top py-5 mb-3">
+  <div class="container-fluid">
+    <a class="navbar-brand me-5" href="#">MOVIESTARZ</a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+      <ul class="navbar-nav d-flex w-100 justify-content-between">
+        <div class="d-flex column-gap-3">
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page"  routerLinkActive="active"  >Home</a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link active" aria-current="page"  routerLinkActive="active"  >Admin</a>
+        </li>
+      </div>
+      <div class="d-flex">
+        <ng-container *ngIf="!utente; then registerLogin else registrato"></ng-container>
+
+        <ng-template #registerLogin class="d-flex ms-auto align-items-center">
+        <li class="nav-item ms-auto">
+          <a class="nav-link"  routerLinkActive="active">Register</a>
+        </li>
+
+        <span class="align-self-center"> / </span>
+
+        <li class="nav-item">
+          <a class="nav-link"  routerLinkActive="active">Login</a>
+        </li>
+      </ng-template>
+
+      <ng-template class="d-flex" #registrato>
+        <div class="dropdown dropstart align-self-center">
+        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.user?.name}} </button>
+        <ul class="dropdown-menu">
+          <li><a class="dropdown-item active" >Profile</a></li>
+          <li><a class="dropdown-item" >Favourites</a></li>
+
+        </ul>
+      </div>
+        <button type="button" class="btn btn-danger" >Logout</button>
+      </ng-template>
+    </div>
+
+      </ul>
+    </div>
+  </div>
+</nav>

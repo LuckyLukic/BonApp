@@ -14,18 +14,16 @@ import org.springframework.stereotype.Repository;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 
-
-
 @Repository
 public interface UserRepository extends JpaRepository<User, UUID> {
-	
+
 	Optional<User> findByEmail(String email);
+
 	List<User> findByProdottiPreferitiContaining(Prodotto prodotto);
-	
-	
+
 	@Query("SELECT g FROM User u JOIN u.prodottiPreferiti g WHERE u.id = ?1")
-    Page<Prodotto> findProdottiFavoritiByUserId(UUID userId, Pageable pageable);
-	
+	Page<Prodotto> findProdottiFavoritiByUserId(UUID userId, Pageable pageable);
+
 	@Query(value = "SELECT p.id AS prodotto_id, COUNT(upp.user_id) AS favorite_count " +
             "FROM user_prodotti_preferiti upp " +
             "JOIN prodotto p ON upp.prodotto_id = p.id " +
@@ -35,19 +33,11 @@ public interface UserRepository extends JpaRepository<User, UUID> {
                  "FROM user_prodotti_preferiti upp " +
                  "JOIN prodotto p ON upp.prodotto_id = p.id",
     nativeQuery = true)
-	
-	
     Page<Object[]> findTopFavoriteProducts(Pageable pageable);
-    
-    @Query("SELECT u FROM User u JOIN u.indirizzo i WHERE " +
-    	       "(COALESCE(:cap, '') = '' OR i.cap = :cap) AND " +
-    	       "(COALESCE(:localita, '') = '' OR i.localita = :localita) AND " +
-    	       "(COALESCE(:comune, '') = '' OR i.comune = :comune)")
-    	Page<User> findByCapLocalitaAndComune(@Param("cap") String cap, 
-    	                                      @Param("localita") String localita, 
-    	                                      @Param("comune") String comune, 
-    	                                      Pageable pageable);
-}
-	
-	
 
+	@Query("SELECT u FROM User u JOIN u.indirizzo i WHERE " + "(COALESCE(:cap, '') = '' OR i.cap = :cap) AND "
+			+ "(COALESCE(:localita, '') = '' OR i.localita = :localita) AND "
+			+ "(COALESCE(:comune, '') = '' OR i.comune = :comune)")
+	Page<User> findByCapLocalitaAndComune(@Param("cap") String cap, @Param("localita") String localita,
+			@Param("comune") String comune, Pageable pageable);
+}

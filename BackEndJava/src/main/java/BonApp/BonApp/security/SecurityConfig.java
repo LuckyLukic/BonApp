@@ -26,27 +26,28 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		// http.cors(c -> c.disable());
+		http.cors(c -> c.disable());
+      
 		http.csrf(c -> c.disable());
 
 		http.sessionManagement(session -> session.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/prodotti/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzi/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/prodotti/**").permitAll());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordine-singolo/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ingredienti/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
-		
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzo/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/user/**").authenticated());
 
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(corsFilter, JWTAuthFilter.class);
+
 		return http.build();
 	}
 
 	@Bean
 	PasswordEncoder encoder() {
-		return new BCryptPasswordEncoder(11);
+		return new BCryptPasswordEncoder(12);
 	}
-}
+  }

@@ -11,6 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import BonApp.BonApp.Enum.Categoria;
 import BonApp.BonApp.entities.Prodotto;
+import BonApp.BonApp.entities.User;
 
 
 public interface ProdottoRepository extends JpaRepository<Prodotto, UUID> {
@@ -30,4 +31,15 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, UUID> {
 	            @Param("maxPrice") Double maxPrice,
 	            @Param("ingredienteName") String ingredienteName);
 
+	
+//	@Query(value = "SELECT p.id AS prodotto_id, COUNT(upp.user_id) AS favorite_count " +
+//	        "FROM user_prodotti_preferiti upp " +
+//	        "JOIN prodotto p ON upp.prodotto_id = p.id " +
+//	        "GROUP BY p.id " +
+//	        "ORDER BY favorite_count DESC",
+//	    countQuery = "SELECT COUNT(DISTINCT p.id) " +
+//	                 "FROM user_prodotti_preferiti upp " +
+//	                 "JOIN prodotto p ON upp.prodotto_id = p.id",
+//	    nativeQuery = true)
+//	Page<Object[]> findTopFavoriteProducts(Pageable pageable);
 }
