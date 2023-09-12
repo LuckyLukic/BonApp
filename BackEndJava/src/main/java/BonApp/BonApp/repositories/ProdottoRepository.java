@@ -17,15 +17,17 @@ public interface ProdottoRepository extends JpaRepository<Prodotto, UUID> {
 
 	Page<Prodotto> findByNomeContainingIgnoreCase(String partialName, Pageable page);
 
-	List<Prodotto> findByCategoria(Categoria categoria);
 	
-	@Query("SELECT p FROM Prodotto p WHERE " +
-	           "( :categoria IS NULL OR p.categoria = :categoria ) AND " +
-	           "( :minPrice IS NULL OR p.prezzo >= :minPrice ) AND " +
-	           "( :maxPrice IS NULL OR p.prezzo <= :maxPrice )")
-	    List<Prodotto> findByCategoriaAndPriceRange(
+	
+	@Query("SELECT p FROM Prodotto p JOIN p.ingredienti i WHERE " +
+		       "( :categoria IS NULL OR p.categoria = :categoria ) AND " +
+		       "( :minPrice IS NULL OR p.prezzo >= :minPrice ) AND " +
+		       "( :maxPrice IS NULL OR p.prezzo <= :maxPrice ) AND " +
+		       "( :ingredienteName IS NULL OR LOWER(i.nome) LIKE LOWER(CONCAT('%', :ingredienteName, '%')) )")
+	    List<Prodotto> findByCategoriaAndPriceRangeAndIngredienteName(
 	            @Param("categoria") Categoria categoria, 
 	            @Param("minPrice") Double minPrice, 
-	            @Param("maxPrice") Double maxPrice);
+	            @Param("maxPrice") Double maxPrice,
+	            @Param("ingredienteName") String ingredienteName);
 
 }

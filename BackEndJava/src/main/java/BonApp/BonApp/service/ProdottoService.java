@@ -106,12 +106,10 @@ public class ProdottoService {
 		return prodottoRepository.findByNomeContainingIgnoreCase(partialName, prodottiPageable);
 	}
 
-	public List<Prodotto> findByCategoria(Categoria categoria) {
-    return prodottoRepository.findByCategoria(categoria);
-	}
 	
-	public List<Prodotto> findByCategoriaAndPriceRange(Categoria categoria, Double minPrice, Double maxPrice) {
-        return prodottoRepository.findByCategoriaAndPriceRange(categoria, minPrice, maxPrice);
+	
+	public List<Prodotto> findByCriteria(Categoria categoria, Double minPrice, Double maxPrice, String ingredienteName) {
+        return prodottoRepository.findByCategoriaAndPriceRangeAndIngredienteName(categoria, minPrice, maxPrice, ingredienteName);
     }
 
 }

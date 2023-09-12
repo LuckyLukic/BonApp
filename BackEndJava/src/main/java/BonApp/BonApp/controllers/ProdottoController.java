@@ -78,20 +78,15 @@ public class ProdottoController {
         }
     }
     
-    @GetMapping("/findByCategoria")
-    public ResponseEntity<List<Prodotto>> findByCategoria(@RequestParam Categoria categoria) {
-        List<Prodotto> prodotti = prodottoService.findByCategoria(categoria);
-        return ResponseEntity.ok(prodotti);
-    }
     
     @GetMapping("/search")
-    public ResponseEntity<List<Prodotto>> findByCategoriaAndPriceRange(
-            @RequestParam(value = "categoria", required = false) Categoria categoria, 
-            @RequestParam(value = "minPrice", required = false) Double minPrice, 
-            @RequestParam(value = "maxPrice", required = false) Double maxPrice) {
+    public ResponseEntity<List<Prodotto>> getProdottiByCriteria(
+            @RequestParam(required = false) Categoria categoria, 
+            @RequestParam(required = false) Double minPrice, 
+            @RequestParam(required = false) Double maxPrice,
+            @RequestParam(required = false) String ingredienteName) {
         
-        List<Prodotto> result = prodottoService.findByCategoriaAndPriceRange(categoria, minPrice, maxPrice);
-        return ResponseEntity.ok(result);
+        List<Prodotto> prodotti = prodottoService.findByCriteria(categoria, minPrice, maxPrice, ingredienteName);
+        return ResponseEntity.ok(prodotti);
     }
-
 }
