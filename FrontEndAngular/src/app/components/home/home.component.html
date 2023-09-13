@@ -1,38 +1,36 @@
-<ng-container *ngIf="menu; then showfood; else sorry"></ng-container>
+<ng-container *ngIf="dishesList; then showfood; else sorry"></ng-container>
 
 <ng-template #showfood>
+
   <div class="container-fluid">
     <div class="row row-gap-3">
-      <div class="cardwrapper col-3" *ngFor="let singleDish of menu">
+
+      <div class="cardwrapper col-3" *ngFor="let singleDish of dishesList">
         <div class="card h-100">
-          <img
-            src="{{ singleDish.imgUrl }}"
-            class="card-img-top"
-            alt="movie poster"
-          />
+          <img src={{singleDish.imgUrl}} alt="ciccio">
           <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">{{ singleDish.nome }}</h5>
+            <h5 class="card-title">{{ singleDish.nome}}</h5>
             <div class="d-flex flex-column">
               <p class="card-text mb-2">prezzo: {{ singleDish.prezzo }}</p>
               <a
-
+                [routerLink]="['/dishes', singleDish.id]"
                 class="btn btn-primary mb-2"
                 >DETAIL</a
               >
 
-              <!-- <ng-container *ngIf="utente">
+              <ng-container *ngIf="utente">
                 <ng-container
-                  *ngIf="favoriteDishes; then movies; else noMovies"
+                  *ngIf="favoriteDishes; then dishes; else noDishes"
                 ></ng-container>
 
-                <ng-template #movies>
+                <ng-template #dishes>
                   <div
-                    *ngIf="checkMatch(singleMovie.id) === true; else noMovies"
+                    *ngIf="checkMatch(singleDish.id) === true; else noDishes"
                   >
                     <button
                       class="btn btn-danger w-100"
                       type="button"
-                      (click)="removeFavorite(singleMovie.id)"
+                      (click)="removeFavorite(singleDish.id)"
 
                     >
                       REMOVE FROM FAVORITES
@@ -40,17 +38,17 @@
                   </div>
                 </ng-template>
 
-                <ng-template #noMovies>
+                <ng-template #noDishes>
                   <button
                     class="btn btn-success w-100"
                     type="button"
-                    (click)="addFavorite(singleMovie.id)"
+                    (click)="addFavorite(singleDish.id)"
                   >
                     ADD TO FAVORITES
                   </button>
                 </ng-template>
 
-              </ng-container> -->
+              </ng-container>
 
             </div>
           </div>

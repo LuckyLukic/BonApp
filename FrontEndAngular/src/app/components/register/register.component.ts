@@ -1,8 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, FormGroup, Validators} from '@angular/forms';
+import { FormBuilder, Validators,FormGroup} from '@angular/forms';
 import { Utente } from 'src/app/module/utente.interface';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import { catchError } from 'rxjs/operators';
+import { of } from 'rxjs';
+
 
 
 @Component({
@@ -10,25 +13,8 @@ import { AuthService } from 'src/app/service/auth.service';
   templateUrl: './register.component.html',
   styleUrls: ['./register.component.scss']
 })
-export class RegisterComponent implements OnInit {
-  pattern = '^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$';
-  newUser!: Utente;
 
-  registerForm = this.builder.group({
-    username: ['', [Validators.required, Validators.minLength(8)]],
-    name: ['', Validators.required],
-    surname: ['', Validators.required],
-    indirizzo: this.builder.group({
-      via: ['', Validators.required],
-      civico: ['', Validators.required],
-      localita: ['', Validators.required],
-      cap: ['', Validators.required],
-      comune: ['', Validators.required],
-      provincia: ['', Validators.required],
-    }),
-    email: ['', [Validators.required, Validators.email]],
-    password: ['', [Validators.required, Validators.pattern(this.pattern)]],
-  });
+export class RegisterComponent implements OnInit {
 
   constructor(
     private builder: FormBuilder,
@@ -36,24 +22,50 @@ export class RegisterComponent implements OnInit {
     private route: Router
   ) {}
 
+  pattern = '^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$';
+  newUser!: Utente;
+
+  registerForm = this.builder.group({
+    newUserPayload: this.builder.group({
+      username: ['', [Validators.required, Validators.minLength(8)]],
+      name: ['', Validators.required],
+      surname: ['', Validators.required],
+      email: ['', [Validators.required, Validators.email]],
+      password: ['', [Validators.required, Validators.pattern(this.pattern)]],
+    }),
+    newIndirizzoPayload: this.builder.group({
+      cap: ['', Validators.required],
+      civico: ['', Validators.required],
+      localita: ['', Validators.required],
+      via: ['', Validators.required],
+      comune: ['', Validators.required],
+      provincia: ['', Validators.required],
+    }),
+  });
+
+
+
   ngOnInit(): void {}
 
   onSubmit() {
-    this.newUser = this.registerForm.value as Utente;
 
-    try {
-      this.authSrv.registra(this.newUser).subscribe(() => {
-        this.registerForm.reset();
-        this.route.navigate(['/login']);
-      }, (error: any) => {
+  this.newUser = this.registerForm.value as Utente;
+
+
+  this.authSrv.registra(this.newUser)
+    .pipe(
+      catchError((error) => {
         if (error.status === 400) {
-          alert('email already registered');
-          this.route.navigate(['/register']);
+          alert('Email already registered');
+          return of(null);
         }
-      });
-    } catch (error: any) {
-      console.error('An unexpected error occurred', error);
-    }
+        throw error;
+      })
+    )
+    .subscribe(() => {
+      this.registerForm.reset();
+      this.route.navigate(['/login']);
+    });
   }
 }
 

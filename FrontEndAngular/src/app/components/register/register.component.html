@@ -1,52 +1,56 @@
 <div class="row d-flex justify-content-center">
-  <form class="col-6 mb-5 "[formGroup]="registerForm" (ngSubmit)="onSubmit()">
+  <form class="col-6 mb-5" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div formGroupName="newUserPayload">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" aria-describedby="username" formControlName="username" placeholder="required, minimum 8 characters">
+      <div *ngIf="registerForm.get('newUserPayload.username')?.touched && registerForm.get('newUserPayload.username')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newUserPayload.username')!.errors!['required']">this field is required</div>
+        <div *ngIf="registerForm.get('newUserPayload.username')!.errors!['minlength']"> minimum length 8 characters</div>
+      </div>
+    </div>
     <div class="mb-3">
       <label for="name" class="form-label">Nome</label>
       <input type="text" class="form-control" id="name" aria-describedby="name" formControlName="name" placeholder="required">
-      <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="alert alert-danger">
+      <div *ngIf="registerForm.get('newUserPayload.surname')?.touched && registerForm.get('newUserPayload.surname')?.invalid" class="alert alert-danger">
         this field is required
       </div>
-    </div><div class="mb-3">
+    </div>
+    <div class="mb-3">
       <label for="surname" class="form-label">Cognome</label>
       <input type="text" class="form-control" id="surname" aria-describedby="surname" formControlName="surname"  placeholder="required">
       <div *ngIf="registerForm.get('surname')?.touched && registerForm.get('surname')?.invalid" class="alert alert-danger">
         this field is required
       </div>
     </div>
-    <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
-      <input type="text" class="form-control" id="username" aria-describedby="username" formControlName="username" placeholder="required, minimum 8 characters">
-      <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid" class="alert alert-danger">
-        <div *ngIf="registerForm.get('username')!.errors!['required']">this field is required</div>
-        <div *ngIf="registerForm.get('username')!.errors!['minlength']"> minimum length 8 characters</div>
-      </div>
-    </div>
+
     <div class="mb-3">
       <label for="exampleInputEmail1" class="form-label">Email address</label>
       <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="email">
-      <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="alert alert-danger">
-        <div *ngIf="registerForm.get('email')!.errors!['required']">this field is required</div>
-        <div *ngIf="registerForm.get('email')!.errors!['email']"> email format not valid</div>
+      <div *ngIf="registerForm.get('newUserPayload.email')?.touched && registerForm.get('newUserPayload.email')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newUserPayload.email')!.errors!['required']">this field is required</div>
+        <div *ngIf="registerForm.get('newUserPayload.email')!.errors!['email']"> email format not valid</div>
       </div>
 
     </div>
     <div class="mb-3">
       <label for="password" class="form-label">Password</label>
       <input type="password" class="form-control" id="password" aria-describedby="password" formControlName="password" placeholder="min 8 characters, 1 capitol letter, 1 special symbol, 1 number">
-      <div *ngIf="registerForm.get('password')?.touched && registerForm.get('password')?.invalid" class="alert alert-danger">
-        <div *ngIf="registerForm.get('password')!.errors!['required']">this field is required</div>
-        <div *ngIf="registerForm.get('password')!.errors!['pattern']"> password format is wrong: min 8 characters, 1 capitol letter, 1 special symbol, 1 number</div>
+      <div *ngIf="registerForm.get('newUserPayload.password')?.touched && registerForm.get('newUserPayload.password')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newUserPayload.password')!.errors!['required']">this field is required</div>
+        <div *ngIf="registerForm.get('newUserPayload.password')!.errors!['pattern']"> password format is wrong: min 8 characters, 1 capital letter, 1 special symbol, 1 number</div>
       </div>
     </div>
 
-    <div formGroupName="indirizzo">
-      <div class="mb-3">
-        <label for="via" class="form-label">Via</label>
-        <input type="text" class="form-control" id="via" formControlName="via" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.via')?.touched && registerForm.get('indirizzo.via')?.invalid" class="alert alert-danger">
-          this field is required
+    </div>
+      <div formGroupName="newIndirizzoPayload">
+        <div class="mb-3">
+          <label for="via" class="form-label">Via</label>
+          <input type="text" class="form-control" id="via" formControlName="via" placeholder="required">
+          <div *ngIf="registerForm.get('newIndirizzoPayload.via')?.touched && registerForm.get('newIndirizzoPayload.via')?.invalid" class="alert alert-danger">
+            this field is required
+          </div>
         </div>
-      </div>
       <div class="mb-3">
         <label for="civico" class="form-label">Civico</label>
         <input type="text" class="form-control" id="civico" formControlName="civico" placeholder="required">

@@ -2,6 +2,7 @@ import { Injectable } from '@angular/core';
 import { environment } from 'src/environments/environment';
 import { HttpClient } from '@angular/common/http';
 import { Dish } from '../module/dish.interface';
+import { Favorite } from '../module/favorite.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,24 +14,26 @@ export class MenuService {
   constructor(private http: HttpClient) { }
 
   getMenu() {
-    return this.http.get<Dish[]>(this.url+"prodotti")
+    return this.http.get<Dish>(this.url+"prodotti")
 
   }
 
-  // getMovieDetail (id:number) {
-  //   return this.http.get<Movie>(this.url+`movies-popular/${id}`)
+  getDishDetail (id:number) {
+    return this.http.get<Dish>(this.url+`prodotti/${id}`)
 
-  // }
+  }
 
-  // getFavourites (userId:number) {
-  //   return this.http.get<Favourite[]>(this.url+`favorites?userId=${userId}`)
-  //   }
+  getFavorites (userId:number) {
+    return this.http.get<Favorite[]>(this.url+`userId=${userId}/favorites`)
+    }
 
-  // addFavourite (favorite: Favourite) {
-  //   return this.http.post(this.url+"favorites", favorite)
-  //   }
+  addFavorite (favorite: Favorite) {
+    return this.http.post(this.url+`users/add-favorites`, favorite)
+    }
 
-  // removeFavorite (favoriteId:number) {
-  //   return this.http.delete(this.url+`favorites/${favoriteId}`)
-  // }
+  removeFavorite (favoriteId:number) {
+    return this.http.delete(this.url+`favorites/${favoriteId}`)
+  }
+
 }
+

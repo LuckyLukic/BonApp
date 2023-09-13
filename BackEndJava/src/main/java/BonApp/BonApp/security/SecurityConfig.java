@@ -26,7 +26,6 @@ public class SecurityConfig {
 	@Bean
 	SecurityFilterChain securityFilterChain(HttpSecurity http) throws Exception {
 
-		http.cors(c -> c.disable());
       
 		http.csrf(c -> c.disable());
 
@@ -37,8 +36,10 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordine-singolo/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ingredienti/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzo/**").authenticated());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/user/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzi/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users").permitAll());
+	
+		
 
 		http.addFilterBefore(jwtFilter, UsernamePasswordAuthenticationFilter.class);
 		http.addFilterBefore(corsFilter, JWTAuthFilter.class);

@@ -11,7 +11,6 @@ import org.springframework.util.AntPathMatcher;
 import org.springframework.web.filter.OncePerRequestFilter;
 
 import BonApp.BonApp.entities.User;
-import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.exceptions.UnauthorizedException;
 import BonApp.BonApp.service.UsersService;
 import jakarta.servlet.FilterChain;
@@ -31,25 +30,37 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	    protected void doFilterInternal(HttpServletRequest request, HttpServletResponse response, FilterChain filterChain)
 	            throws ServletException, IOException {
 	        String authHeader = request.getHeader("Authorization");
-	        if (authHeader == null || !authHeader.startsWith("Bearer "))
-	            throw new UnauthorizedException("Per favore passa il token nell'authorization header");
+	        if (authHeader == null || !authHeader.startsWith("Bearer ")) {
+	            if (shouldNotFilter(request)) {
+	                filterChain.doFilter(request, response);
+	                return;
+	            } else {
+	                throw new UnauthorizedException("Per favore passa il token nell'authorization header");
+	            }
+	        }
+
 	        String token = authHeader.substring(7);
 	        System.out.println("TOKEN = " + token);
 	        jwttools.verifyToken(token);
 	        String id = jwttools.extractSubject(token);
 	        User currentUser = uS.findById(UUID.fromString(id));
 
+	        if (currentUser == null) {
+	            throw new UnauthorizedException("User not found");
+	        }
+
 	        UsernamePasswordAuthenticationToken authToken = new UsernamePasswordAuthenticationToken(currentUser, null,
 	                currentUser.getAuthorities());
 	        SecurityContextHolder.getContext().setAuthentication(authToken);
 	        filterChain.doFilter(request, response);
-
 	    }
 
 	    @Override
 	    protected boolean shouldNotFilter(HttpServletRequest request) {
 	        String path = request.getServletPath();
-	        return new AntPathMatcher().match("/auth/**", path) || new AntPathMatcher().match("/prodotti/**", path);
+	        return new AntPathMatcher().match("/auth/**", path)
+	                || new AntPathMatcher().match("/prodotti/**", path)
+	                || new AntPathMatcher().match("/reviews/**", path)
+	                || new AntPathMatcher().match("/users", path);
 	    }
-
-}
+	}

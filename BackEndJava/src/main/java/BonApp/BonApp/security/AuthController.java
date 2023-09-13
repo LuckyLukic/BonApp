@@ -13,9 +13,12 @@ import org.springframework.web.bind.annotation.RestController;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.UnauthorizedException;
 import BonApp.BonApp.payload.LoginSuccessfullPayload;
+import BonApp.BonApp.payload.NewIndirizzoPayload;
 import BonApp.BonApp.payload.NewUserPayload;
+import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.UserLoginPayload;
 import BonApp.BonApp.service.UsersService;
+import jakarta.validation.Valid;
 
 
 
@@ -34,11 +37,10 @@ public class AuthController {
 
 	@PostMapping("/register")
 	@ResponseStatus(HttpStatus.CREATED)
-	public User saveUser(@RequestBody @Validated NewUserPayload body) {
-
-		body.setPassword(bcrypt.encode(body.getPassword()));
-		User created = userService.save(body);
-		return created;
+	public User saveUser(@RequestBody @Valid RegistrationPayload registrationPayload) {
+		registrationPayload.getNewUserPayload().setPassword(bcrypt.encode(registrationPayload.getNewUserPayload().getPassword()));
+	    User created = userService.save(registrationPayload);
+	    return created;
 	}
 
 	@PostMapping("/login")

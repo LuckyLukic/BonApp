@@ -3,10 +3,10 @@ import { HttpClient } from '@angular/common/http';
 import { AuthData } from '../module/auth-data.interface';
 import { environment } from 'src/environments/environment';
 import { Router } from '@angular/router';
+import { Utente } from '../module/utente.interface';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
-import { Utente } from '../module/utente.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -22,7 +22,7 @@ export class AuthService {
   constructor(private http: HttpClient, private route: Router) {}
 
   login(data: { email: string; password: string }) {
-    return this.http.post<AuthData>(`${this.baseURL}login`, data).pipe(
+    return this.http.post<AuthData>(`${this.baseURL}auth/login`, data).pipe(
       tap((data) => {
         console.log(data);
         this.authSubj.next(data);
@@ -51,7 +51,7 @@ export class AuthService {
   }
 
   registra(data: Partial<Utente>) {
-    return this.http.post(`${this.baseURL}register`, data);
+    return this.http.post(`${this.baseURL}auth/register`, data);
   }
 
   restore() {

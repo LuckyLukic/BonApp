@@ -11,29 +11,31 @@ import { NavbarComponent } from './components/navbar/navbar.component';
 import { HomeComponent } from './components/home/home.component';
 import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
+import { FavoritesComponent } from './components/favorites/favorites.component';
+import { SingleDishComponent } from './components/single-dish/single-dish.component';
 
-// const route: Route[] = [
-//   {
-//     path: "",
-//     component: HomeComponent
+ const route: Route[] = [
+   {
+     path: "",
+     component: HomeComponent
+   },
+  {
+    path: "dishes/:id",
+    component: SingleDishComponent,
+    canActivate: [AuthGuardGuard]
+  },
+  // {path: "users",
+  // component: UsersComponent, children:[
+  //   {path:':id', component: SingleUserComponent}
+  // ]
 //   },
-//   {
-//     path: "movies/:id",
-//     component: SingleMovieComponent,
-//     canActivate: [AuthGuardGuard]
-//   },
-//   {path: "users",
-//   component: UsersComponent, children:[
-//     {path:':id', component: SingleUserComponent}
-//   ]
-//   },
-//   {path: "register",
-//    component: RegisterComponent
-//   },
-//   {
-//     path: "login",
-//     component: LoginComponent
-//   },
+   {path: "register",
+    component: RegisterComponent
+   },
+   {
+     path: "login",
+     component: LoginComponent
+   }
 //   {
 //     path: "ownprofile/:id",
 //     component: OwnProfileComponent,
@@ -49,7 +51,7 @@ import { RegisterComponent } from './components/register/register.component';
 //     component: Error404Component
 //   }
 
-// ]
+ ]
 
 
 @NgModule({
@@ -59,10 +61,12 @@ import { RegisterComponent } from './components/register/register.component';
     LoginComponent,
     RegisterComponent,
     HomeComponent,
+    FavoritesComponent,
+
   ],
   imports: [
     BrowserModule,
-    // RouterModule.forRoot(route),
+    RouterModule.forRoot(route),
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule

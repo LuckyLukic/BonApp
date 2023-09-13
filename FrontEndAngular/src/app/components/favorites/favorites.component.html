@@ -1,0 +1,45 @@
+<ng-container *ngIf="favoriteDishes; then showdishes; else sorry"></ng-container>
+
+<ng-template #showdishes>
+  <div class="container-fluid">
+    <div class="row row-gap-3">
+      <div class="cardwrapper col-3" *ngFor="let singleDish of preferedDishList">
+        <div class="card h-100">
+          <img
+            src="{{ singleDish.imgUrl}}"
+            class="card-img-top"
+            alt="movie poster"
+          />
+          <div class="card-body d-flex flex-column justify-content-between">
+            <h5 class="card-title">Title:{{ singleDish.nome }}</h5>
+            <div class="d-flex flex-column">
+              <p class="card-text mb-2">Id: {{ singleDish.descrizione }}</p>
+              <p class="card-text mb-2">Popularity: {{ singleDish.prezzo }}</p>
+
+
+              <a
+                [routerLink]="['/prodotti', singleDish.id]"
+                class="btn btn-primary mb-2"
+                >DETAIL</a>
+
+                <button
+                      class="btn btn-danger w-100"
+                      type="button"
+                      (click)="removeFavorite(singleDish.id)"
+                    >
+                      REMOVE
+                    </button>
+
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</ng-template>
+
+<ng-template #sorry>
+  <div class="row d-flex justify-content-center align-items-center col-4">
+    Sorry, something is wrong. Please try later!
+  </div>
+</ng-template>
