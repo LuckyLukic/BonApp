@@ -1,34 +1,36 @@
-<ng-container *ngIf="favoriteDishes; then showdishes; else sorry"></ng-container>
+<ng-container *ngIf="topFavoriteDishes; then showdishes; else sorry"></ng-container>
 
 <ng-template #showdishes>
   <div class="container-fluid">
     <div class="row row-gap-3">
-      <div class="cardwrapper col-3" *ngFor="let singleDish of preferedDishList">
+      <div class="cardwrapper col-3" *ngFor="let singleDish of topFavoriteDishes">
         <div class="card h-100">
           <img
-            src="{{ singleDish.imgUrl}}"
+            src="{{ singleDish.prodotto.imgUrl}}"
             class="card-img-top"
             alt="movie poster"
           />
           <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Title:{{ singleDish.nome }}</h5>
+            <h5 class="card-title">Title:{{ singleDish.prodotto.nome}}</h5>
+            <h5 class="card-title">Numero Ratings:{{ singleDish.favoriteCount}}</h5>
             <div class="d-flex flex-column">
-              <p class="card-text mb-2">Id: {{ singleDish.descrizione }}</p>
-              <p class="card-text mb-2">Popularity: {{ singleDish.prezzo }}</p>
+              <ng-container *ngIf="singleDish.prodotto.ingredienti.length > 0">
+                <div *ngFor="let ingredient of singleDish?.prodotto?.ingredienti">
+                  <!-- Assuming each ingredient object has a property called 'name' -->
+
+                  <p class="card-text mb-2">Ingrediente: {{ getIngredientName(ingredient)}}</p>
+
+                </div>
+              </ng-container>
+
+              <p class="card-text mb-2">Descrizione: {{ singleDish.prodotto.descrizione }}</p>
 
 
-              <a
+
+              <!-- <a
                 [routerLink]="['/prodotti', singleDish.id]"
                 class="btn btn-primary mb-2"
-                >DETAIL</a>
-
-                <button
-                      class="btn btn-danger w-100"
-                      type="button"
-                      (click)="removeFavorite(singleDish.id)"
-                    >
-                      REMOVE
-                    </button>
+                >DETAIL</a> -->
 
             </div>
           </div>

@@ -25,6 +25,10 @@ public class Review {
     @GeneratedValue
     private UUID id;
     
+    
+    @Column(nullable = false, length = 100)
+    private String title;
+    
     @Column(nullable = false, length = 1000)
     private String comment;
     
@@ -41,7 +45,11 @@ public class Review {
     private String username;
     private LocalDate reviewDate;
 
-	public Review(String comment, Integer rating, User user) {
+	public Review(String title, String comment, Integer rating, User user) {
+		
+		if (title == null) {
+            throw new IllegalArgumentException("Il titolo non può essere nullo");
+        }
 		
 		if (comment == null) {
             throw new IllegalArgumentException("Il commento non può essere nullo");
@@ -54,6 +62,7 @@ public class Review {
 		if(rating < 1 || rating > 5) {
             throw new IllegalArgumentException("Rating must be between 1 and 5");
 		}
+		this.title = title;
 		this.comment = comment;
 		this.rating = rating;
 	

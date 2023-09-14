@@ -32,6 +32,7 @@ public class ReviewService {
 	public Review save(NewReviewPayload body) throws NotFoundException {
 		User authenticatedUser = userService.getCurrentUser();
 		Review review = new Review();
+		review.setTitle(body.getTitle());
 		review.setComment(body.getComment());
 		review.setRating(body.getRating());
 		review.setUser(authenticatedUser);
@@ -59,7 +60,7 @@ public class ReviewService {
 		if (!existingReview.getUser().getId().equals(currentUser.getId())) {
 			throw new ForbiddenException("User not authorized to modify this review");
 		}
-
+		existingReview.setTitle(body.getTitle());
 		existingReview.setComment(body.getComment());
 		existingReview.setRating(body.getRating());
 		existingReview.setUsername(currentUser.getUsername());

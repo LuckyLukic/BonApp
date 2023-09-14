@@ -12,11 +12,12 @@ import { Favorite } from 'src/app/module/favorite.interface';
   styleUrls: ['./home.component.scss']
 })
 export class HomeComponent implements OnInit {
-  dishesList!: Dish[];
+  dishesList: Dish[] = [];
 
   utente!: Partial<Utente>;
   favoriteDishes!: Favorite[];
   singleDish!:Favorite;
+
 
   constructor(
     private dishes: MenuService,
@@ -35,9 +36,8 @@ export class HomeComponent implements OnInit {
       }
     });
 
-
-
-    this.dishes.getMenu().subscribe((allDishes) => {
+    this.dishes.getMenu().subscribe((allDishes: Dish) => {
+      console.log(allDishes);
       this.dishesList = allDishes.content;
     });
   }
@@ -50,19 +50,20 @@ export class HomeComponent implements OnInit {
 
   checkMatch(id:string): boolean {
 
-    return this.favoriteDishes.some((element) => element.dishId===id)
+    return this.favoriteDishes.some((element) => element.prodotto.id===id)
 
   }
 
   addFavorite(dishId: string): void {
-    const favorite = {
-      dishId: dishId,
-      userId: this.utente.id
-    }
-
-    if (favorite.userId) {
-      this.dishes.addFavorite(favorite).subscribe(() => {
-        this.favoriti(favorite.userId!);
+    const favorite: Favorite = {
+      prodotto: { id: dishId } as Dish, // Assuming Dish has an id property of string type
+      userId: this.utente.id,
+      favoriteCount: 0,  // You need to provide a valid count here
+      content: []
+    };
+      if (favorite.userId) {
+        this.dishes.addFavorite(favorite).subscribe(() => {
+          this.favoriti(favorite.userId!);
       });
     }
   }
@@ -80,7 +81,7 @@ export class HomeComponent implements OnInit {
   }
 
   findId(id: string): string | null {
-    const myDish = this.favoriteDishes.find((element) => element.dishId === id);
+    const myDish = this.favoriteDishes.find((element) => element.prodotto.id === id);
     return myDish?.id ?? null;
   }
 }

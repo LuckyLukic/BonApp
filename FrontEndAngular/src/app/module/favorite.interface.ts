@@ -1,5 +1,9 @@
+import { Dish } from "./dish.interface";
+
 export interface Favorite {
-    dishId: string;
-    userId: string | null | undefined;
-    id?: string | null;
+  content: Favorite[];
+    prodotto: Dish
+    favoriteCount: number;
+    userId?: string | null | undefined;
+    id?: string
 }

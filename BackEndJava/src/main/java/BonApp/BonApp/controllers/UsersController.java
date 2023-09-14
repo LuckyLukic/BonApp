@@ -23,7 +23,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
-import BonApp.BonApp.payload.NewIndirizzoPayload;
+
 import BonApp.BonApp.payload.NewPreferiti;
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.RegistrationPayload;

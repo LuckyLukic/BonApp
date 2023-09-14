@@ -14,6 +14,8 @@ import lombok.Setter;
 @AllArgsConstructor
 public class NewReviewPayload {
 
+	@NotNull(message = "il titolo e' obbligatorio")
+	private String title;
 	@NotNull(message = "Il commento e' obbligatorio")
 	private String comment;
 	@NotNull(message = "Il rating e' obbligatorio")

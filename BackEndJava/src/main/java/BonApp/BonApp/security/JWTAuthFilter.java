@@ -61,6 +61,6 @@ public class JWTAuthFilter extends OncePerRequestFilter {
 	        return new AntPathMatcher().match("/auth/**", path)
 	                || new AntPathMatcher().match("/prodotti/**", path)
 	                || new AntPathMatcher().match("/reviews/**", path)
-	                || new AntPathMatcher().match("/users", path);
+	                || new AntPathMatcher().match("/users/top-favorites", path);
 	    }
 	}

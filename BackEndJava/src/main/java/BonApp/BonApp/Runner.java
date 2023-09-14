@@ -147,6 +147,7 @@ public class Runner implements CommandLineRunner{
 	              for (int j = 0; j < reviewCount; j++) {
 	                  Review review = new Review();
 	                  review.setUser(user);
+	                  review.setTitle(faker.lorem().word());
 	                  review.setComment(faker.lorem().paragraph());
 	                  review.setReviewDate(LocalDate.now());
 	                  review.setRating(faker.number().numberBetween(1, 6));

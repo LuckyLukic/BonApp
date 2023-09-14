@@ -13,6 +13,7 @@ import { LoginComponent } from './components/login/login.component';
 import { RegisterComponent } from './components/register/register.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
 import { SingleDishComponent } from './components/single-dish/single-dish.component';
+import { ReviewsComponent } from './components/reviews/reviews.component';
 
  const route: Route[] = [
    {
@@ -35,17 +36,22 @@ import { SingleDishComponent } from './components/single-dish/single-dish.compon
    {
      path: "login",
      component: LoginComponent
-   }
+   },
 //   {
 //     path: "ownprofile/:id",
 //     component: OwnProfileComponent,
 //     canActivate: [AuthGuardGuard],
 //   },
-//   {
-//     path: "favorites/:id",
-//     component: FavoritesComponent,
-//     canActivate: [AuthGuardGuard]
-//   },
+   {
+     path: "top-favoriti",
+     component: FavoritesComponent,
+
+   },
+   {
+    path: "all-reviews",
+    component: ReviewsComponent,
+
+  }
 //   {
 //     path: "**",
 //     component: Error404Component
@@ -62,6 +68,7 @@ import { SingleDishComponent } from './components/single-dish/single-dish.compon
     RegisterComponent,
     HomeComponent,
     FavoritesComponent,
+    ReviewsComponent,
 
   ],
   imports: [

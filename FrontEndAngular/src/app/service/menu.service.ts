@@ -27,6 +27,10 @@ export class MenuService {
     return this.http.get<Favorite[]>(this.url+`userId=${userId}/favorites`)
     }
 
+  getTopFavorites () {
+    return this.http.get<Favorite>(this.url+`users/top-favorites`)
+  }
+
   addFavorite (favorite: Favorite) {
     return this.http.post(this.url+`users/add-favorites`, favorite)
     }
