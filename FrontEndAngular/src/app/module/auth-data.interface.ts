@@ -1,11 +1,25 @@
+import { Utente } from "./utente.interface";
+
 export interface AuthData {
   accessToken: string;
-  user: {
-  "name": string | null
-  "surname": string |null,
-  "username": string |null,
-  "email": string |null,
-  "id": number |null
+  newUserPayload: {
+    "username": string | null,
+    "name": string | null,
+    "surname": string | null,
+    "email": string | null,
+    "password": string | null,
 
-  }
+    };
+
+  newIndirizzoPayload: {
+    "cap": string | null,
+    "civico": string | null,
+    "localita": string | null,
+    "via": string | null,
+    "comune": string | null,
+    "provincia": string | null,
+
+  };
+
+  "id"?: string | null
 }

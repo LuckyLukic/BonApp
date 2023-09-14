@@ -8,6 +8,6 @@ export interface Dish {
   "categoria" : Categoria;
   "ingredienti" : String[];
   "imgUrl" : String;
-  "id" : number;
+  "id" : string;
 
 }

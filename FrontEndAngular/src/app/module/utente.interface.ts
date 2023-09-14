@@ -1,5 +1,4 @@
 
-
 export interface Utente {
 
   newUserPayload: {
@@ -8,7 +7,7 @@ export interface Utente {
     "surname": string | null,
     "email": string | null,
     "password": string | null,
-    "id"?: number | null
+
     };
 
   newIndirizzoPayload: {
@@ -18,7 +17,9 @@ export interface Utente {
     "via": string | null,
     "comune": string | null,
     "provincia": string | null,
-    "id"?: number | null
+
   };
+
+  "id"?: string | null
 
 }

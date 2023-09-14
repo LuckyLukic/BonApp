@@ -12,14 +12,14 @@ import { ActivatedRoute } from '@angular/router';
 export class SingleDishComponent implements OnInit {
 
   dish!: Dish
-  myId!: number
+  myId!: string
 
 
   constructor(private dishes: MenuService, private route: ActivatedRoute ) { }
 
   ngOnInit(): void {
     if(this.route.snapshot.paramMap.get('id')) {
-      this.myId = parseInt(this.route.snapshot.paramMap.get('id')!)
+      this.myId = this.route.snapshot.paramMap.get('id')!
       this.dishes.getDishDetail(this.myId).subscribe((data:Dish)=> {
         this.dish = data
         console.log(this.dish)

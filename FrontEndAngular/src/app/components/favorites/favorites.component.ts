@@ -12,24 +12,23 @@ import { AuthData } from 'src/app/module/auth-data.interface';
 })
 export class FavoritesComponent implements OnInit {
 
-  user!: AuthData | null;
+  utente!: Partial<Utente>;
   favoriteDishes!: Favorite[];
   menu!: Dish[];
   preferedDishList: Dish[] = [];
   constructor(private dishes: MenuService, private authSrv: AuthService) { }
 
   ngOnInit(): void {
-    this.authSrv.user$.subscribe((userData) => {
-      if (userData) {
-        this.user = userData; // Update the user property with the correct user data
-      if (this.user?.user?.id !== null) {
-        this.favoriti(this.user.user.id);
+    this.authSrv.user$.subscribe((_utente) => {
+      if (_utente) {
+        this.utente = _utente;
+
+        this.favoriti(this.utente.id!);
       }
-    }
     });
   }
 
-  favoriti(id: number): void {
+  favoriti(id: string): void {
     this.dishes.getFavorites(id).subscribe((data: Favorite[]) => {
       this.favoriteDishes = data;
       for (let dish of this.favoriteDishes) {
@@ -40,7 +39,7 @@ export class FavoritesComponent implements OnInit {
     });
   }
 
-  removeFavorite(id:number):void {
+  removeFavorite(id:string):void {
     const realId = this.findId(id)
 
     if(realId) {
@@ -50,7 +49,7 @@ export class FavoritesComponent implements OnInit {
   }
   }
 
-  findId(id:number): number | null {
+  findId(id:string): string | null {
 
     const myDish = this.favoriteDishes.find(element =>
       element.dishId===id);

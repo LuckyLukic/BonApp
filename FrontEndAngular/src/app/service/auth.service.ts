@@ -19,7 +19,9 @@ export class AuthService {
   user$ = this.authSubj.asObservable();
   timeOut: any;
 
-  constructor(private http: HttpClient, private route: Router) {}
+  constructor(private http: HttpClient, private route: Router) {
+    this.restore()
+  }
 
   login(data: { email: string; password: string }) {
     return this.http.post<AuthData>(`${this.baseURL}auth/login`, data).pipe(

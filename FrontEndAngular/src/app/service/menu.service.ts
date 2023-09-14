@@ -18,12 +18,12 @@ export class MenuService {
 
   }
 
-  getDishDetail (id:number) {
+  getDishDetail (id:string) {
     return this.http.get<Dish>(this.url+`prodotti/${id}`)
 
   }
 
-  getFavorites (userId:number) {
+  getFavorites (userId:string) {
     return this.http.get<Favorite[]>(this.url+`userId=${userId}/favorites`)
     }
 
@@ -31,7 +31,7 @@ export class MenuService {
     return this.http.post(this.url+`users/add-favorites`, favorite)
     }
 
-  removeFavorite (favoriteId:number) {
+  removeFavorite (favoriteId:string) {
     return this.http.delete(this.url+`favorites/${favoriteId}`)
   }
 

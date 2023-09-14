@@ -31,14 +31,14 @@
 
       <ng-template class="d-flex" #registrato>
         <div class="dropdown dropstart align-self-center">
-        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.user?.name}} </button>
+        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.newUserPayload?.name}} </button>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item active" >Profile</a></li>
           <li><a class="dropdown-item" >Favourites</a></li>
 
         </ul>
       </div>
-        <button type="button" class="btn btn-danger" >Logout</button>
+        <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
       </ng-template>
     </div>
 

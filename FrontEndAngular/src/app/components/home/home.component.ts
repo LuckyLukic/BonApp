@@ -25,33 +25,39 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
+
     this.authSrv.user$.subscribe((_utente) => {
       if (_utente) {
-        this.utente = _utente.user;
-
-        this.favoriti(this.utente.newIndirizzoPayload?.id)
+        this.utente = _utente;
+        if (this.utente.id !== null && this.utente.id !== undefined) {
+          this.favoriti(this.utente.id);
+        }
       }
     });
+
+
 
     this.dishes.getMenu().subscribe((allDishes) => {
       this.dishesList = allDishes.content;
     });
   }
 
-  favoriti(id: number): void {
+  favoriti(id: string): void {
     this.dishes.getFavorites(id).subscribe((data: Favorite[]) => {
       this.favoriteDishes = data;
     });
   }
 
-  checkMatch(id: number): boolean {
-    return this.favoriteDishes.some((element) => element.dishId === id);
+  checkMatch(id:string): boolean {
+
+    return this.favoriteDishes.some((element) => element.dishId===id)
+
   }
 
-  addFavorite(dishId: number): void {
+  addFavorite(dishId: string): void {
     const favorite = {
       dishId: dishId,
-      userId: this.utente?.newUserPayload?.id
+      userId: this.utente.id
     }
 
     if (favorite.userId) {
@@ -61,17 +67,19 @@ export class HomeComponent implements OnInit {
     }
   }
 
-  removeFavorite(id: number): void {
+  removeFavorite(id: string): void {
     const realId = this.findId(id);
 
     if (realId) {
       this.dishes.removeFavorite(realId).subscribe(() => {
-        this.favoriti(this.utente.newUserPayload?.id);
+        if (this.utente.id !== null && this.utente.id!== undefined) {
+        this.favoriti(this.utente.id);
+        }
       });
     }
   }
 
-  findId(id: number): number | null {
+  findId(id: string): string | null {
     const myDish = this.favoriteDishes.find((element) => element.dishId === id);
     return myDish?.id ?? null;
   }
