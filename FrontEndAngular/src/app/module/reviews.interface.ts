@@ -5,7 +5,7 @@ export interface Reviews {
   content: Reviews[];
   title: string;
   comment: string;
-  user: Utente
+  username : string;
   rating: number;
 
 
