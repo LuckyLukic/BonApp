@@ -1,0 +1,31 @@
+<ng-container *ngIf="utenti; then showusers else nousers"></ng-container>
+<ng-template #showusers>
+  <div class="container-fluid">
+  <div class="row d-flex row-gap-3 w-100">
+    <div class="col-6">
+    <div class="userWrapper col-12 d-flex align-items-center justify-content-between" *ngFor="let singleUser of utenti">
+      <div>
+      <p class="m-0"><strong>Nome:</strong> {{singleUser.name}}</p>
+      <p class="m-0"><strong>Cognome:</strong>  {{singleUser.surname}}</p>
+    </div>
+
+      <div class="buttonWrapper col-6">
+        <a [routerLink]="['/users', singleUser.id]"> <button class="btn btn-success me-2">Detail</button> </a>
+    </div>
+  </div>
+
+    </div>
+
+<div class="col-6">
+    <router-outlet ></router-outlet>
+  </div>
+
+
+  </div>
+</div>
+</ng-template>
+<ng-template #nousers>
+  <div class="row d-flex justify-content-center align-items-center">
+    <p>Sorry, no users in the database</p>
+  </div>
+</ng-template>

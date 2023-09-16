@@ -7,6 +7,7 @@ import { Utente } from '../module/utente.interface';
 import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
+import { Registrazione } from '../module/registrazione.interface';
 
 @Injectable({
   providedIn: 'root',
@@ -52,7 +53,7 @@ export class AuthService {
     }, tempoScadenza)
   }
 
-  registra(data: Partial<Utente>) {
+  registra(data: Partial<Registrazione>) {
     return this.http.post(`${this.baseURL}auth/register`, data);
   }
 

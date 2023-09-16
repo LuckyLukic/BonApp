@@ -1,10 +1,11 @@
 import { Component, OnInit } from '@angular/core';
-import { AuthData } from 'src/app/module/auth-data.interface';
 import { AuthService } from 'src/app/service/auth.service';
 import { Dish } from 'src/app/module/dish.interface';
 import { MenuService } from 'src/app/service/menu.service';
 import { Utente } from 'src/app/module/utente.interface';
 import { Favorite } from 'src/app/module/favorite.interface';
+import { delay } from 'rxjs';
+import { UserService } from 'src/app/service/utente.service';
 
 @Component({
   selector: 'app-home',
@@ -21,61 +22,59 @@ export class HomeComponent implements OnInit {
 
   constructor(
     private dishes: MenuService,
-    private authSrv: AuthService
+    private userSrv:UserService
   ) {}
 
   ngOnInit(): void {
 
 
-    this.authSrv.user$.subscribe((_utente) => {
-      if (_utente) {
+    this.userSrv.getCurrentUser().subscribe((_utente) => {
         this.utente = _utente;
-        if (this.utente.id !== null && this.utente.id !== undefined) {
+        if (this.utente && this.utente.id) {
           this.favoriti(this.utente.id);
         }
-      }
+
     });
 
     this.dishes.getMenu().subscribe((allDishes: Dish) => {
-      console.log(allDishes);
       this.dishesList = allDishes.content;
+
     });
+
+    console.log(this.utente)
   }
 
-  favoriti(id: string): void {
-    this.dishes.getFavorites(id).subscribe((data: Favorite[]) => {
-      this.favoriteDishes = data;
-    });
+
+   favoriti(id: string): void {
+     this.userSrv.getOwnFavorites(id).subscribe((data: Favorite) => {
+       this.favoriteDishes = data.content;
+     });
   }
 
-  checkMatch(id:string): boolean {
+   checkMatch(id:string): boolean {
 
-    return this.favoriteDishes.some((element) => element.prodotto.id===id)
+     return this.favoriteDishes.some((element) => element.prodotto.id===id)
 
-  }
+   }
 
-  addFavorite(dishId: string): void {
-    const favorite: Favorite = {
-      prodotto: { id: dishId } as Dish, // Assuming Dish has an id property of string type
-      userId: this.utente.id,
-      favoriteCount: 0,  // You need to provide a valid count here
-      content: []
-    };
-      if (favorite.userId) {
-        this.dishes.addFavorite(favorite).subscribe(() => {
-          this.favoriti(favorite.userId!);
+   addFavorite(dishId: string): void {
+    if (this.utente && this.utente.id) {
+      this.dishes.addFavorite(this.utente.id, dishId).subscribe(response => {
+        console.log('Favorite added', response);
+        // Refresh the favorites list
+        this.favoriti(this.utente.id!);
+      }, error => {
+        console.error('Error adding favorite', error);
       });
     }
   }
 
-  removeFavorite(id: string): void {
-    const realId = this.findId(id);
-
-    if (realId) {
-      this.dishes.removeFavorite(realId).subscribe(() => {
-        if (this.utente.id !== null && this.utente.id!== undefined) {
-        this.favoriti(this.utente.id);
-        }
+  removeFavorite(dishId: string): void {
+    if (this.utente && this.utente.id) {
+      this.dishes.removeFavorite(this.utente.id, dishId).subscribe(response =>{
+        this.favoriti(this.utente.id!);
+      }, error => {
+        console.error('Error adding favorite', error);
       });
     }
   }

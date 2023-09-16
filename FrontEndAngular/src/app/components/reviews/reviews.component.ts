@@ -20,7 +20,7 @@ export class ReviewsComponent implements OnInit {
 
     this.authSrv.user$.subscribe((_utente) => {
       if (_utente) {
-        this.utente = _utente;
+        this.utente = _utente.user;
   }
 });
    this.revSrv.getAllReviews().subscribe((allReviews: Reviews) => {

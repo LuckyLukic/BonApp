@@ -1,4 +1,4 @@
-import { Utente } from "./utente.interface";
+
 
 export interface Reviews {
 
@@ -7,6 +7,7 @@ export interface Reviews {
   comment: string;
   username : string;
   rating: number;
-
+  reviewDate?: string;
+  id?: string;
 
 }

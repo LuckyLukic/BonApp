@@ -1,6 +1,6 @@
 <nav class="navbar navbar-expand-md bg-body-tertiary sticky-top py-5 mb-3">
   <div class="container-fluid">
-    <a class="navbar-brand me-5" href="#">MOVIESTARZ</a>
+    <a class="navbar-brand me-5" href="#">BONAPP</a>
     <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
       <span class="navbar-toggler-icon"></span>
     </button>
@@ -37,10 +37,11 @@
 
       <ng-template class="d-flex" #registrato>
         <div class="dropdown dropstart align-self-center">
-        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.newUserPayload?.name}} </button>
+        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.name}} </button>
         <ul class="dropdown-menu">
-          <li><a class="dropdown-item active" >Profile</a></li>
-          <li><a class="dropdown-item" >Favourites</a></li>
+          <li><a class="dropdown-item active" [routerLink]="['/ownprofile', utente?.id]">Profile</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/favorites', utente?.id]">Favourites</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/own-reviews', utente?.id]">reviews</a></li>
 
         </ul>
       </div>

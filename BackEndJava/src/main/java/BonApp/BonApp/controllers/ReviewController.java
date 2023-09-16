@@ -57,12 +57,6 @@ public class ReviewController {
 		return ResponseEntity.ok(reviewService.updateReview(reviewId, body));
 	}
 
-	@DeleteMapping("/{reviewId}")
-	@PreAuthorize("isAuthenticated()")
-	@ResponseStatus(HttpStatus.NO_CONTENT)
-	public void deleteReview(@PathVariable UUID reviewId) {
-		reviewService.deleteReview(reviewId);
-	}
 
 	@GetMapping("/search")
 	public ResponseEntity<List<Review>> findReviewsByCriteria(

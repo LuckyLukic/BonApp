@@ -1,11 +1,10 @@
 package BonApp.BonApp.controllers;
 
-import java.util.List;
-
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,13 +20,18 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import BonApp.BonApp.entities.Prodotto;
-import BonApp.BonApp.entities.User;
 
+import BonApp.BonApp.entities.Review;
+import BonApp.BonApp.entities.User;
+import BonApp.BonApp.exceptions.ForbiddenException;
+import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewPreferiti;
+import BonApp.BonApp.payload.NewReviewPayload;
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.TopFavoritePayload;
+import BonApp.BonApp.repositories.ReviewRepository;
+import BonApp.BonApp.service.ReviewService;
 import BonApp.BonApp.service.UsersService;
 import jakarta.validation.Valid;
 
@@ -39,6 +43,15 @@ public class UsersController {
 
 	@Autowired
 	UsersService userService;
+	
+	@Autowired
+	ReviewService reviewService;
+	
+	@Autowired
+	ReviewRepository reviewRepository;
+	
+	
+	
 
 	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
@@ -58,10 +71,20 @@ public class UsersController {
 	}
 
 	@GetMapping("/{userId}")
-	//@PreAuthorize("hasAuthority('ADMIN')")
+	
 	public User findById(@PathVariable UUID userId) {
 		return userService.findById(userId);
 	}
+	
+	@GetMapping("/current")
+    public ResponseEntity<User> getCurrentUser() {
+        try {
+            User currentUser = userService.getCurrentUser();
+            return new ResponseEntity<>(currentUser, HttpStatus.OK);
+        } catch (NotFoundException e) {
+            return new ResponseEntity<>(HttpStatus.NOT_FOUND);
+        }
+    }
 
 	@PutMapping("/{userId}")
 	//@PreAuthorize("hasAuthority('ADMIN')")
@@ -77,28 +100,31 @@ public class UsersController {
 	}
 	
 	
-	@PostMapping("add-favorites/{productId}")
-	public ResponseEntity<NewPreferiti> addProductToFavorites(
-	        @PathVariable UUID productId, 
-	        @RequestBody NewPreferiti newPreferiti) {
-	    NewPreferiti responsePreferiti = userService.addProductToFavorites(newPreferiti.getProductId());
-	    return ResponseEntity.status(HttpStatus.CREATED).body(responsePreferiti);
+	@PostMapping("/{userId}/add-favorite/{productId}")
+    public NewPreferiti addProductToFavorites(
+        @PathVariable UUID userId, 
+        @PathVariable UUID productId
+    ) throws NotFoundException, ForbiddenException {
+        return userService.addProductToFavorites(userId, productId);
+    }
+
+	@DeleteMapping("/{userId}/remove-favorite/{productId}")
+	public ResponseEntity<Void> removeProductFromFavorites(
+	        @PathVariable UUID userId, 
+	        @PathVariable UUID productId) {
+	    userService.removeProductFromFavorites(productId);
+	    return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
 
-	@DeleteMapping("remove-favorites/{productId}")
-	public ResponseEntity<NewPreferiti> removeProductFromFavorites(
-	        @PathVariable UUID productId, 
-	        @RequestBody NewPreferiti newPreferiti) {
-	    NewPreferiti responsePreferiti = userService.removeProductFromFavorites(newPreferiti.getProductId());
-	    return ResponseEntity.status(HttpStatus.NO_CONTENT).body(responsePreferiti);
-	}
-
-	@GetMapping("/{userId}/favorite")
-    public ResponseEntity<Page<Prodotto>> getUserPreferiti(@PathVariable UUID userId,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
-        Page<Prodotto> favorites = userService.getFavoriteProducts(userId, page, size);
+	@GetMapping("/{userId}/favorites")
+    public ResponseEntity<Page<TopFavoritePayload>> getFavoriteProducts(
+            @PathVariable UUID userId,
+            Pageable pageable) throws NotFoundException {
+        
+        Page<TopFavoritePayload> favorites = userService.getFavoriteProducts(userId, pageable);
         return ResponseEntity.ok(favorites);
     }
+
 	
 
 	@GetMapping("/top-favorites")
@@ -130,6 +156,51 @@ public class UsersController {
         Page<User> users = userService.searchUsers(cap, localita, comune, pageable);
         return ResponseEntity.ok(users);
     }
+	
+	@PostMapping("/{userId}/new-review")
+    public ResponseEntity<Review> createReview(
+            @PathVariable UUID userId, 
+            @Valid @RequestBody NewReviewPayload newReviewPayload) {
 
-}
+        Review review = reviewService.createReview(userId, newReviewPayload);
+        return new ResponseEntity<>(review, HttpStatus.CREATED);
+    }
+	
+	
+    @GetMapping("/{userId}/getOwnReviews")
+    public ResponseEntity<Page<Review>> getAllReviewsByUserId(
+            @PathVariable UUID userId, 
+            @RequestParam(defaultValue = "0") int page, 
+            @RequestParam(defaultValue = "10") int size) {
+
+        Pageable pageable = PageRequest.of(page, size);
+        Page<Review> reviews = reviewService.getAllReviewsByUserId(userId, pageable);
+        return new ResponseEntity<>(reviews, HttpStatus.OK);
+    }
+    
+    
+    @DeleteMapping("/{userId}/delete-own-review/{reviewId}")
+    public ResponseEntity<String> deleteReview(@PathVariable UUID userId, @PathVariable UUID reviewId) {
+        try {
+            reviewService.deleteReview(reviewId, userId);
+            return ResponseEntity.ok("Review deleted successfully");
+        } catch (NotFoundException e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body("Review not found");
+        } catch (ForbiddenException e) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).body("User not authorized to delete this review");
+        }
+        
+        
+    }
+   
+
+
+
+
+
+    
+ 
+	}
+
+
 

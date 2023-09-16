@@ -14,6 +14,11 @@ import { RegisterComponent } from './components/register/register.component';
 import { FavoritesComponent } from './components/favorites/favorites.component';
 import { SingleDishComponent } from './components/single-dish/single-dish.component';
 import { ReviewsComponent } from './components/reviews/reviews.component';
+import { OwnProfileComponent } from './components/own-profile/own-profile.component';
+import { SingleUserComponent } from './components/users/single-user/single-user.component';
+import { UsersComponent } from './components/users/users.component';
+import { OwnFavoritesComponent } from './components/favorites/own-favorites/own-favorites.component';
+import { OwnReviewsComponent } from './components/reviews/own-reviews/own-reviews.component';
 
  const route: Route[] = [
    {
@@ -23,13 +28,12 @@ import { ReviewsComponent } from './components/reviews/reviews.component';
   {
     path: "dishes/:id",
     component: SingleDishComponent,
-    canActivate: [AuthGuardGuard]
   },
-  // {path: "users",
-  // component: UsersComponent, children:[
-  //   {path:':id', component: SingleUserComponent}
-  // ]
-//   },
+  {path: "users",
+  component: UsersComponent, children:[
+    {path:':id', component: SingleUserComponent}
+  ]
+  },
    {path: "register",
     component: RegisterComponent
    },
@@ -37,19 +41,30 @@ import { ReviewsComponent } from './components/reviews/reviews.component';
      path: "login",
      component: LoginComponent
    },
-//   {
-//     path: "ownprofile/:id",
-//     component: OwnProfileComponent,
-//     canActivate: [AuthGuardGuard],
-//   },
+  {
+    path: "ownprofile/:id",
+    component: OwnProfileComponent,
+    canActivate: [AuthGuardGuard],
+  },
    {
      path: "top-favoriti",
      component: FavoritesComponent,
 
    },
    {
+    path: "favorites/:id",
+    component: OwnFavoritesComponent,
+    canActivate: [AuthGuardGuard]
+   },
+   {
     path: "all-reviews",
     component: ReviewsComponent,
+
+  },
+  {
+    path: "own-reviews/:id",
+    component: OwnReviewsComponent,
+    canActivate: [AuthGuardGuard]
 
   }
 //   {
@@ -69,6 +84,10 @@ import { ReviewsComponent } from './components/reviews/reviews.component';
     HomeComponent,
     FavoritesComponent,
     ReviewsComponent,
+    OwnProfileComponent,
+    UsersComponent,
+    OwnFavoritesComponent,
+    OwnReviewsComponent,
 
   ],
   imports: [

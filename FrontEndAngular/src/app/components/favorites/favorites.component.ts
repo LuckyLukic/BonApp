@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { Utente } from 'src/app/module/utente.interface';
+
 import { MenuService } from 'src/app/service/menu.service';
 import { AuthService } from "src/app/service/auth.service";
 import { Favorite } from 'src/app/module/favorite.interface';

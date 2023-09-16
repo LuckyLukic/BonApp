@@ -31,13 +31,14 @@ export class MenuService {
     return this.http.get<Favorite>(this.url+`users/top-favorites`)
   }
 
-  addFavorite (favorite: Favorite) {
-    return this.http.post(this.url+`users/add-favorites`, favorite)
+  addFavorite(userId: string, dishId: string) {
+      return this.http.post(this.url + `users/${userId}/add-favorite/${dishId}`, {});
     }
 
-  removeFavorite (favoriteId:string) {
-    return this.http.delete(this.url+`favorites/${favoriteId}`)
-  }
+
+    removeFavorite(userId: string, dishId: string) {
+      return this.http.delete(this.url + `users/${userId}/remove-favorite/${dishId}`);
+    }
 
 }
 

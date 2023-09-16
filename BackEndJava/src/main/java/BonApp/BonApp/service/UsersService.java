@@ -16,20 +16,26 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.crypto.bcrypt.BCryptPasswordEncoder;
 import org.springframework.stereotype.Service;
 
+
+
 import BonApp.BonApp.entities.Indirizzo;
 import BonApp.BonApp.entities.Prodotto;
+import BonApp.BonApp.entities.Review;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.BadRequestException;
 import BonApp.BonApp.exceptions.ForbiddenException;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewPreferiti;
+import BonApp.BonApp.payload.NewReviewPayload;
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.NewIndirizzoPayload;
 import BonApp.BonApp.payload.TopFavoritePayload;
 import BonApp.BonApp.repositories.IndirizzoRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
+import BonApp.BonApp.repositories.ReviewRepository;
 import BonApp.BonApp.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class UsersService {
@@ -42,6 +48,10 @@ public class UsersService {
 
 	@Autowired
 	private IndirizzoRepository indirizzoRepository;
+	
+	@Autowired
+	private ReviewRepository reviewRepository;
+	
 
 	// SALVA NUOVO UTENTE + ECCEZIONE SE VIENE USATA LA STESSA EMAIL
 	public User save(RegistrationPayload registrationPayload) {
@@ -133,45 +143,53 @@ public class UsersService {
 				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
 	}
 
-	public NewPreferiti addProductToFavorites(UUID productId) throws NotFoundException, ForbiddenException {
+	public NewPreferiti addProductToFavorites(UUID userId, UUID productId) throws NotFoundException, ForbiddenException {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new NotFoundException("User not found"));
 
-		User user = this.getCurrentUser();
+        Prodotto product = prodottoRepository.findById(productId)
+                .orElseThrow(() -> new NotFoundException("Product not found"));
 
-		Prodotto product = prodottoRepository.findById(productId)
-				.orElseThrow(() -> new NotFoundException("Product not found"));
+        user.getProdottiPreferiti().add(product);
+        userRepository.save(user);
 
-		user.getProdottiPreferiti().add(product);
-		userRepository.save(user);
-
-		return new NewPreferiti(user.getId(), productId, "Product successfully added to favorites");
-	}
+        return new NewPreferiti(productId, "Product successfully added to favorites");
+    }
 
 	public NewPreferiti removeProductFromFavorites(UUID productId) throws NotFoundException, ForbiddenException {
 
-		User user = this.getCurrentUser();
+	    User user = this.getCurrentUser();
 
-		Prodotto product = prodottoRepository.findById(productId)
-				.orElseThrow(() -> new NotFoundException("Product not found"));
+	    Prodotto product = prodottoRepository.findById(productId)
+	            .orElseThrow(() -> new NotFoundException("Product not found"));
 
-		user.getProdottiPreferiti().remove(product);
-		userRepository.save(user);
+	    boolean removed = user.getProdottiPreferiti().removeIf(prod -> prod.getId().equals(productId));
+	    
+	    if(!removed) {
+	        throw new NotFoundException("Product not found in favorites");
+	    }
 
-		return new NewPreferiti(user.getId(), productId, "Product successfully removed from favorites");
+	    userRepository.save(user);
+
+	    return new NewPreferiti(productId, "Product successfully removed from favorites");
 	}
 
-	public Page<Prodotto> getFavoriteProducts(UUID userId, int page, int size) throws NotFoundException {
-		User user = userRepository.findById(userId)
-				.orElseThrow(() -> new NotFoundException("L'utente con l'ID " + userId + " non è stato trovato."));
+	
 
-		Pageable pageable = PageRequest.of(page, size);
-		Page<Prodotto> favorites = userRepository.findProdottiFavoritiByUserId(userId, pageable);
+	 public Page<TopFavoritePayload> getFavoriteProducts(UUID userId, Pageable pageable) throws NotFoundException {
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new NotFoundException("L'utente con l'ID " + userId + " non è stato trovato."));
 
-		if (favorites.isEmpty()) {
-			throw new NotFoundException("L'utente non ha prodotti preferiti");
-		}
+	        Page<Prodotto> favorites = userRepository.findProdottiFavoritiByUserId(userId, pageable);
 
-		return favorites;
-	}
+	        if (favorites.isEmpty()) {
+	            throw new NotFoundException("L'utente non ha prodotti preferiti");
+	        }
+
+	        return favorites.map(prodotto -> new TopFavoritePayload(prodotto, 0L));
+	    }
+	 
+	 
 
 	public Page<TopFavoritePayload> getTopFavoriteProducts(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
@@ -209,6 +227,9 @@ public class UsersService {
 	public Page<User> findUsersByAddress(String cap, String localita, String comune, Pageable pageable) {
 		return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
 	}
+	
+	
+	
 }
 	    
 

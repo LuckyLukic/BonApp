@@ -1,6 +1,7 @@
 package BonApp.BonApp.payload;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.User;
@@ -20,9 +21,6 @@ public class NewReviewPayload {
 	private String comment;
 	@NotNull(message = "Il rating e' obbligatorio")
 	private Integer rating;
-
-	private String username;
-
-	private LocalDate reviewDate;
+	
 
 }

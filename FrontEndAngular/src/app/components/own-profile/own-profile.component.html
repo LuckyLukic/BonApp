@@ -1,0 +1,15 @@
+<div class="row d-flex justify-content-center">
+  <div class="col-6">
+    <div class="card">
+      <div class="card-body">
+        <h5 class="card-title">DATI PERSONALI</h5>
+        <p class="card-text"><strong>Nome:</strong> {{utente.name}}</p>
+        <p class="card-text"><strong>Cognome:</strong> {{utente.surname}}</p>
+        <p class="card-text"><strong>Email:</strong> {{utente.email}}</p>
+        <p class="card-text"><strong>Password:</strong> {{utente.password}}</p>
+
+        <button type="button" class="btn btn-danger" (click)="deleteUser(utente.id!)">Delete</button>
+      </div>
+    </div>
+  </div>
+</div>

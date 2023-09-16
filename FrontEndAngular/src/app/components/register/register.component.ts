@@ -1,6 +1,6 @@
 import { Component, OnInit } from '@angular/core';
 import { FormBuilder, Validators,FormGroup} from '@angular/forms';
-import { Utente } from 'src/app/module/utente.interface';
+import { Registrazione } from 'src/app/module/registrazione.interface';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { catchError } from 'rxjs/operators';
@@ -23,7 +23,7 @@ export class RegisterComponent implements OnInit {
   ) {}
 
   pattern = '^(?=.*[A-Z])(?=.*[!@#$%^&*])(?=.*[0-9]).{8,}$';
-  newUser!: Utente;
+  newUser!: Registrazione;
 
   registerForm = this.builder.group({
     newUserPayload: this.builder.group({
@@ -49,7 +49,7 @@ export class RegisterComponent implements OnInit {
 
   onSubmit() {
 
-  this.newUser = this.registerForm.value as Utente;
+  this.newUser = this.registerForm.value as Registrazione;
 
 
   this.authSrv.registra(this.newUser)

@@ -19,6 +19,8 @@ import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewReviewPayload;
 
 import BonApp.BonApp.repositories.ReviewRepository;
+import BonApp.BonApp.repositories.UserRepository;
+import jakarta.persistence.EntityNotFoundException;
 
 @Service
 public class ReviewService {
@@ -28,6 +30,9 @@ public class ReviewService {
 
 	@Autowired
 	private UsersService userService;
+	
+	@Autowired
+	private UserRepository userRepository;
 
 	public Review save(NewReviewPayload body) throws NotFoundException {
 		User authenticatedUser = userService.getCurrentUser();
@@ -68,19 +73,39 @@ public class ReviewService {
 		return reviewRepository.save(existingReview);
 	}
 
-	// Delete
-	public void deleteReview(UUID id) throws NotFoundException {
-		User currentUser = userService.getCurrentUser();
-		Review existingReview = findReviewById(id);
+	// Delete Own review
+	 	public void deleteReview(UUID reviewId, UUID userId) throws NotFoundException {
+	 	    Review existingReview = findReviewById(reviewId);
 
-		if (!existingReview.getUser().getId().equals(currentUser.getId())) {
-			throw new ForbiddenException("User not authorized to delete this review");
-		}
+	 	    if (!existingReview.getUser().getId().equals(userId)) {
+	 	        throw new ForbiddenException("User not authorized to delete this review");
+	 	    }
 
-		reviewRepository.delete(existingReview);
-	}
+	 	    reviewRepository.delete(existingReview);
+	 	}
 
+	
 	public List<Review> findReviewsByCriteria(LocalDate startDate, LocalDate endDate, Integer rating, String username) {
 		return reviewRepository.findReviewsByCriteria(startDate, endDate, rating, username);
 	}
+	
+	public Review createReview(UUID userId, NewReviewPayload newReviewPayload) {
+        User user = userRepository.findById(userId)
+                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+        Review review = new Review(
+                newReviewPayload.getTitle(),
+                newReviewPayload.getComment(),
+                newReviewPayload.getRating(),
+                user
+        );
+
+        return reviewRepository.save(review);
+    }
+
+    public Page<Review> getAllReviewsByUserId(UUID userId, Pageable pageable) {
+        return reviewRepository.findByUserId(userId, pageable);
+    }
+	
+
 }

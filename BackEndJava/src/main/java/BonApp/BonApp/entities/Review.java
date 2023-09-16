@@ -65,7 +65,7 @@ public class Review {
 		this.title = title;
 		this.comment = comment;
 		this.rating = rating;
-	
+	    this.user = user;
 		this.reviewDate = LocalDate.now();
 		this.username = user.getUsername();
 		}
