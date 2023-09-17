@@ -37,10 +37,6 @@ public class NewUserPayload {
 	@StrongPassword(message = "La password non soddisfa i requisiti di sicurezza")
 	private String password;
 	
-	
-	private String role;
-	
-	private LocalDate dataRegistrazione;
 
 	
 
