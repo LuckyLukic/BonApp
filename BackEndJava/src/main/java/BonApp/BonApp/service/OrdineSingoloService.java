@@ -118,6 +118,14 @@ public class OrdineSingoloService {
 		return ordineSingoloRepository.findByUserId(userId, pageable);
 	    }
 	
+	public double calculateShippingCost(double totalPrice) {
+        if (totalPrice > 15) {
+            return 0.0;
+        } else {
+            return 2.5;
+        }
+    }
+	
 	
 //    public int getProductQuantityInCart(UUID userId, UUID productId) {
 //        OrdineSingolo cart = getCartByStatus(StatusOrdine.IN_CART);
