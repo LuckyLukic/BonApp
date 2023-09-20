@@ -20,6 +20,7 @@ export class HomeComponent implements OnInit {
   singleDish!:Favorite;
   productsInOrder: Dish[] = [];
 
+
   constructor(
     private dishes: MenuService,
     private userSrv:UserService,
@@ -103,6 +104,7 @@ export class HomeComponent implements OnInit {
         console.log('Favorite added', response);
 
         this.favoriti(this.utente.id!);
+
       }, error => {
         console.error('Error adding favorite', error);
       });

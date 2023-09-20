@@ -21,6 +21,7 @@ import { OwnFavoritesComponent } from './components/favorites/own-favorites/own-
 import { OwnReviewsComponent } from './components/reviews/own-reviews/own-reviews.component';
 import { CartComponent } from './components/cart/cart.component';
 import { UpdateComponent } from './components/own-profile/update/update.component';
+import { RateUsComponent } from './components/reviews/rate-us/rate-us.component';
 
  const route: Route[] = [
    {
@@ -76,6 +77,11 @@ import { UpdateComponent } from './components/own-profile/update/update.componen
 
   },
   {
+   path: "rate-us/:id",
+   component: RateUsComponent,
+   canActivate: [AuthGuardGuard]
+  },
+  {
     path: "cart/:id",
     component: CartComponent,
     canActivate: [AuthGuardGuard]
@@ -105,6 +111,7 @@ import { UpdateComponent } from './components/own-profile/update/update.componen
     OwnReviewsComponent,
     CartComponent,
     UpdateComponent,
+    RateUsComponent,
 
 
   ],

@@ -240,7 +240,7 @@ public class UsersService {
 	
 	
 	  //ADD TO CART
-	@Transactional
+	  @Transactional
 	   public void addProductToCart(UUID userId, UUID productId, int quantity) {
 	        User user = userRepository.findById(userId)
 	                .orElseThrow(() -> new EntityNotFoundException("User not found"));

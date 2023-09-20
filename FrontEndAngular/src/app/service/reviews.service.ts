@@ -24,4 +24,8 @@ export class ReviewsService {
   deleteOwnReview (userId:string, reviewId:string): Observable<any> {
     return this.http.delete<any>(this.url+`users/${userId}/delete-own-review/${reviewId}`)
   }
+
+  saveOwnReview (userId:string, review:Reviews) {
+    return this.http.post(this.url+`users/${userId}/new-review`, review)
+  }
 }

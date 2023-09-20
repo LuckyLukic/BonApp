@@ -2,7 +2,6 @@ import { Component, OnInit, } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/utente.service';
 import { Utente } from 'src/app/module/utente.interface';
-import { Dish } from 'src/app/module/dish.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { Subscription } from 'rxjs';
 
@@ -16,8 +15,14 @@ export class NavbarComponent implements OnInit {
   utente!: Partial<Utente> |null;
   productsInOrder: any[] = [];
   private cartSubscription?: Subscription;
+  checkUtente!: string | null;
 
-  constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) { }
+  constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) {
+
+   }
+
+
+
 
   ngOnInit(): void {
 
@@ -26,7 +31,12 @@ export class NavbarComponent implements OnInit {
       console.log("NAV", _utente)
       this.subscribeToCartItemList();
 
+
     });
+
+    this.checkUtente = localStorage.getItem('user');
+    console.log("checkUtente", this.checkUtente)
+
   }
 
   private subscribeToCartItemList(): void {
