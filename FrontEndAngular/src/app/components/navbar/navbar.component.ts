@@ -13,7 +13,7 @@ import { Subscription } from 'rxjs';
 })
 export class NavbarComponent implements OnInit {
 
-  utente!: Partial<Utente> | null;
+  utente!: Partial<Utente> |null;
   productsInOrder: any[] = [];
   private cartSubscription?: Subscription;
 

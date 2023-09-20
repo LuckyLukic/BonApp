@@ -67,16 +67,17 @@ onSubmit() {
 
 
   this.authSrv.updateUser(this.utente.id!, this.newUser)
-
-    .subscribe(() => {
-
-      this.route.navigate(['/']);
-      console.log("Utente", this.utente)
-      console.log("onSUBMIT", this.utente.id)
-    });
-  }
-
-
-
+    .subscribe(
+      () => {
+        // You can use a service or a simple alert to show a success message
+        alert('Update successful');
+        this.route.navigate([`/ownprofile/${this.utente.id}`]);
+      },
+      (error) => {
+        console.error('Update failed', error);
+        // Handle the error here, maybe show the user a message
+      }
+    );
+}
 
 }

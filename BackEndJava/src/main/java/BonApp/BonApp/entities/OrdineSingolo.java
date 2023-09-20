@@ -74,6 +74,7 @@ public class OrdineSingolo {
 		this.shippingCost = calculateShippingCost();
 	}
 	
+	
 	public double calculateShippingCost() {
         if (this.totalPrice > 15) {
             this.shippingCost = 0.0;
@@ -90,9 +91,9 @@ public class OrdineSingolo {
 	    for (int i = 0; i < quantity; i++) {
 	        this.prodotti.add(prodotto);
 	    }
-	    
 	    this.productQuantities.put(prodotto.getId(), this.productQuantities.getOrDefault(prodotto.getId(), 0) + quantity);
 	    this.totalPrice += prodotto.getPrezzo() * quantity;
+	    calculateShippingCost();
 	}
 
 
@@ -106,12 +107,25 @@ public class OrdineSingolo {
 	    this.productQuantities.put(prodotto.getId(), currentQuantity);
 	    this.totalPrice -= prodotto.getPrezzo() * quantity;
 	    
-//	    if(currentQuantity == 0) {
+	    for (int i = 0; i < quantity; i++) {
 	        this.prodotti.remove(prodotto);
-	        this.productQuantities.remove(prodotto.getId());
+	    }
 	    
+	    if(currentQuantity == 0) {
+	        this.productQuantities.remove(prodotto.getId());  
+	    }
 	    
+	    if(this.prodotti.isEmpty()) {
+	        this.totalPrice = 0.0; // Set total price to zero if the list is empty
+	    }	    
+	    calculateShippingCost();
+	    
+//	    if(currentQuantity == 0) {
+//	        this.prodotti.remove(prodotto);
+//	        this.productQuantities.remove(prodotto.getId());  
 	}
+	
+	
 	
 	public int getProductQuantity(UUID productId) {
 	    return this.productQuantities.getOrDefault(productId, 0);

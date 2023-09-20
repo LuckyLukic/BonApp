@@ -69,6 +69,6 @@ export class AuthService {
   }
 
   updateUser(userid: string, data: Partial<Utente>) {
-    return this.http.put(this.baseURL+`users/+${userid}`, data )
+    return this.http.put(`${this.baseURL}users/${userid}`, data )
   }
 }

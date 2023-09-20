@@ -41,43 +41,50 @@ export class CartComponent implements OnInit {
 
   }
 
-  getProductsInCart(userId:string): void {
-    this.cartSrv.getProductsInOrder(userId).subscribe ((data: Dish[])=> {
-      this.productsInOrder = data;
-      this.cartSrv.setCartItemList(data);
-      console.log("CARRELLO", this.productsInOrder);
+  getProductsInCart(userId: string): void {
+    this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {
+      this.productsInOrder = this.transformProdottiList(data);
+      this.cartSrv.setCartItemList(this.productsInOrder);
+      console.log(this.productsInOrder);
     },
     error => {
       console.error('Error fetching products in cart', error);
     });
-}
+  }
 
-// addToCart(itemId:string): void {
-//   this.cartSrv.addToCart(this.utente.id!, itemId, 1).pipe(
-//     tap(() => {
-//       this.productsInOrder = [];
-//     }),
-//     tap(() => {
-//       this.getProductsInCart(this.utente.id!);
-//     })
-//   ).subscribe();
-// }
+  private transformProdottiList(response: any[]): Dish[] {
+    // Step 1: Create a map of all unique Dish objects by their id
+    const dishMap: { [id: string]: Dish } = {};
+    response.forEach((dish: Dish | string) => {
+      if (typeof dish !== 'string' && dish.id) {
+        dishMap[dish.id] = dish;
+      }
+    });
+    // Step 2: Create a new list of Dishes, replacing string ids with Dish objects from the map
+    const dishList = response.map((dish: Dish | string) => {
+      if (typeof dish === 'string') {
+        return dishMap[dish] || { productId: dish };
+      } else {
+        return dish;
+      }
+    });
+    return dishList;
+  }
+
+
 addToCart(itemId: string): void {
   this.cartSrv.addToCart(this.utente.id!, itemId, 1).pipe(
-    switchMap(() => {
+    tap(() => {
       this.productsInOrder = [];
-      return this.cartSrv.getProductsInOrder(this.utente.id!);
-    })
-  ).subscribe(
-    (data: Dish[]) => {
-      this.productsInOrder = data;
-      this.cartSrv.setCartItemList(data);
-      console.log("CARRELLO", this.productsInOrder);
-    },
-    error => {
-      console.error('Error updating cart', error);
-    }
-  );
+    }),
+    tap(() => {
+      this.getProductsInCart(this.utente.id!);
+    }),
+    tap(() => {
+      this.getOrdineInCart(this.utente.id!);
+    }),
+
+  ).subscribe();
 }
 
 removeFromCart(itemId:string): void {
@@ -87,45 +94,38 @@ removeFromCart(itemId:string): void {
     }),
     tap(() => {
       this.getProductsInCart(this.utente.id!);
-    })
+    }),
+    tap(() => {
+      this.getOrdineInCart(this.utente.id!);
+    }),
+
   ).subscribe();
 }
 
 
-// getNumberOfSameProducts(itemId: string): void {
-//   this.cartSrv.addToCart(this.utente.id!, itemId, 1).pipe(
-//     switchMap(() => this.cartSrv.getNumberOfSameProducts(this.utente.id!, itemId)),
-//     catchError(error => {
-//       console.error('Error in getNumberOfSameProducts:', error);
-//       return EMPTY;
-//     })
-//   ).subscribe(response => {
-//     const product = this.productsInOrder.find(p => p.id === itemId);
-//     if (product) {
-//       product.count = +response;
-//     }
-//   });
-// }
-
-// updateProductCountAfterRemoval(itemId: string): void {
-//   this.cartSrv.removeFromCart(this.utente.id!, itemId, 1).pipe(
-//     switchMap(() => this.cartSrv.getProductsInOrder(this.utente.id!))
-//   ).subscribe(updatedProductsInOrder => {
-//     this.productsInOrder = updatedProductsInOrder;
-//     const product = this.productsInOrder.find(p => p.id === itemId);
-//     if (product && product.count && product.count > 0) {
-//       product.count -= 1; // decrease the count property of the product
-//     }
-//   }, error => {
-//     console.error('Error in updateProductCountAfterRemoval:', error);
-//   });
-// }
-
 getOrdineInCart(userId:string):void {
-  this.cartSrv.getOrdineWithIncart(userId).subscribe((data:OrdineSingolo) => {
-    this.ordineInCart = data;
+  this.cartSrv.getOrdineWithIncart(userId).subscribe((data:OrdineSingolo[]) => {
+    this.ordineInCart = data[0];
     console.log("ORDINESINGOLO", data)
   })
+}
+
+
+getGroupedProducts(): (Dish & { count: number })[] {
+  const groupedProductsMap: { [id: string]: Dish & { count: number } } = {};
+
+  this.productsInOrder.forEach((dish) => {
+    if (dish.id) {
+      if (!groupedProductsMap[dish.id]) {
+        groupedProductsMap[dish.id] = { ...dish, count: 1 };
+      } else {
+        groupedProductsMap[dish.id].count += 1;
+      }
+    }
+  });
+
+  // Convert the map back to an array
+  return Object.values(groupedProductsMap);
 }
 
 }
