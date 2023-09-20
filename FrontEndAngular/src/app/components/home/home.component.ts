@@ -30,12 +30,15 @@ export class HomeComponent implements OnInit {
   ngOnInit(): void {
 
     this.userSrv.getCurrentUser().subscribe((_utente) => {
-        this.utente = _utente;
+      this.utente = _utente;
+        this.userSrv.setUser(_utente);
+
+      console.log("CIAO", this.utente)
         if (this.utente && this.utente.id) {
           this.favoriti(this.utente.id);
           this.getProductsInCart(this.utente.id);
 
-          console.log("CIAO", this.utente)
+
         }
 
 

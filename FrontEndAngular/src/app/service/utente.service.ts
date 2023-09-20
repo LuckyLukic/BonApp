@@ -7,6 +7,7 @@ import { OwnFavorite } from '../module/own-favorite.interface';
 
 import { Dish } from '../module/dish.interface';
 import { Favorite } from '../module/favorite.interface';
+import { BehaviorSubject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root'
@@ -14,8 +15,19 @@ import { Favorite } from '../module/favorite.interface';
 export class UserService {
 
   baseUrl = environment.baseUrl
+  private userSubject = new BehaviorSubject<Partial<Utente> | null>(null);
+  currentUser$ = this.userSubject.asObservable();
+
 
   constructor(private http: HttpClient) { }
+
+  setUser(data: Partial<Utente> | null) {
+    this.userSubject.next(data);
+  }
+
+  getUser(): Observable<Partial<Utente> | null> {
+    return this.userSubject.asObservable();
+  }
 
   createUser(user:Partial<Utente>) {
     return this.http.post<Utente>(this.baseUrl+"users", user)

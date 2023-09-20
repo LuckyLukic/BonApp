@@ -1,4 +1,4 @@
-import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
+import { Component, OnInit, } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/utente.service';
 import { Utente } from 'src/app/module/utente.interface';
@@ -21,8 +21,9 @@ export class NavbarComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.userSrv.getCurrentUser().subscribe((_utente) => {
+    this.userSrv.getUser().subscribe((_utente) => {
       this.utente = _utente;
+      console.log("NAV", _utente)
       this.subscribeToCartItemList();
 
     });
