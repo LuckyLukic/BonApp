@@ -15,7 +15,7 @@ export class FavoritesComponent implements OnInit {
 
 
   topFavoriteDishes: Favorite[] = []
-
+  productsInOrder: Dish[] = [];
 
   constructor(private dishes: MenuService, private authSrv: AuthService) { }
 

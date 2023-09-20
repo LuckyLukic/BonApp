@@ -23,6 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.ManyToOne;
 import jakarta.persistence.Table;
 
 import lombok.Getter;
@@ -58,12 +59,14 @@ public class Prodotto {
     private List<Ingrediente> ingredienti = new ArrayList<>();
     
     @JsonIgnore
-    @ManyToMany(mappedBy = "prodotti")
-    private List<OrdineSingolo> singleOrders = new ArrayList<>();
-
-    @JsonIgnore
+    //@ManyToMany(mappedBy = "prodotti")
+    @ManyToMany(mappedBy = "prodotti", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
+    private List<OrdineSingolo> orders = new ArrayList<>();
+    
+   @JsonIgnore
     @ManyToMany(mappedBy = "prodottiPreferiti")
     private List<User> usersFavouriteProducts = new ArrayList<>();
+
     
     
     public Prodotto(String nome, String descrizione, double prezzo, Categoria categoria, List<Ingrediente> ingredienti, String imgUrl) {

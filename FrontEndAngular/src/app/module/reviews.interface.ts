@@ -7,7 +7,7 @@ export interface Reviews {
   comment: string;
   username : string;
   rating: number;
-  reviewDate?: string;
+  reviewDate: Date;
   id?: string;
 
 }

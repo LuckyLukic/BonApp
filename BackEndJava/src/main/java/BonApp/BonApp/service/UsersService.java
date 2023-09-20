@@ -1,13 +1,16 @@
 package BonApp.BonApp.service;
 
+
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -18,6 +21,7 @@ import org.springframework.stereotype.Service;
 
 import BonApp.BonApp.Enum.StatusOrdine;
 import BonApp.BonApp.entities.Indirizzo;
+import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.Review;
 import BonApp.BonApp.entities.User;
@@ -31,10 +35,12 @@ import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.NewIndirizzoPayload;
 import BonApp.BonApp.payload.TopFavoritePayload;
 import BonApp.BonApp.repositories.IndirizzoRepository;
+import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.ReviewRepository;
 import BonApp.BonApp.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
+import jakarta.transaction.Transactional;
 
 @Service
 public class UsersService {
@@ -49,7 +55,7 @@ public class UsersService {
 	private IndirizzoRepository indirizzoRepository;
 
 	@Autowired
-	private ReviewRepository reviewRepository;
+	private OrdineSingoloRepository ordineSingoloRepository;
 
 	// SALVA NUOVO UTENTE + ECCEZIONE SE VIENE USATA LA STESSA EMAIL
 	public User save(RegistrationPayload registrationPayload) {
@@ -106,10 +112,24 @@ public class UsersService {
 	}
 
 	// CERCA E CANCELLA UTENTE TRAMITE ID
+	@Transactional
 	public void findByIdAndDelete(UUID id) throws NotFoundException {
-		User found = this.findById(id);
-		userRepository.delete(found);
+	    User user = userRepository.findById(id)
+	            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+
+	    // Clean up references in the orders
+	    for (OrdineSingolo ordine : user.getSingleOrders()) {
+	        // This should clear the entries in the join table "ordinesingolo_prodotto"
+	        ordine.getProdotti().clear();
+	        ordine.setUser(null);  // This removes the reference to the user in each order
+	    }
+
+	    // Now it should be safe to delete the user
+	    userRepository.delete(user);
+
 	}
+	
+	
 
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
@@ -171,7 +191,8 @@ public class UsersService {
 
 		return new NewPreferiti(productId, "Product successfully removed from favorites");
 	}
-
+	
+    // GET OWN FAVORITE PRODUCTS
 	public Page<TopFavoritePayload> getFavoriteProducts(UUID userId, Pageable pageable) throws NotFoundException {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new NotFoundException("L'utente con l'ID " + userId + " non è stato trovato."));
@@ -184,7 +205,9 @@ public class UsersService {
 
 		return favorites.map(prodotto -> new TopFavoritePayload(prodotto, 0L));
 	}
-
+	
+	
+    //GET TOP FAVORITE PRODUCTS
 	public Page<TopFavoritePayload> getTopFavoriteProducts(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
@@ -216,42 +239,97 @@ public class UsersService {
 	}
 	
 	
-	//ADD PRODUCT
-	public void addProductToCart(UUID userId, UUID productId, int quantity) {
-	    User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-	    Prodotto prodotto = prodottoRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+	  //ADD TO CART
+	@Transactional
+	   public void addProductToCart(UUID userId, UUID productId, int quantity) {
+	        User user = userRepository.findById(userId)
+	                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	    user.getSingleOrders().stream()
-	            .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
-	            .findFirst()
-	            .orElseThrow(() -> new NotFoundException("Cart not found"))
-	            .addProduct(prodotto, quantity);
+	        Prodotto prodotto = prodottoRepository.findById(productId)
+	                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-	    userRepository.save(user);
-	}
+	        OrdineSingolo cart = user.getSingleOrders().stream()
+	                .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
+	                .findFirst()
+	                .orElseGet(() -> {
+	                    OrdineSingolo newCart = new OrdineSingolo(user, new ArrayList<>());
+	                    user.addSingleOrder(newCart);
+	                    return newCart;
+	                });
 
-	//REMOVE PRODUCT
-	public void removeProductFromCart(UUID userId, UUID productId, int quantity) {
-	    User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
-	    Prodotto prodotto = prodottoRepository.findById(productId).orElseThrow(() -> new NotFoundException("Product not found"));
+	        cart.addProduct(prodotto, quantity);
+	        ordineSingoloRepository.save(cart);
+	        userRepository.save(user);
+	    }
 
-	    user.getSingleOrders().stream()
-	            .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
-	            .findFirst()
-	            .orElseThrow(() -> new NotFoundException("Cart not found"))
-	            .removeProduct(prodotto, quantity);
+	   
+	  //REMOVE FROM CART
+	   @Transactional
+	   public void removeProductFromCart(UUID userId, UUID productId, int quantity) {
+		    if (quantity <= 0) {
+		        throw new IllegalArgumentException("Quantity must be greater than zero");
+		    }
 
-	    userRepository.save(user);
-	}
-	public Page<User> searchUsers(String cap, String localita, String comune, Pageable pageable) {
-		return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
-	}
+		    User user = userRepository.findById(userId)
+		            .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	public Page<User> findUsersByAddress(String cap, String localita, String comune, Pageable pageable) {
-		return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
-	}
+		    Prodotto prodotto = prodottoRepository.findById(productId)
+		            .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+
+		    OrdineSingolo cart = user.getSingleOrders().stream()
+		            .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
+		            .findFirst()
+		            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+
+		    cart.removeProduct(prodotto, quantity);
+		    ordineSingoloRepository.save(cart);
+		}
+	   
+	   
+	   //GET ORDINE WITH STATUS IN_CART
+	   public List<OrdineSingolo> findCartByUserId(UUID userId) {
+	        User user = userRepository.findById(userId).orElse(null);
+	        if (user != null) {
+	            return user.getSingleOrders().stream()
+	                    .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
+	                    .collect(Collectors.toList());
+	        }
+	        return null;
+	    }
+	    
+//	    GET PRODUCTS FROM CART OF A LOGGED USER
+	    public List<Prodotto> getProductsInOrder(UUID userId) {
+	        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+	        System.out.println("User retrieved: " + user);
+
+	        List<OrdineSingolo> ordineSingoloList = ordineSingoloRepository.findByUserAndStatus(user, StatusOrdine.IN_CART);
+	        System.out.println("Orders retrieved: " + ordineSingoloList);
+	        
+	        if(ordineSingoloList.isEmpty()) {
+	            throw new RuntimeException("No orders in cart found");
+	        }
+
+	        OrdineSingolo ordineSingolo = ordineSingoloList.get(0);
+
+	        return ordineSingolo.getProdotti();
+	    }
 	
 	
+
+	
+	
+	
+	
+	
+	    
+	    
+//		public Page<User> searchUsers(String cap, String localita, String comune, Pageable pageable) {
+//			return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
+//		}
+
+//		public Page<User> findUsersByAddress(String cap, String localita, String comune, Pageable pageable) {
+//			return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
+//		}
 
 }
 	    

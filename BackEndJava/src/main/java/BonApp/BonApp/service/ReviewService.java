@@ -45,6 +45,15 @@ public class ReviewService {
 		review.setUsername(authenticatedUser.getUsername());
 		return reviewRepository.save(review);
 	}
+	
+	public Review createReview(UUID userId, NewReviewPayload newReviewPayload) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
+
+		Review review = new Review(newReviewPayload.getTitle(), newReviewPayload.getComment(),
+				newReviewPayload.getRating(), user);
+
+		return reviewRepository.save(review);
+	}
 
 	// Read single review
 	public Review findReviewById(UUID id) throws NotFoundException {
@@ -89,19 +98,7 @@ public class ReviewService {
 		return reviewRepository.findReviewsByCriteria(startDate, endDate, rating, username);
 	}
 	
-	public Review createReview(UUID userId, NewReviewPayload newReviewPayload) {
-        User user = userRepository.findById(userId)
-                .orElseThrow(() -> new IllegalArgumentException("Invalid user ID"));
-
-        Review review = new Review(
-                newReviewPayload.getTitle(),
-                newReviewPayload.getComment(),
-                newReviewPayload.getRating(),
-                user
-        );
-
-        return reviewRepository.save(review);
-    }
+	
 
     public Page<Review> getAllReviewsByUserId(UUID userId, Pageable pageable) {
         return reviewRepository.findByUserId(userId, pageable);

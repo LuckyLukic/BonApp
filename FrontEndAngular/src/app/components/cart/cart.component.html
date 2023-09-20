@@ -1,0 +1,61 @@
+
+
+<ng-container *ngIf="productsInOrder; then showCart; else noCart"></ng-container>
+
+<div class="container-fluid">
+<ng-template #showCart>
+<div class="card">
+  <div class="row">
+      <div class="col-md-8 cart">
+          <div class="title">
+              <div class="row">
+                  <div class="col"><h4><b>Shopping Cart</b></h4></div>
+                  <div class="col align-self-center text-right text-muted">{{productsInOrder.length}} items</div>
+              </div>
+          </div>
+          <div class="row border-top border-bottom" *ngFor="let singleDish of productsInOrder">
+              <div class="row main align-items-center">
+                  <div class="col-2"><img class="img-fluid" src="{{singleDish.imgUrl}}"></div>
+                  <div class="col">
+                      <div class="row text-muted">{{singleDish.nome}}</div>
+                  </div>
+                  <div class="col">
+                      <a href="#" (click)="removeFromCart(singleDish.id!); $event.preventDefault() ">-</a><a class="border">{{ singleDish.count || 1 }}</a><a href="#" (click)="addToCart(singleDish.id!); $event.preventDefault() ">+</a>
+                  </div>
+                  <div class="col">{{singleDish.prezzo}} <a href="#" (click)="removeFromCart(singleDish.id!); $event.preventDefault()"><span class="close">&#10005;</span></a> </div>
+              </div>
+          </div>
+
+          <div class="back-to-shop">
+            <a [routerLink]="['/']" routerLinkActive="active">&leftarrow;</a><span class="text-muted">Back to shop</span>
+          </div>
+      </div>
+      <div class="col-md-4 summary">
+          <div><h5><b>Summary</b></h5></div>
+          <hr>
+          <div class="row">
+              <div class="col" style="padding-left:0;">TOT ITEMS: {{productsInOrder.length}}</div>
+              <div class="col text-right">{{ordineInCart.totalPrice}}</div>
+          </div>
+          <form>
+              <p>DELIVERY COST: no charges for orders above 15 Euro</p>
+
+              <p>Deliver: {{ordineInCart.shippingCost}}</p>
+              <input id="code" placeholder="Enter your code">
+          </form>
+          <div class="row" style="border-top: 1px solid rgba(0,0,0,.1); padding: 2vh 0;">
+              <div class="col">TOTAL PRICE</div>
+              <div class="col text-right"></div>
+          </div>
+          <button class="btn">CHECKOUT</button>
+      </div>
+  </div>
+
+</div>
+</ng-template>
+
+<ng-template #noCart>
+  <div class="row d-flex justify-content-center align-items-center col-4">
+    Sorry, no products in the cart
+  </div>
+</ng-template>

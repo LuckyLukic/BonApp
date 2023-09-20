@@ -3,6 +3,7 @@ package BonApp.BonApp.service;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Optional;
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -12,6 +13,7 @@ import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
 import org.springframework.stereotype.Service;
 
+import BonApp.BonApp.Enum.StatusOrdine;
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
@@ -33,6 +35,7 @@ public class OrdineSingoloService {
 	@Autowired
 	ProdottoRepository prodottoRepository;
 
+	
 	public OrdineSingolo save(NewOrdineSingoloPayload body) throws NotFoundException {
 		User user = userRepository.findById(body.getUserId())
 				.orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
@@ -62,6 +65,7 @@ public class OrdineSingoloService {
 				.orElseThrow(() -> new NotFoundException("Single Order not found with ID: " + id));
 	}
 
+	
 	public OrdineSingolo findByIdAndUpdate(UUID id, NewOrdineSingoloPayload body) throws NotFoundException {
 		OrdineSingolo existingSingleOrder = findById(id);
 
@@ -113,4 +117,16 @@ public class OrdineSingoloService {
 	public Page<OrdineSingolo> findOrdersByUserId(UUID userId, Pageable pageable) {
 		return ordineSingoloRepository.findByUserId(userId, pageable);
 	    }
+	
+	
+//    public int getProductQuantityInCart(UUID userId, UUID productId) {
+//        OrdineSingolo cart = getCartByStatus(StatusOrdine.IN_CART);
+//        if (cart != null) {
+//            return cart.getProductQuantity(productId);
+//        }
+//        return 0;
+//    }
+
 }
+
+	

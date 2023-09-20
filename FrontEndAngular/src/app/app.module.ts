@@ -19,6 +19,8 @@ import { SingleUserComponent } from './components/users/single-user/single-user.
 import { UsersComponent } from './components/users/users.component';
 import { OwnFavoritesComponent } from './components/favorites/own-favorites/own-favorites.component';
 import { OwnReviewsComponent } from './components/reviews/own-reviews/own-reviews.component';
+import { CartComponent } from './components/cart/cart.component';
+import { UpdateComponent } from './components/own-profile/update/update.component';
 
  const route: Route[] = [
    {
@@ -42,10 +44,16 @@ import { OwnReviewsComponent } from './components/reviews/own-reviews/own-review
      component: LoginComponent
    },
   {
-    path: "ownprofile/:id",
-    component: OwnProfileComponent,
-    canActivate: [AuthGuardGuard],
-  },
+      path: 'ownprofile/:id',
+      component: OwnProfileComponent,
+      canActivate: [AuthGuardGuard],
+    },
+    {
+      path: 'ownprofile/:id/update',
+      component: UpdateComponent,
+      canActivate: [AuthGuardGuard],
+    },
+
    {
      path: "top-favoriti",
      component: FavoritesComponent,
@@ -66,7 +74,14 @@ import { OwnReviewsComponent } from './components/reviews/own-reviews/own-review
     component: OwnReviewsComponent,
     canActivate: [AuthGuardGuard]
 
+  },
+  {
+    path: "cart/:id",
+    component: CartComponent,
+    canActivate: [AuthGuardGuard]
+
   }
+
 //   {
 //     path: "**",
 //     component: Error404Component
@@ -88,6 +103,9 @@ import { OwnReviewsComponent } from './components/reviews/own-reviews/own-review
     UsersComponent,
     OwnFavoritesComponent,
     OwnReviewsComponent,
+    CartComponent,
+    UpdateComponent,
+
 
   ],
   imports: [

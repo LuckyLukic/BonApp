@@ -32,6 +32,9 @@ public class NewProdottoPayload {
 
 	@NotNull(message = "inserisci almento 1 ingrediente")
 	private List<Ingrediente> ingredienti;
+	
+	@NotNull(message = "inserisci almento 1 prodotto")
+	private int quantity;
 
 	private String imgUrl;
 }

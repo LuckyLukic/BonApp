@@ -27,6 +27,7 @@ import BonApp.BonApp.repositories.IngredienteRepository;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.UserRepository;
+import jakarta.transaction.Transactional;
 
 @Service
 public class ProdottoService {
@@ -79,6 +80,8 @@ public class ProdottoService {
 		return prodottoRepository.save(existingProdotto);
 	}
 
+	@Transactional
+
 	public void findByIdAndDelete(UUID id) throws NotFoundException {
 		Prodotto existingProdotto = findById(id);
 
@@ -107,31 +110,16 @@ public class ProdottoService {
 		prodottoRepository.delete(existingProdotto);
 	}
 
+	
 	public Page<Prodotto> findByPartialName(String partialName, int page, int size, String sortBy) {
 		Pageable prodottiPageable = PageRequest.of(page, size, Sort.by(sortBy));
 		return prodottoRepository.findByNomeContainingIgnoreCase(partialName, prodottiPageable);
 	}
 
 	
-	
 	public List<Prodotto> findByCriteria(Categoria categoria, Double minPrice, Double maxPrice, String ingredienteName) {
         return prodottoRepository.findByCategoriaAndPriceRangeAndIngredienteName(categoria, minPrice, maxPrice, ingredienteName);
     }
 	
-//	public Page<TopFavoritePayload> findTopFavoriteProducts(Pageable pageable) {
-//	    Page<Object[]> resultPage = prodottoRepository.findTopFavoriteProducts(pageable);
-//	    List<TopFavoritePayload> topFavoritePayloads = resultPage.getContent().stream()
-//	            .map(objArr -> {
-//	                UUID prodottoId = (UUID) objArr[0];
-//	                Long favoriteCount = ((BigInteger) objArr[1]).longValue();
-//	                
-//	                Prodotto prodotto = prodottoRepository.findById(prodottoId).orElse(null);
-//	                
-//	                return new TopFavoritePayload(prodotto, favoriteCount);
-//	            })
-//	            .collect(Collectors.toList());
-//
-//	    return new PageImpl<>(topFavoritePayloads, pageable, resultPage.getTotalElements());
-//	}
 
 }	

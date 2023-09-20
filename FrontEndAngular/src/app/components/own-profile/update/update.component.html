@@ -1,0 +1,59 @@
+
+<div class="row d-flex justify-content-center">
+  <form class="col-6 mb-5" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div class="mb-3">
+      <label for="username" class="form-label">Username</label>
+      <input type="text" class="form-control" id="username" aria-describedby="username" formControlName="username" placeholder="required, minimum 8 characters">
+      <div *ngIf="registerForm.get('username')?.touched && registerForm.get('username')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('username')?.hasError('required')">this field is required</div>
+        <div *ngIf="registerForm.get('username')?.hasError('minlength')"> minimum length 8 characters</div>
+      </div>
+    </div>
+    <!-- Similar changes to 'name' and 'surname' input fields -->
+    <div class="mb-3">
+      <label for="name" class="form-label">Nome</label>
+      <input type="text" class="form-control" id="name" aria-describedby="name" formControlName="name" placeholder="required">
+      <div *ngIf="registerForm.get('name')?.touched && registerForm.get('name')?.invalid" class="alert alert-danger">
+        this field is required
+      </div>
+    </div>
+    <div class="mb-3">
+      <label for="surname" class="form-label">Cognome</label>
+      <input type="text" class="form-control" id="surname" aria-describedby="surname" formControlName="surname" placeholder="required">
+      <div *ngIf="registerForm.get('surname')?.touched && registerForm.get('surname')?.invalid" class="alert alert-danger">
+        this field is required
+      </div>
+    </div>
+    <!-- Similar changes to 'email' input field -->
+    <div class="mb-3">
+      <label for="exampleInputEmail1" class="form-label">Email address</label>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="email">
+      <div *ngIf="registerForm.get('email')?.touched && registerForm.get('email')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('email')?.hasError('required')">this field is required</div>
+        <div *ngIf="registerForm.get('email')?.hasError('email')"> email format not valid</div>
+      </div>
+    </div>
+    <div formGroupName="indirizzo">
+      <!-- Similar updates to the rest of the input fields within 'indirizzo' group -->
+      <div class="mb-3">
+        <label for="via" class="form-label">Via</label>
+        <input type="text" class="form-control" id="via" formControlName="via" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.via')?.touched && registerForm.get('indirizzo.via')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+      <!-- ... (add similar sections for 'civico', 'localita', 'cap', 'comune', and 'provincia' here, following the same pattern) ... -->
+      <!-- Example for 'civico' -->
+      <div class="mb-3">
+        <label for="civico" class="form-label">Civico</label>
+        <input type="text" class="form-control" id="civico" formControlName="civico" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.civico')?.touched && registerForm.get('indirizzo.civico')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+      <!-- ... (continue with 'localita', 'cap', 'comune', and 'provincia') ... -->
+    </div>
+    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Submit</button>
+  </form>
+</div>
+

@@ -67,4 +67,8 @@ export class AuthService {
     }
     this.authSubj.next(datiUtente);
   }
+
+  updateUser(userid: string, data: Partial<Utente>) {
+    return this.http.put(this.baseURL+`users/+${userid}`, data )
+  }
 }

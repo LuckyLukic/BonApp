@@ -11,6 +11,8 @@ import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.query.Param;
 import org.springframework.stereotype.Repository;
 
+import BonApp.BonApp.Enum.StatusOrdine;
+import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 
@@ -41,4 +43,7 @@ public interface UserRepository extends JpaRepository<User, UUID> {
 			+ "(COALESCE(:comune, '') = '' OR i.comune = :comune)")
 	Page<User> findByCapLocalitaAndComune(@Param("cap") String cap, @Param("localita") String localita,
 			@Param("comune") String comune, Pageable pageable);
+
+
+
 }

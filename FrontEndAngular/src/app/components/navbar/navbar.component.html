@@ -14,11 +14,11 @@
           <a class="nav-link active" aria-current="page" [routerLink]="['top-favoriti']" routerLinkActive="active"  >favoriti</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['all-reviews']" routerLinkActive="active"  >cosa dicono di noi</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['all-reviews']" routerLinkActive="active"  >dicono di noi</a>
         </li>
-        <li class="nav-item">
+        <!-- <li class="nav-item">
           <a class="nav-link active" aria-current="page"  routerLinkActive="active"  >Admin</a>
-        </li>
+        </li> -->
       </div>
       <div class="d-flex">
         <ng-container *ngIf="!utente; then registerLogin else registrato"></ng-container>
@@ -40,11 +40,25 @@
         <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.name}} </button>
         <ul class="dropdown-menu">
           <li><a class="dropdown-item active" [routerLink]="['/ownprofile', utente?.id]">Profile</a></li>
-          <li><a class="dropdown-item" [routerLink]="['/favorites', utente?.id]">Favourites</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/favorites', utente?.id]">favourites</a></li>
           <li><a class="dropdown-item" [routerLink]="['/own-reviews', utente?.id]">reviews</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/own-orders', utente?.id]">orders</a></li>
 
         </ul>
       </div>
+
+      <div class="position-relative">
+        <button class="btn btn-link" [routerLink]="['/cart', utente?.id]">
+          <i class="bi bi-cart4"></i>
+
+
+        </button>
+        <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" *ngIf="productsInOrder">
+          {{ productsInOrder.length}}
+          <span class="visually-hidden">unread messages</span>
+      </span>
+      </div>
+
         <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
       </ng-template>
     </div>

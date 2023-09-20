@@ -103,6 +103,8 @@ public class OrdineSingoloController {
 	        Page<OrdineSingolo> ordini = ordineSingoloService.findOrdersByUserId(userId, pageable);
 	        return ResponseEntity.ok(ordini);
 	    }
+	 
+	
 }
 
 

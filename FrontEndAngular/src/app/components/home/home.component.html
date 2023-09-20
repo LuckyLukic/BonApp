@@ -1,4 +1,5 @@
-<ng-container *ngIf="dishesList; then showfood; else sorry"></ng-container>
+<ng-container *ngIf="utente; then showfood; else sorry"></ng-container>
+
 
 <ng-template #showfood>
 
@@ -20,6 +21,21 @@
               >
 
               <ng-container *ngIf="utente">
+
+                <button
+                class="btn btn-warning w-100 mb-2 position-relative"
+                type="button"
+                (click)="addToCart(singleDish.id!)" >
+                ADD TO CART
+                <span  class="badge bg-secondary position-absolute top-50 end-0">{{ getItemCount(singleDish.id!) }}</span>
+              </button>
+              <button *ngIf="isItemInArray(singleDish.id!)"
+                class="btn btn-danger w-100 mb-2"
+                type="button"
+                (click)="removeFromCart(singleDish.id!)" >
+                REMOVE FROM CART
+              </button>
+
                 <ng-container
                   *ngIf="favoriteDishes; then dishes; else noDishes"
                 ></ng-container>
@@ -29,7 +45,7 @@
                     *ngIf="checkMatch(singleDish.id!) === true; else noDishes"
                   >
                     <button
-                      class="btn btn-danger w-100"
+                      class="btn btn-danger w-100 mb-2"
                       type="button"
                       (click)="removeFavorite(singleDish.id!)"
 
@@ -41,7 +57,7 @@
 
                 <ng-template #noDishes>
                   <button
-                    class="btn btn-success w-100"
+                    class="btn btn-success w-100 mb-2"
                     type="button"
                     (click)="addFavorite(singleDish.id!)"
                   >

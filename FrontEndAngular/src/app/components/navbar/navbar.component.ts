@@ -1,48 +1,47 @@
-import { Component, OnInit } from '@angular/core';
-import { AuthData } from 'src/app/module/auth-data.interface';
-import { Utente } from 'src/app/module/utente.interface';
+import { Component, OnInit, Input, OnChanges, SimpleChanges, ChangeDetectionStrategy, ChangeDetectorRef } from '@angular/core';
 import { AuthService } from 'src/app/service/auth.service';
 import { UserService } from 'src/app/service/utente.service';
-import { Router, NavigationEnd } from '@angular/router';
-import { filter } from 'rxjs';
-
+import { Utente } from 'src/app/module/utente.interface';
+import { Dish } from 'src/app/module/dish.interface';
+import { CartService } from 'src/app/service/cart.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
-  styleUrls: ['./navbar.component.scss']
+  styleUrls: ['./navbar.component.scss'],
 })
 export class NavbarComponent implements OnInit {
 
-  utente!: Partial <Utente> | null
+  utente!: Partial<Utente> | null;
+  productsInOrder: any[] = [];
+  private cartSubscription?: Subscription;
 
-  constructor(private authSrv: AuthService, private userSrv: UserService,private router: Router) { }
+  constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) { }
 
   ngOnInit(): void {
 
     this.userSrv.getCurrentUser().subscribe((_utente) => {
+      this.utente = _utente;
+      this.subscribeToCartItemList();
 
-        this.utente = _utente;
-      });
+    });
+  }
 
-      // this.router.events
-      // .pipe(
-      //   filter(event => event instanceof NavigationEnd)
-      // )
-      // .subscribe(() => {
-      //   this.userSrv.getCurrentUser().subscribe((_utente) => {
+  private subscribeToCartItemList(): void {
+    this.cartSubscription = this.cartSrv.cartItemList$.subscribe(
+      cartItemList => {
+        this.productsInOrder = cartItemList;
+        console.log("NAVBAR", this.productsInOrder);
+      }
+    );
+  }
 
-      //     this.utente = _utente;
-      //   });
-
-      // });
-
-}
 
   logout() {
     this.authSrv.logout();
     this.utente = null;
   }
-
 }
+
 

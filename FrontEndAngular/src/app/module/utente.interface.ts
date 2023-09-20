@@ -9,7 +9,8 @@ export interface Utente {
     "name": string,
     "surname": string,
     "email": string,
-    "indirizzo" : {
+    "indirizzo" :
+     {
       "cap": string | null,
       "civico": string | null,
       "localita": string | null,
@@ -17,11 +18,10 @@ export interface Utente {
       "comune": string | null,
       "provincia": string | null,
     }
-    "password": string;
-    "role": Role
-    "singleOrders": OrdineSingolo[];
-    "dataRegistrazione": string;
-    "prodottiPreferiti": Dish[];
-    "reviews" : Reviews[];
+    "role"?: Role
+    "singleOrders"?: OrdineSingolo[];
+    "dataRegistrazione"?: string;
+    "prodottiPreferiti"?: Dish[];
+    "reviews"? : Reviews[];
 
   }

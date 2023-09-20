@@ -7,6 +7,7 @@ import { Dish } from 'src/app/module/dish.interface';
 import { UserService } from 'src/app/service/utente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { OwnFavorite } from 'src/app/module/own-favorite.interface';
+import { CartService } from 'src/app/service/cart.service';
 
 @Component({
   selector: 'app-own-favorites',
@@ -17,30 +18,34 @@ export class OwnFavoritesComponent implements OnInit {
 
   utente!: Partial<Utente>;
   favoriteDishes: Favorite[] = [];
+  productsInOrder: Dish[] = [];
 
 
-  constructor(private route: ActivatedRoute, private dishes: MenuService,private authSrv: AuthService, private userSrv: UserService) { }
+  constructor(private route: ActivatedRoute, private dishes: MenuService,private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) { }
 
   ngOnInit(): void {
 
-    this.route.params.subscribe(params => {
-      if (params) {
-        const userId = params['id'];
-        if (userId) {
-
-        this.userSrv.getCurrentUser().subscribe((_utente) => {
-        this.utente = _utente;
-
+    this.userSrv.getCurrentUser().subscribe((_utente) => {
+      this.utente = _utente;
+      if (this.utente && this.utente.id) {
+        this.getProductsInCart(this.utente.id!);
         this.getOwnFavorites(this.utente.id!)
-        console.log("OWN FAVORITES" + this.favoriteDishes)
-      })
 
 
+      }
+    })
     }
-  }
-})
 
-  }
+
+  getProductsInCart(userId:string): void {
+    this.cartSrv.getProductsInOrder(userId).subscribe ((data: Dish[])=> {
+      this.productsInOrder = data;
+      console.log("Products in order", this.productsInOrder);
+    },
+    error => {
+      console.error('Error fetching products in cart', error);
+    });
+}
 
 
 
@@ -48,9 +53,9 @@ export class OwnFavoritesComponent implements OnInit {
   removeFavorite(dishId: string): void {
     if (this.utente && this.utente.id) {
       this.dishes.removeFavorite(this.utente.id, dishId).subscribe(response =>{
-        this.getOwnFavorites(this.utente.id!);
-      }, error => {
-        console.error('Error adding favorite', error);
+        this.favoriteDishes = this.favoriteDishes.filter(item => item.prodotto.id !== dishId);
+    }, error => {
+      console.error('Error removing favorite', error);
       });
     }
   }

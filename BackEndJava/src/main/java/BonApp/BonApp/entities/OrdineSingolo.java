@@ -7,31 +7,43 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
+import java.util.stream.Collectors;
+
+import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+import com.fasterxml.jackson.annotation.ObjectIdGenerators;
 
 import BonApp.BonApp.Enum.StatusOrdine;
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
+@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class OrdineSingolo {
 
 	@Id
 	@GeneratedValue
 	private UUID id;
 
+//	@ManyToOne
+//	@JoinColumn(name = "user_id", nullable = false)
 	@ManyToOne
-	@JoinColumn(name = "user_id", nullable = false)
+	@JoinColumn(name = "user_id", nullable = true)
 	private User user;
 
 	private double totalPrice;
@@ -39,14 +51,17 @@ public class OrdineSingolo {
 	private LocalDate dataOrdine;
 	private LocalTime oraOrdine;
 
+	@Enumerated(EnumType.STRING)
 	private StatusOrdine status;
 	
     private double shippingCost;
 
 
-	@ManyToMany(cascade = { CascadeType.MERGE })
-	@JoinTable(name = "ordinesingolo_prodotto", joinColumns = @JoinColumn(name = "ordinesingolo_id"), inverseJoinColumns = @JoinColumn(name = "prodotto_id"))
-	private List<Prodotto> prodotti = new ArrayList<>();
+    @ManyToMany(cascade = { CascadeType.MERGE })    
+    @JoinTable(name = "ordinesingolo_prodotto",
+               joinColumns = @JoinColumn(name = "ordinesingolo_id"),
+               inverseJoinColumns = @JoinColumn(name = "prodotto_id"))	
+    private List<Prodotto> prodotti = new ArrayList<>();
 
 	public OrdineSingolo(User user, List<Prodotto> prodotti) {
 
@@ -56,7 +71,7 @@ public class OrdineSingolo {
 		this.dataOrdine = LocalDate.now();
 		this.oraOrdine = LocalTime.now();
 		this.status = StatusOrdine.IN_CART;
-		this.shippingCost =  2.5;
+		this.shippingCost = calculateShippingCost();
 	}
 	
 	public double calculateShippingCost() {
@@ -72,21 +87,36 @@ public class OrdineSingolo {
 	private Map<UUID, Integer> productQuantities = new HashMap<>();
 
 	public void addProduct(Prodotto prodotto, int quantity) {
-		this.prodotti.add(prodotto);
-		this.productQuantities.put(prodotto.getId(), this.productQuantities.getOrDefault(prodotto.getId(), 0) + quantity);
-		this.totalPrice += prodotto.getPrezzo() * quantity;
+	    for (int i = 0; i < quantity; i++) {
+	        this.prodotti.add(prodotto);
+	    }
+	    
+	    this.productQuantities.put(prodotto.getId(), this.productQuantities.getOrDefault(prodotto.getId(), 0) + quantity);
+	    this.totalPrice += prodotto.getPrezzo() * quantity;
 	}
+
 
 	public void removeProduct(Prodotto prodotto, int quantity) {
 	    Integer currentQuantity = this.productQuantities.getOrDefault(prodotto.getId(), 0);
-	    if(currentQuantity < quantity) {
-	        throw new IllegalArgumentException("Cannot remove more products than present in the cart");
-	    }
+//	    if(currentQuantity < quantity) {
+//	        throw new IllegalArgumentException("Cannot remove more products than present in the cart");
+//	    }
 	    
-	    this.prodotti.remove(prodotto);
-	    this.productQuantities.put(prodotto.getId(), currentQuantity - quantity);
+	    currentQuantity -= quantity;
+	    this.productQuantities.put(prodotto.getId(), currentQuantity);
 	    this.totalPrice -= prodotto.getPrezzo() * quantity;
+	    
+//	    if(currentQuantity == 0) {
+	        this.prodotti.remove(prodotto);
+	        this.productQuantities.remove(prodotto.getId());
+	    
+	    
 	}
+	
+	public int getProductQuantity(UUID productId) {
+	    return this.productQuantities.getOrDefault(productId, 0);
+	}
+	
 	
 
 	public void checkout() {
@@ -98,6 +128,7 @@ public class OrdineSingolo {
 
 			User user = this.getUser();
 			OrdineSingolo newOrdineSingolo = new OrdineSingolo();
+			//newOrdineSingolo.setUser(user); 
 			user.addSingleOrder(newOrdineSingolo);
 		} else {
 			throw new IllegalStateException("Cannot checkout a cart that is not in IN_CART status");

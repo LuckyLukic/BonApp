@@ -1,4 +1,5 @@
 import { Categoria } from "./categoria";
+import { Ingredienti } from "./ingredienti";
 
 export interface Dish {
   "content": Dish[];
@@ -6,8 +7,9 @@ export interface Dish {
   "descrizione" : string;
   "prezzo" : number;
   "categoria" : Categoria;
-  "ingredienti" : String[];
+  "ingredienti" : Ingredienti[];
   "imgUrl" : String;
+  "count"?: number;
   "id"? : string
 
 }
