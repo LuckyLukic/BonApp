@@ -147,12 +147,12 @@ public class OrdineSingolo {
 			this.status = StatusOrdine.COMPLETATO;
 			this.dataOrdine = LocalDate.now();
 			this.oraOrdine = LocalTime.now();
-			this.shippingCost = calculateShippingCost();
-
-			User user = this.getUser();
-			OrdineSingolo newOrdineSingolo = new OrdineSingolo();
-			//newOrdineSingolo.setUser(user); 
-			user.addSingleOrder(newOrdineSingolo);
+			//this.shippingCost = calculateShippingCost();
+//
+//			User user = this.getUser();
+//			OrdineSingolo newOrdineSingolo = new OrdineSingolo();
+//			newOrdineSingolo.setUser(user); 
+//			user.addSingleOrder(newOrdineSingolo);
 		} else {
 			throw new IllegalStateException("Cannot checkout a cart that is not in IN_CART status");
 		}

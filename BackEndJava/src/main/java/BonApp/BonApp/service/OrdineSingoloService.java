@@ -3,9 +3,11 @@ package BonApp.BonApp.service;
 import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
+import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
+import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
@@ -34,6 +36,9 @@ public class OrdineSingoloService {
 	@Autowired
 	UserRepository userRepository;
 
+	@Autowired
+	UsersService userService;
+	
 	@Autowired
 	ProdottoRepository prodottoRepository;
 
@@ -107,8 +112,11 @@ public class OrdineSingoloService {
 				.orElseThrow(() -> new NotFoundException("Order not found"));
 
 		ordineSingolo.checkout();
-
+		
+		userService.initializeUserCart(userId);
 		return ordineSingoloRepository.save(ordineSingolo);
+		
+		
 	}
 	
 	
@@ -144,7 +152,33 @@ public class OrdineSingoloService {
         }
         
 	}
+
+	
+   //	GET ALL ORDER OF GIVE USER WITH STATUS COMPLETATO
+//    public List<OrdineSingolo> findAllCompletedOrdersForUser(User user) {
+//        return ordineSingoloRepository.findByUserAndStatus(user, StatusOrdine.COMPLETATO);
+//    }
+	
+
+
+
+public List<OrdineSingolo> findAllCompletedOrdersForUser(UUID userId) {
+    User user = userService.findById(userId);
+    if (user == null) {
+        // Handle the case where no user is found. You could return an empty list or throw an exception.
+        return Collections.emptyList();
+    }
+    
+    return user.getSingleOrders().stream()
+        .filter(order -> order.getStatus() == StatusOrdine.COMPLETATO)
+        .collect(Collectors.toList());
 }
+
+}
+
+
+
+
 	
 	
 //    public int getProductQuantityInCart(UUID userId, UUID productId) {

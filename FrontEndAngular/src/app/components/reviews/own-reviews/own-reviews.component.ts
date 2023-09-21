@@ -1,8 +1,6 @@
 import { Component, OnInit } from '@angular/core';
-import { elementAt } from 'rxjs';
 import { Reviews } from 'src/app/module/reviews.interface';
 import { Utente } from 'src/app/module/utente.interface';
-import { AuthService } from 'src/app/service/auth.service';
 import { ReviewsService } from 'src/app/service/reviews.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/utente.service';
@@ -22,7 +20,7 @@ export class OwnReviewsComponent implements OnInit {
 
   ngOnInit(): void {
 
-    this.route.params.subscribe(params => {
+
 
 
       this.userSrv.getCurrentUser().subscribe((_utente) => {
@@ -35,7 +33,9 @@ export class OwnReviewsComponent implements OnInit {
         this.getOwnReviews(this.utente.id!)
 
   }
-})})
+})
+
+
       }
 
   getOwnReviews(id:string): void {

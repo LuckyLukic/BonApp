@@ -34,6 +34,10 @@ export class CartService {
     return this.http.get<Dish[]>(this.url + `users/${userId}/cart/products`);
   }
 
+  checkout(userId:string, orderId:string) {
+    return this.http.post(this.url+`ordine-singolo/${userId}/checkout/${orderId}`, {});
+  }
+
   // getNumberOfSameProducts(userId: string, productId: string): Observable<any> { // Specified return type
   //   return this.http.get(this.url + `users/${userId}/product-quantity?productId=${productId}`);
   // }

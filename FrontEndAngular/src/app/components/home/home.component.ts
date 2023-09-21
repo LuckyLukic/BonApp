@@ -6,6 +6,7 @@ import { Favorite } from 'src/app/module/favorite.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
+import { StripeService } from 'src/app/service/stripe.service';
 
 @Component({
   selector: 'app-home',
@@ -25,6 +26,7 @@ export class HomeComponent implements OnInit {
     private dishes: MenuService,
     private userSrv:UserService,
     private cartSrv:CartService,
+
 
   ) {}
 

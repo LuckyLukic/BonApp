@@ -219,6 +219,15 @@ public class UsersController {
     }
     
     
+    @GetMapping("/{userId}/completed")
+    public ResponseEntity<List<OrdineSingolo>> getAllCompletedOrdersForUser(@PathVariable UUID userId) {
+        // Fetch the User entity using the userId (you might have a UserService for this)
+        User user = userService.findById(userId);  // This is just a hypothetical method.
+        List<OrdineSingolo> completedOrders = ordineSingoloService.findAllCompletedOrdersForUser(userId);
+        return ResponseEntity.ok(completedOrders);
+    }
+    
+    
     //GET THE QUANTITY OF A ITEM IN A CART
 //    @GetMapping("/product-quantity")
 //    public int getProductQuantityInCart(@RequestParam UUID userId, @RequestParam UUID productId) {

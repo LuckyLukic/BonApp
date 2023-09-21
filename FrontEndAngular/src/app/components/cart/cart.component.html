@@ -47,7 +47,7 @@
               <div class="col">TOTAL PRICE {{ordineInCart.totalPrice + ordineInCart.shippingCost}}</div>
               <div class="col text-right"></div>
           </div>
-          <button class="btn">CHECKOUT</button>
+          <button class="btn" (click)="handlePayment()">CHECKOUT</button>
       </div>
   </div>
 

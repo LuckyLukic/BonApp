@@ -4,10 +4,8 @@ import { Dish } from 'src/app/module/dish.interface';
 import { Utente } from 'src/app/module/utente.interface';
 import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
-import { catchError } from 'rxjs/operators';
-import { EMPTY } from 'rxjs';
-import { switchMap } from 'rxjs/operators';
 import { OrdineSingolo } from 'src/app/module/ordine-singolo.interface';
+import { StripeService } from 'src/app/service/stripe.service';
 
 
 
@@ -20,11 +18,13 @@ import { OrdineSingolo } from 'src/app/module/ordine-singolo.interface';
 export class CartComponent implements OnInit {
   ordineInCart!: OrdineSingolo;
   productsInOrder: Dish[] = [];
-  utente!: Utente
+  utente!: Utente;
+  loaded: boolean = false;
+
 
   // productCount: number = 1;
 
-  constructor(private userSrv: UserService, private cartSrv: CartService ) { }
+  constructor(private userSrv: UserService, private cartSrv: CartService, private stripeService: StripeService ) { }
 
   ngOnInit(): void {
 
@@ -126,6 +126,23 @@ getGroupedProducts(): (Dish & { count: number })[] {
 
   // Convert the map back to an array
   return Object.values(groupedProductsMap);
+}
+
+checkout():void {
+  this.cartSrv.checkout(this.utente.id!, this.ordineInCart.id!).subscribe((response)=>{
+  console.log("Ordine Effettuato", response)
+  });
+}
+
+
+handlePayment() {
+  // if (this.loaded) {
+     this.checkout();
+     this.stripeService.redirectToCheckout(this.ordineInCart.totalPrice);
+
+  // } else {
+  //   console.error('Total price data not loaded yet.');
+  // }
 }
 
 }

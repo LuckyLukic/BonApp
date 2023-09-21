@@ -69,10 +69,10 @@ public class OrdineSingoloController {
 		ordineSingoloService.findByIdAndDelete(singleOrderId);
 	}
 
-	@PostMapping("/{userId}/checkout")
-	public ResponseEntity<?> processCheckout(@PathVariable UUID userId, @RequestBody UUID ordineSingoloId) {
+	@PostMapping("/{userId}/checkout/{orderId}")
+	public ResponseEntity<?> processCheckout(@PathVariable UUID userId, @PathVariable UUID orderId) {
 		try {
-			return ResponseEntity.ok(ordineSingoloService.processCheckout(userId, ordineSingoloId));
+			return ResponseEntity.ok(ordineSingoloService.processCheckout(userId, orderId));
 		} catch (NotFoundException e) {
 			return ResponseEntity.status(HttpStatus.NOT_FOUND).body(e.getMessage());
 		} catch (IllegalStateException e) {

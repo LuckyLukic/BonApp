@@ -34,13 +34,15 @@ public class SecurityConfig {
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/auth/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/prodotti/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews/**").permitAll());
-		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordine-singolo/**").authenticated());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ordine-singolo/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/ingredienti/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/indirizzi/**").authenticated());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/top-favorites").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/**").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/reviews").permitAll());
 		http.authorizeHttpRequests(auth -> auth.requestMatchers("/users/current").permitAll());
+		http.authorizeHttpRequests(auth -> auth.requestMatchers("/stripe/**").permitAll());
+		
 	
 		
 

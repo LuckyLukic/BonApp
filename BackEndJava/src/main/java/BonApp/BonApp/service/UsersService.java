@@ -313,6 +313,9 @@ public class UsersService {
 
 	        return ordineSingolo.getProdotti();
 	    }
+	    
+	    
+	  
 	
 	
 

@@ -1,5 +1,5 @@
 import { Dish } from "./dish.interface";
-import { Utente } from "./utente.interface";
+
 
 export interface OrdineSingolo {
   id? : string;
