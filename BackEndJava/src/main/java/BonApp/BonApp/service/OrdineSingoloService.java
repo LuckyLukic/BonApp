@@ -1,5 +1,6 @@
 package BonApp.BonApp.service;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
@@ -22,6 +23,7 @@ import BonApp.BonApp.payload.NewOrdineSingoloPayload;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.UserRepository;
+import ch.qos.logback.core.status.Status;
 
 @Service
 public class OrdineSingoloService {
@@ -108,6 +110,8 @@ public class OrdineSingoloService {
 
 		return ordineSingoloRepository.save(ordineSingolo);
 	}
+	
+	
 
 	public Page<OrdineSingolo> findByMultipleCriteria(String cap, String localita, String comune, Double minPrice, Double maxPrice, LocalDate startDate, LocalDate endDate, Pageable pageable) {
 	    return ordineSingoloRepository.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate, endDate, pageable);
@@ -127,6 +131,22 @@ public class OrdineSingoloService {
     }
 	
 	
+	public void checkStatusSendEmail() throws IOException {
+        List<OrdineSingolo> ordiniCompletati = ordineSingoloRepository.findByStatus(StatusOrdine.COMPLETATO);
+
+        for (OrdineSingolo ordine : ordiniCompletati) {
+            LocalDate currentDate = LocalDate.now();
+            
+            if (currentDate.isEqual(ordine.getDataOrdine())) {
+                ordine.invioEmail(ordine); 
+            
+    }
+        }
+        
+	}
+}
+	
+	
 //    public int getProductQuantityInCart(UUID userId, UUID productId) {
 //        OrdineSingolo cart = getCartByStatus(StatusOrdine.IN_CART);
 //        if (cart != null) {
@@ -135,6 +155,6 @@ public class OrdineSingoloService {
 //        return 0;
 //    }
 
-}
+
 
 	

@@ -35,7 +35,8 @@ public interface OrdineSingoloRepository extends JpaRepository<OrdineSingolo, UU
 	Page<OrdineSingolo> findByUserId(@Param("userId") UUID userId, Pageable pageable);
 
 	List<OrdineSingolo> findByUserAndStatus(User user, StatusOrdine status);
+	List<OrdineSingolo> findByStatus(StatusOrdine status);
 
-	OrdineSingolo findByStatus(StatusOrdine status);
+	
 
 }

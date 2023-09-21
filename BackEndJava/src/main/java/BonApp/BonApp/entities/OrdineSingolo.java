@@ -1,5 +1,6 @@
 package BonApp.BonApp.entities;
 
+import java.io.IOException;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.ArrayList;
@@ -11,8 +12,16 @@ import java.util.stream.Collectors;
 
 import com.fasterxml.jackson.annotation.JsonIdentityInfo;
 import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+import com.sendgrid.Method;
+import com.sendgrid.Request;
+import com.sendgrid.Response;
+import com.sendgrid.SendGrid;
+import com.sendgrid.helpers.mail.Mail;
+import com.sendgrid.helpers.mail.objects.Content;
+import com.sendgrid.helpers.mail.objects.Email;
 
 import BonApp.BonApp.Enum.StatusOrdine;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
@@ -148,8 +157,34 @@ public class OrdineSingolo {
 			throw new IllegalStateException("Cannot checkout a cart that is not in IN_CART status");
 		}
 	}
+	
+	public void invioEmail(OrdineSingolo ordine) throws IOException {
+		  
+	    Email from = new Email("lucabjjiannice@gmail.com");
+	    String subject = "Sending with SendGrid is Fun";
+	    Email to = new Email("luca.iannice@icloud.com");
+	    Content content = new Content("text/plain", "http://localhost:4200/rate-us/" + ordine.getUser().getId());          
+	    Mail mail = new Mail(from, subject, to, content);
+
+	    SendGrid sg = new SendGrid(System.getenv("API_KEY_SENDGRID"));
+	    System.out.println("SENDGRID_API_KEY: " + System.getenv("API_KEY_SENDGRID"));
+
+	    Request request = new Request();
+	    try {
+	      request.setMethod(Method.POST);
+	      request.setEndpoint("mail/send");
+	      request.setBody(mail.build());
+	      Response response = sg.api(request);
+	      System.out.println(response.getStatusCode());
+	      System.out.println(response.getBody());
+	      System.out.println(response.getHeaders());
+	    } catch (IOException ex) {
+	      throw ex;
+	    }
+  }
 
 }
+
 
 
 
