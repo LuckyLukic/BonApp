@@ -23,6 +23,7 @@ import { CartComponent } from './components/cart/cart.component';
 import { UpdateComponent } from './components/own-profile/update/update.component';
 import { RateUsComponent } from './components/reviews/rate-us/rate-us.component';
 import { OwnOrdersComponent } from './components/own-orders/own-orders.component';
+import { FooterComponent } from './components/footer/footer.component';
 
  const route: Route[] = [
    {
@@ -119,6 +120,7 @@ import { OwnOrdersComponent } from './components/own-orders/own-orders.component
     UpdateComponent,
     RateUsComponent,
     OwnOrdersComponent,
+    FooterComponent,
 
 
   ],

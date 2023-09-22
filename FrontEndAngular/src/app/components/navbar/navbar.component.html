@@ -1,34 +1,30 @@
-<nav class="navbar navbar-expand-md bg-body-tertiary sticky-top py-5 mb-3">
+<nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top py-5">
   <div class="container-fluid">
-    <a class="navbar-brand me-5" href="#">BONAPP</a>
-    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
-      <span class="navbar-toggler-icon"></span>
-    </button>
+    <a class="navbar-brand me-5" [routerLink]="['/']">BONAPP</a>
+
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav d-flex w-100 justify-content-between">
-        <div class="d-flex column-gap-3">
+        <div class="d-flex column-gap-3 links">
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['/']" routerLinkActive="active"  >Home</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['/']" routerLinkActive="active"  >HOME</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['top-favoriti']" routerLinkActive="active"  >favoriti</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['top-favoriti']" routerLinkActive="active"  >TOP FAVORITI</a>
         </li>
         <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['all-reviews']" routerLinkActive="active"  >dicono di noi</a>
+          <a class="nav-link active" aria-current="page" [routerLink]="['all-reviews']" routerLinkActive="active"  >DICONO DI NOI</a>
         </li>
-        <!-- <li class="nav-item">
-          <a class="nav-link active" aria-current="page"  routerLinkActive="active"  >Admin</a>
-        </li> -->
+
       </div>
       <div class="d-flex">
         <ng-container *ngIf="!utente; then registerLogin else registrato"></ng-container>
 
         <ng-template #registerLogin class="d-flex ms-auto align-items-center">
-        <li class="nav-item ms-auto">
+        <li class="nav-item ms-auto ">
           <a class="nav-link" [routerLink]="['/register']" routerLinkActive="active">Register</a>
         </li>
 
-        <span class="align-self-center"> / </span>
+        <span class="align-self-center spanBar"> | </span>
 
         <li class="nav-item">
           <a class="nav-link" [routerLink]="['/login']" routerLinkActive="active">Login</a>
@@ -36,34 +32,54 @@
       </ng-template>
 
       <ng-template class="d-flex" #registrato>
-        <div class="dropdown dropstart align-self-center">
-        <button class="mb-0 me-3 align-self-center dropdown-toggle border-0" type="button" data-bs-toggle="dropdown" aria-expanded="false"> Benvenuto {{utente?.name}} </button>
-        <ul class="dropdown-menu">
-          <li><a class="dropdown-item active" [routerLink]="['/ownprofile', utente?.id]">Profile</a></li>
-          <li><a class="dropdown-item" [routerLink]="['/favorites', utente?.id]">favourites</a></li>
-          <li><a class="dropdown-item" [routerLink]="['/own-reviews', utente?.id]">reviews</a></li>
-          <li><a class="dropdown-item" [routerLink]="['/own-orders', utente?.id]">orders</a></li>
+        <div class="collapse navbar-collapse" id="navbarNavDarkDropdown">
+          <ul class="navbar-nav">
+            <li class="nav-item dropdown">
+              <a class="nav-link dropdown-toggle" href="#" id="navbarDarkDropdownMenuLink" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                Benvenuto {{utente!.name}}
+              </a>
+              <ul class="dropdown-menu dropdown-menu-dark" aria-labelledby="navbarDarkDropdownMenuLink">
+          <li><a class="dropdown-item active" [routerLink]="['/ownprofile', utente!.id]">Profile</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/favorites', utente!.id]">favourites</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/own-reviews', utente!.id]">reviews</a></li>
+          <li><a class="dropdown-item" [routerLink]="['/own-orders', utente!.id]">orders</a></li>
+          <li><a class="dropdown-item" (click)="logout()">LogOut</a></li>
 
         </ul>
-      </div>
-
-      <div class="position-relative">
-        <button class="btn btn-link" [routerLink]="['/cart', utente?.id]">
-          <i class="bi bi-cart4"></i>
+      </li>
+    </ul>
+  </div>
 
 
-        </button>
-        <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill bg-danger" *ngIf="productsInOrder">
-          {{ productsInOrder.length}}
-          <span class="visually-hidden">unread messages</span>
-      </span>
-      </div>
 
-        <button type="button" class="btn btn-danger" (click)="logout()">Logout</button>
       </ng-template>
+
     </div>
+
 
       </ul>
     </div>
+
+
+    <ng-container *ngIf="utente then carrello"></ng-container>
+    <ng-template #carrello>
+    <div class="position-relative ms-auto">
+      <button class="btn btn-link" [routerLink]="['/cart', utente!.id]">
+        <i class="fa-solid fa-cart-plus fa-xl"></i>
+      </button>
+
+      <span class="position-absolute top-0 start-0 translate-middle badge rounded-pill" >
+        {{ productsInOrder.length}}
+        <span class="visually-hidden">unread messages</span>
+    </span>
+        </div>
+      </ng-template>
+
+      <button class="navbar-toggler ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+      </button>
+
+
   </div>
 </nav>
+

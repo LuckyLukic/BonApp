@@ -1,9 +1,10 @@
 
-<div class="row d-flex justify-content-center">
-  <form class="col-6 mb-5" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div formGroupName="newUserPayload">
+<div class=" d-flex justify-content-center contenitore">
+  <form class="col-10 mb-5 row" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <div formGroupName="newUserPayload" class="col-md-6 ps-md-0 formGroupName">
+      <p>DATI PERSONALI</p>
     <div class="mb-3">
-      <label for="username" class="form-label">Username</label>
+      <label for="username" class="form-label">USERNAME</label>
       <input type="text" class="form-control" id="username" aria-describedby="username" formControlName="username" placeholder="required, minimum 8 characters">
       <div *ngIf="registerForm.get('newUserPayload.username')?.touched && registerForm.get('newUserPayload.username')?.invalid" class="alert alert-danger">
         <div *ngIf="registerForm.get('newUserPayload.username')!.errors!['required']">this field is required</div>
@@ -11,14 +12,14 @@
       </div>
     </div>
     <div class="mb-3">
-      <label for="name" class="form-label">Nome</label>
+      <label for="name" class="form-label">NOME</label>
       <input type="text" class="form-control" id="name" aria-describedby="name" formControlName="name" placeholder="required">
       <div *ngIf="registerForm.get('newUserPayload.surname')?.touched && registerForm.get('newUserPayload.surname')?.invalid" class="alert alert-danger">
         this field is required
       </div>
     </div>
     <div class="mb-3">
-      <label for="surname" class="form-label">Cognome</label>
+      <label for="surname" class="form-label">COGNOME</label>
       <input type="text" class="form-control" id="surname" aria-describedby="surname" formControlName="surname"  placeholder="required">
       <div *ngIf="registerForm.get('surname')?.touched && registerForm.get('surname')?.invalid" class="alert alert-danger">
         this field is required
@@ -26,8 +27,8 @@
     </div>
 
     <div class="mb-3">
-      <label for="exampleInputEmail1" class="form-label">Email address</label>
-      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="email">
+      <label for="exampleInputEmail1" class="form-label">EMAIL </label>
+      <input type="email" class="form-control" id="exampleInputEmail1" aria-describedby="emailHelp" formControlName="email" placeholder="required">
       <div *ngIf="registerForm.get('newUserPayload.email')?.touched && registerForm.get('newUserPayload.email')?.invalid" class="alert alert-danger">
         <div *ngIf="registerForm.get('newUserPayload.email')!.errors!['required']">this field is required</div>
         <div *ngIf="registerForm.get('newUserPayload.email')!.errors!['email']"> email format not valid</div>
@@ -35,7 +36,7 @@
 
     </div>
     <div class="mb-3">
-      <label for="password" class="form-label">Password</label>
+      <label for="password" class="form-label">PASSWORD</label>
       <input type="password" class="form-control" id="password" aria-describedby="password" formControlName="password" placeholder="min 8 characters, 1 capitol letter, 1 special symbol, 1 number">
       <div *ngIf="registerForm.get('newUserPayload.password')?.touched && registerForm.get('newUserPayload.password')?.invalid" class="alert alert-danger">
         <div *ngIf="registerForm.get('newUserPayload.password')!.errors!['required']">this field is required</div>
@@ -43,53 +44,66 @@
       </div>
     </div>
 
+    <div class="mb-3">
+      <label for="confirmPassword" class="form-label">CONFERMA PASSWORD</label>
+      <input type="password" class="form-control" id="confirmPassword" aria-describedby="confirmPassword" formControlName="confirmPassword" placeholder="Re-enter password">
+      <div *ngIf="registerForm.get('newUserPayload.confirmPassword')?.touched && registerForm.get('newUserPayload.confirmPassword')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newUserPayload.confirmPassword')!.errors!['required']">this field is required</div>
+      </div>
+      <div *ngIf="registerForm.get('newUserPayload')!.errors && registerForm.get('newUserPayload.confirmPassword')?.touched" class="alert alert-danger">
+        Passwords do not match!
+      </div>
     </div>
-      <div formGroupName="newIndirizzoPayload">
+
+    </div>
+
+      <div formGroupName="newIndirizzoPayload" class="col-md-6 pe-md-0 formGroupIndirizzo">
+        <p>INDIRIZZO</p>
         <div class="mb-3">
-          <label for="via" class="form-label">Via</label>
+          <label for="via" class="form-label">VIA</label>
           <input type="text" class="form-control" id="via" formControlName="via" placeholder="required">
           <div *ngIf="registerForm.get('newIndirizzoPayload.via')?.touched && registerForm.get('newIndirizzoPayload.via')?.invalid" class="alert alert-danger">
             this field is required
           </div>
         </div>
       <div class="mb-3">
-        <label for="civico" class="form-label">Civico</label>
+        <label for="civico" class="form-label">CIVICO</label>
         <input type="text" class="form-control" id="civico" formControlName="civico" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.civico')?.touched && registerForm.get('indirizzo.civico')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newIndirizzoPayload.civico')?.touched && registerForm.get('newIndirizzoPayload.civico')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>
       <!-- ... (add similar sections for 'localita', 'cap', 'comune', and 'provincia' here) ... -->
       <div class="mb-3">
-        <label for="localita" class="form-label">Localita</label>
+        <label for="localita" class="form-label">LOCALITA'</label>
         <input type="text" class="form-control" id="localita" formControlName="localita" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.localita')?.touched && registerForm.get('indirizzo.localita')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newIndirizzoPayload.localita')?.touched && registerForm.get('newIndirizzoPayload.localita')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>
       <div class="mb-3">
         <label for="cap" class="form-label">CAP</label>
         <input type="text" class="form-control" id="cap" formControlName="cap" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.cap')?.touched && registerForm.get('indirizzo.cap')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('inewIndirizzoPayload.cap')?.touched && registerForm.get('newIndirizzoPayload.cap')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>
       <div class="mb-3">
-        <label for="comune" class="form-label">Comune</label>
+        <label for="comune" class="form-label">COMUNE</label>
         <input type="text" class="form-control" id="comune" formControlName="comune" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.comune')?.touched && registerForm.get('indirizzo.comune')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newIndirizzoPayload.comune')?.touched && registerForm.get('newIndirizzoPayload.comune')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>
       <div class="mb-3">
-        <label for="provincia" class="form-label">Provincia</label>
+        <label for="provincia" class="form-label">PROVINCIA</label>
         <input type="text" class="form-control" id="provincia" formControlName="provincia" placeholder="required">
-        <div *ngIf="registerForm.get('indirizzo.provincia')?.touched && registerForm.get('indirizzo.provincia')?.invalid" class="alert alert-danger">
+        <div *ngIf="registerForm.get('newIndirizzoPayload.provincia')?.touched && registerForm.get('newIndirizzoPayload.provincia')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>
     </div>
 
-    <button type="submit" class="btn btn-primary" [disabled]="registerForm.invalid">Submit</button>
+    <button type="submit" class="btn btn-primary col-12" [disabled]="registerForm.invalid">Submit</button>
   </form>
   </div>

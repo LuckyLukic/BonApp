@@ -26,10 +26,6 @@ export class OwnOrdersComponent implements OnInit {
 
       this.userSrv.getCurrentUser().subscribe((_utente) => {
         this.utente = _utente;
-        console.log("DIOCANE",this.utente)
-
-
-
 
 
         this.getAllCompletedOrder(this.utente.id!)
@@ -41,29 +37,29 @@ export class OwnOrdersComponent implements OnInit {
 
 getAllCompletedOrder(userId: string) {
   this.ordineSrv.getAllCompletedOrder(userId).subscribe((response : OrdineSingolo[])=>{
-    this.ownOrders = this.transformOrderList(response);
+    this.ownOrders = response;
     console.log("Assigned to this.ownOrders: ", this.ownOrders);
   });
 }
 
 
-transformOrderList(response: any[]): OrdineSingolo[] {
-  console.log("transformOrderList input", response)
-  const originalOrdine = response[0] as OrdineSingolo;
+// transformOrderList(response: any[]): OrdineSingolo[] {
+//   console.log("transformOrderList input", response)
+//   const originalOrdine = response[0] as OrdineSingolo;
 
-  const transformedArray = response.map((item: OrdineSingolo | string) => {
-    if (typeof item === 'string') {
-      return {
-        ...originalOrdine,
-        id: item
-      };
-    }
-    return item;
-  });
+//   const transformedArray = response.map((item: OrdineSingolo | string) => {
+//     if (typeof item === 'string') {
+//       return {
+//         ...originalOrdine,
+//         id: item
+//       };
+//     }
+//     return item;
+//   });
 
-  console.log("transformOrderList result", transformedArray);
-  return transformedArray;
-}
+//   console.log("transformOrderList result", transformedArray);
+//   return transformedArray;
+// }
 
 
 }

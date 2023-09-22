@@ -1,1 +1,60 @@
 
+
+.navbar {
+  background-color: #3c3d41 !important;
+  margin-bottom: 80px;
+  padding: 30px 0 !important;
+  border-bottom-left-radius: 6px;
+  border-bottom-right-radius: 6px;
+}
+
+div.container-fluid {
+  padding: 0 40px;
+  }
+
+.navbar-brand {
+  font-size: 30px;
+  font-weight: 500;
+  color: rgba(255,255,255,1.00) !important;
+}
+
+a {
+  color: rgba(255,255,255,0.8) !important;
+  transition: color 0.3s ease;
+
+&:hover {
+  color: rgba(255,255,255,1.00) !important;
+}
+}
+
+.navbar-nav {
+  padding-left: 10px;
+}
+
+#navbarDarkDropdownMenuLink {
+  margin-right: 30px;
+}
+
+.fa-cart-plus{
+  color: rgba( 42, 197, 22, 0.8);
+  transition: color 0.3s ease;
+
+  &:hover {
+    color:rgba( 42, 197, 22, 1.0);
+  }
+}
+
+.spanBar{
+  color: rgba(255,255,255,0.8);
+}
+
+span.badge {
+  background-color:  rgba( 42, 197, 22, 0.8);
+}
+
+.navbar-toggler{
+  filter: invert(1);
+}
+
+
+

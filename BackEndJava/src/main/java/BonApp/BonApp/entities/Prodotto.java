@@ -35,7 +35,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "prodotto")
-@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
 public class Prodotto {
     
     @Id
@@ -51,7 +51,7 @@ public class Prodotto {
     private Categoria categoria;
     
   
-    @ManyToMany(cascade = {CascadeType.MERGE})
+    @ManyToMany (cascade = {CascadeType.MERGE})
     @JoinTable(
       name = "prodotto_ingrediente", 
       joinColumns = @JoinColumn(name = "prodotto_id"), 

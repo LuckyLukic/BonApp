@@ -3,6 +3,7 @@ import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { NgForm } from '@angular/forms';
 
+
 @Component({
   selector: 'app-login',
   templateUrl: './login.component.html',
@@ -20,6 +21,7 @@ export class LoginComponent implements OnInit {
     this.authSrv.login(form.value).subscribe(
       () => {  // This is the success callback
         alert('Login Effettuato!');
+        // this.refreshNavbar
         this.route.navigate(['/']);
       },
       (error) => {  // This is the error callback
@@ -29,5 +31,11 @@ export class LoginComponent implements OnInit {
       }
     );
   }
+
+
+
+  // refreshNavbar() {
+  //   this.authSrv.triggerRefresh();
+  // }
 
 }

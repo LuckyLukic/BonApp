@@ -43,7 +43,7 @@ export class CartComponent implements OnInit {
 
   getProductsInCart(userId: string): void {
     this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {
-      this.productsInOrder = this.transformProdottiList(data);
+      this.productsInOrder = data;
       this.cartSrv.setCartItemList(this.productsInOrder);
       console.log(this.productsInOrder);
     },

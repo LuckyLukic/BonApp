@@ -8,6 +8,7 @@ import { BehaviorSubject, throwError } from 'rxjs';
 import { tap, catchError } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Registrazione } from '../module/registrazione.interface';
+import { Subject } from 'rxjs';
 
 @Injectable({
   providedIn: 'root',
@@ -19,6 +20,9 @@ export class AuthService {
   private authSubj = new BehaviorSubject<null | AuthData>(null);
   user$ = this.authSubj.asObservable();
   timeOut: any;
+
+  private refreshNavbarSubject = new Subject<void>();
+  refreshNavbar$ = this.refreshNavbarSubject.asObservable();
 
   constructor(private http: HttpClient, private route: Router) {
     this.restore()
@@ -71,4 +75,10 @@ export class AuthService {
   updateUser(userid: string, data: Partial<Utente>) {
     return this.http.put(`${this.baseURL}users/${userid}`, data )
   }
+
+
+
+  // triggerRefresh() {
+  //   this.refreshNavbarSubject.next();
+  // }
 }

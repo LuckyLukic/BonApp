@@ -16,23 +16,29 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 })
 export class NavbarComponent implements OnInit {
 
-  utente!: Partial<Utente> |null;
+  utente: Utente | null = null;
   productsInOrder: any[] = [];
   private cartSubscription?: Subscription;
   checkUtente!: string | null;
   // singleId!: string | null;
 
+
   constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService, private route: ActivatedRoute) {
 
    }
 
-
-
-
   ngOnInit(): void {
 
-    this.userSrv.getUser().subscribe((_utente) => {
+    // this.userSrv.getUser().subscribe((_utente) => {
+    //   this.utente = _utente;
+    // this.authSrv.refreshNavbar$.subscribe(() => {
+    //   })
+
+
+     this.userSrv.getCurrentUser().subscribe((_utente) => {
+
       this.utente = _utente;
+
       console.log("NAV", _utente)
       this.subscribeToCartItemList();
 
@@ -63,6 +69,14 @@ export class NavbarComponent implements OnInit {
     this.authSrv.logout();
     this.utente = null;
   }
+
+  refresh():void {
+    this.userSrv.getCurrentUser().subscribe((_utente) => {
+
+      this.utente = _utente;
+  })
+}
+
 }
 
 

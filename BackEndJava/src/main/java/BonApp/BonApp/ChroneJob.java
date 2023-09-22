@@ -19,7 +19,7 @@ import BonApp.BonApp.service.OrdineSingoloService;
 	    @Autowired
 	    private OrdineSingoloService ordineService;
 
-	    @Scheduled(cron = "*/10 * * * * *")
+	    @Scheduled(cron = "*/20 * * * * *")
 	    public void checkStatusSendEmail() throws IOException {
 	        System.out.println("Executing checkAndUpdateFatturaStates at: " + LocalDate.now());
 	        ordineService.checkStatusSendEmail();

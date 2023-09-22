@@ -1,5 +1,5 @@
 import { Component, OnInit } from '@angular/core';
-import { FormBuilder, Validators} from '@angular/forms';
+import { FormBuilder, Validators, AbstractControl} from '@angular/forms';
 import { Registrazione } from 'src/app/module/registrazione.interface';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
@@ -32,7 +32,8 @@ export class RegisterComponent implements OnInit {
       surname: ['', Validators.required],
       email: ['', [Validators.required, Validators.email]],
       password: ['', [Validators.required, Validators.pattern(this.pattern)]],
-    }),
+      confirmPassword: ['', Validators.required],
+    }, { validators: this.passwordMatchValidator }),
     newIndirizzoPayload: this.builder.group({
       cap: ['', Validators.required],
       civico: ['', Validators.required],
@@ -46,6 +47,15 @@ export class RegisterComponent implements OnInit {
 
 
   ngOnInit(): void {}
+
+    passwordMatchValidator(control: AbstractControl) {
+    const password = control.get('password');
+    const confirmPassword = control.get('confirmPassword');
+
+    return password && confirmPassword && password.value !== confirmPassword.value
+      ?  { passwordMismatch: true }
+      : null;
+  }
 
   onSubmit() {
 
@@ -63,6 +73,7 @@ export class RegisterComponent implements OnInit {
       })
     )
     .subscribe(() => {
+      alert('You are successfully registered!');
       this.registerForm.reset();
       this.route.navigate(['/login']);
     });
