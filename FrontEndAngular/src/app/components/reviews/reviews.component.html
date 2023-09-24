@@ -4,8 +4,8 @@
 <ng-template #showreview>
   <div class="container-fluid px-0">
     <div class="row row-gap-3">
-      <div class="cardwrapper col-lg-6" *ngFor="let singleReview of reviewList; let i = index">
-        <div class="card w-100 h-100 d-flex align-content-between flex-column" [style.animation-delay]="i * 0.2 + 's'">
+      <div class="cardwrapper col-lg-6 d-flex flex-column justify-content-between" *ngFor="let singleReview of reviewList; let i = index">
+        <div class="card w-100 h-100 d-flex justify-content-between flex-column" [style.animation-delay]="i * 0.2 + 's'">
 
           <div class="card-body">
             <p class="rating" > <ngb-rating  [max]= 5 [(rate)]="singleReview.rating" [readonly]="false"></ngb-rating></p>

@@ -1,0 +1,55 @@
+div.container-fluid{
+  margin-bottom: 80px;
+}
+
+div.cardwrapper{
+  margin-bottom: 25px;
+
+}
+
+.card {
+  animation: fadeIn 0.8s ease-in both;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 75%,rgba(175, 69, 17, 0.7)100%);
+  border-top: none;
+  border-left: none;
+  box-shadow: 5px 5px 15px rgba(115, 109, 109, 0.6);
+
+}
+
+.card-body {
+  border-top: none;
+  border-left: none;
+}
+
+@keyframes fadeIn {
+  from {
+    transform: translateX(-100%);
+    opacity: 0;
+  }
+
+  to {
+    transform: translateX(0);
+    opacity: 1;
+  }
+}
+
+.card-text{
+  font-weight: 500;
+}
+
+p{
+  color: rgb(94, 85, 85) !important;
+}
+
+span.ingredienti{
+  color: rgb(68, 59, 59) !important
+}
+
+.bottone{
+  background-color:rgba(255,255,255, 0.7);
+  transition: 0.4s;
+
+  &:hover{
+    background-color: rgba(255,255,255, 1)
+  }
+}

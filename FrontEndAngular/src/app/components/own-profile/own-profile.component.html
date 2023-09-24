@@ -1,8 +1,8 @@
-<div class="row d-flex justify-content-center form-container">
+<div class="row d-flex justify-content-center form-container mx-0">
 
-  <div class="col-8 row wrapper">
+  <div class="col-lg-8 row wrapper">
     <h2 class="text-uppercase mb-4">Profilo personale</h2>
-    <div class="col-6 ciccio">
+    <div class="col-md-6 left mb-5">
       <p class="dati text-uppercase">Dati Personali</p>
       <p class="card-text text-uppercase"> <span>Nome:</span> {{ utente.name }}</p>
       <p class="card-text text-uppercase"><span>Cognome:</span> {{ utente.surname }}</p>
@@ -10,7 +10,7 @@
       <p class="card-text text-uppercase"><span>Username:</span> {{ utente.username }}</p>
     </div>
 
-    <div class="col-6 ciccio2 mb-5">
+    <div class="col-md-6 right mb-5">
       <p class="dati text-uppercase">Indirizzo</p>
       <p class="card-text text-uppercase"> <span>via:</span> {{ utente.indirizzo.via }}</p>
       <p class="card-text text-uppercase">

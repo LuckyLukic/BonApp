@@ -6,6 +6,7 @@ import { Favorite } from 'src/app/module/favorite.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
+import { Router } from '@angular/router';
 import { StripeService } from 'src/app/service/stripe.service';
 
 @Component({
@@ -26,6 +27,7 @@ export class HomeComponent implements OnInit {
     private dishes: MenuService,
     private userSrv:UserService,
     private cartSrv:CartService,
+    private router:Router
 
 
   ) {}
@@ -61,7 +63,7 @@ export class HomeComponent implements OnInit {
 
   getProductsInCart(userId: string): void {
     this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {
-      this.productsInOrder = this.transformProdottiList(data);
+      this.productsInOrder = data;
       this.cartSrv.setCartItemList(this.productsInOrder);
       console.log(this.productsInOrder);
     },
@@ -70,25 +72,25 @@ export class HomeComponent implements OnInit {
     });
   }
 
-  private transformProdottiList(response: any[]): Dish[] {
-    // Step 1: Create a map of all unique Dish objects by their id
-    const dishMap: { [id: string]: Dish } = {};
-    response.forEach((dish: Dish | string) => {
-      if (typeof dish !== 'string' && dish.id) {
-        dishMap[dish.id] = dish;
-      }
-    });
-    // Step 2: Create a new list of Dishes, replacing string ids with Dish objects from the map
-    const dishList = response.map((dish: Dish | string) => {
-      if (typeof dish === 'string') {
-        return dishMap[dish] || { productId: dish };
-      } else {
-        return dish;
-      }
-    });
+  // private transformProdottiList(response: any[]): Dish[] {
+  //   // Step 1: Create a map of all unique Dish objects by their id
+  //   const dishMap: { [id: string]: Dish } = {};
+  //   response.forEach((dish: Dish | string) => {
+  //     if (typeof dish !== 'string' && dish.id) {
+  //       dishMap[dish.id] = dish;
+  //     }
+  //   });
 
-    return dishList;
-  }
+  //   const dishList = response.map((dish: Dish | string) => {
+  //     if (typeof dish === 'string') {
+  //       return dishMap[dish] || { productId: dish };
+  //     } else {
+  //       return dish;
+  //     }
+  //   });
+
+  //   return dishList;
+  // }
 
 
    favoriti(id: string): void {
@@ -160,13 +162,19 @@ export class HomeComponent implements OnInit {
   getItemCount(itemId: string): number {
    return  this.productsInOrder.filter(item => item.id === itemId).length;
 
-
-
   }
 
+  navigateToDestination() {
 
+    const currentUrl = this.router.url;
+    this.router.navigate(['/dishes/:id'], { state: { returnUrl: currentUrl } })
 
 }
+
+}
+
+
+
 
 
 

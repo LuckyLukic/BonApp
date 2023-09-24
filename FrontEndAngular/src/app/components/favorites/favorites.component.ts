@@ -1,11 +1,10 @@
 import { Component, OnInit } from '@angular/core';
-
+import { Router } from '@angular/router';
 import { MenuService } from 'src/app/service/menu.service';
-import { AuthService } from "src/app/service/auth.service";
 import { Favorite } from 'src/app/module/favorite.interface';
 import { Dish } from 'src/app/module/dish.interface';
-import { AuthData } from 'src/app/module/auth-data.interface';
-import { Categoria } from 'src/app/module/categoria';
+
+
 @Component({
   selector: 'app-favorites',
   templateUrl: './favorites.component.html',
@@ -17,7 +16,9 @@ export class FavoritesComponent implements OnInit {
   topFavoriteDishes: Favorite[] = []
   productsInOrder: Dish[] = [];
 
-  constructor(private dishes: MenuService, private authSrv: AuthService) { }
+  constructor(
+               private dishes: MenuService,
+               private router: Router) { }
 
   ngOnInit(): void {
   this.topFavorite()
@@ -28,6 +29,7 @@ export class FavoritesComponent implements OnInit {
     this.dishes.getTopFavorites().subscribe((allDishes: Favorite) => {
 
       this.topFavoriteDishes = allDishes.content;
+      console.log("List", this.topFavoriteDishes)
 
   })
 
@@ -37,5 +39,14 @@ export class FavoritesComponent implements OnInit {
     return (ingredient as any).nome;
   }
 
+  navigateToDestination() {
+
+    const currentUrl = this.router.url;
+    this.router.navigate(['/dishes/:id'], { state: { returnUrl: currentUrl } })
+
+}
+
   }
+
+
 
