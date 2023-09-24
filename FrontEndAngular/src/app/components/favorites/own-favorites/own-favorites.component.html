@@ -2,44 +2,28 @@
 <ng-container *ngIf="favoriteDishes; then showdishes; else sorry"></ng-container>
 
 <ng-template #showdishes>
-  <div class="container-fluid">
-    <div class="row row-gap-3">
-      <div class="cardwrapper col-3" *ngFor="let singleDish of favoriteDishes">
-        <div class="card h-100">
-          <img
-            src="{{ singleDish.prodotto.imgUrl}}"
-            class="card-img-top"
-            alt="movie poster"
-          />
+  <div class="container-fluid px-0">
+    <div class="row d-flex justify-content-between">
+      <div class="cardwrapper col-md-6 col-lg-4 mb-4" *ngFor="let singleDish of favoriteDishes; trackBy: trackByFunction; let i = index">
+        <div class="card h-100 d-flex flex-column" [style.animation-delay]="i * 0.2 + 's'">
+          <img src="{{ singleDish.prodotto.imgUrl}}" class="card-img-top" alt="movie poster" />
+          <div class="card-body d-flex flex-column justify-content-between pb-0">
+            <h4 class="card-title text-uppercase mb-1">{{ singleDish.prodotto.nome}}</h4>
+          </div>
           <div class="card-body d-flex flex-column justify-content-between">
-            <h5 class="card-title">Title:{{ singleDish.prodotto.nome}}</h5>
-            <div class="d-flex flex-column">
-              <ng-container *ngIf="singleDish.prodotto.ingredienti.length >0">
-                <div *ngFor="let ingredient of singleDish?.prodotto?.ingredienti">
+            <div>
 
-                  <p class="card-text mb-2">Ingrediente: {{ getIngredientName(ingredient)}}</p>
+                <p class="card-text mb-3">{{ singleDish.prodotto.descrizione }}</p>
 
-                </div>
-
-
-              <p class="card-text mb-2">Descrizione: {{ singleDish?.prodotto?.descrizione }}</p>
-
-
-
-              <a
-                [routerLink]="['/dishes', singleDish.prodotto.id]"
-                class="btn btn-primary mb-2"
-                >DETAIL</a>
-
-                <button
-                      class="btn btn-danger w-100"
+            </div>
+            <a [routerLink]="['/dishes', singleDish.prodotto.id]" class="btn bottone mb-2 mt-auto">DETAIL</a>
+            <button
+                      class="btn w-100"
                       type="button"
                       (click)="removeFavorite(singleDish.prodotto.id!)"
                     >
                       REMOVE
                     </button>
-              </ng-container>
-            </div>
           </div>
         </div>
       </div>

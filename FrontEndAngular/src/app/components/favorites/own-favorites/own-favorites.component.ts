@@ -6,7 +6,6 @@ import { Utente } from 'src/app/module/utente.interface';
 import { Dish } from 'src/app/module/dish.interface';
 import { UserService } from 'src/app/service/utente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
-import { OwnFavorite } from 'src/app/module/own-favorite.interface';
 import { CartService } from 'src/app/service/cart.service';
 
 @Component({
@@ -82,6 +81,10 @@ export class OwnFavoritesComponent implements OnInit {
 
     getIngredientName(ingredient: any): string {
       return (ingredient as any).nome;
+    }
+
+    trackByFunction(index: number, item: any): any {
+      return item.prodotto.id;
     }
 
 }

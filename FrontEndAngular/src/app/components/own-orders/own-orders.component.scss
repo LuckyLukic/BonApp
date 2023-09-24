@@ -1,0 +1,39 @@
+div.container-fluid{
+  margin-bottom: 80px;
+}
+
+.card {
+  animation: fadeIn 0.2s ease-in both;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 70%,rgba(175, 69, 17, 0.7)100%);
+  border-top: none;
+  border-left: none;
+  box-shadow: 5px 5px 15px rgba(115, 109, 109, 0.6);
+
+}
+
+.card-body {
+  border-top: none;
+  border-left: none;
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+.card-text{
+  font-weight: 500;
+}
+
+p{
+  color: rgb(94, 85, 85) !important;
+}
+
+span.ingredienti{
+  color: rgb(68, 59, 59) !important
+}
