@@ -19,12 +19,12 @@ export class LoginComponent implements OnInit {
   accedi(form: NgForm) {
 
     this.authSrv.login(form.value).subscribe(
-      () => {  // This is the success callback
+      () => {
         alert('Login Effettuato!');
-        // this.refreshNavbar
+
         this.route.navigate(['/']);
       },
-      (error) => {  // This is the error callback
+      (error) => {
         alert('Login errato');
         console.error(error);
         this.route.navigate(['/login']);
@@ -32,10 +32,5 @@ export class LoginComponent implements OnInit {
     );
   }
 
-
-
-  // refreshNavbar() {
-  //   this.authSrv.triggerRefresh();
-  // }
 
 }

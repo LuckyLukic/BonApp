@@ -42,6 +42,7 @@ export class OwnReviewsComponent implements OnInit {
     this.revService.getOwnReviews(id).subscribe(
       (element : Reviews) => {
       this.ownReviewsList = element.content;
+      console.log("Reviews", this.ownReviewsList)
     },
     error => {
       console.error('Error fetching favorite dishes:', error);
@@ -52,6 +53,7 @@ export class OwnReviewsComponent implements OnInit {
     if (this.utente && this.utente.id) {
       this.revService.deleteOwnReview(this.utente.id, reviewId).subscribe(
         response => {
+          alert("Recensione rimossa correttamente")
           this.getOwnReviews(this.utente.id!); // Refresh the list
         },
         error => {
@@ -64,6 +66,8 @@ export class OwnReviewsComponent implements OnInit {
 }
 
 }
+
+
 
 
 

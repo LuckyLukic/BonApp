@@ -1,0 +1,38 @@
+ngb-rating {
+  color: #FFC107;
+  font-size: 20px;
+}
+
+.container-fluid {
+  margin-bottom: 80px;
+}
+
+.card {
+  animation: fadeIn 0.2s ease-in both;
+  background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 80%,rgba(255, 161, 0, 0.50) 100%);
+  border-top: none;
+  border-left: none;
+  box-shadow: 5px 5px 15px rgba(115, 109, 109, 0.5);
+
+}
+
+@keyframes fadeIn {
+  from {
+    opacity: 0;
+  }
+
+  to {
+    opacity: 1;
+  }
+}
+
+button {
+  background-color: rgba(255, 161, 0, 0.50) ;
+  transition: 0.4s;
+
+  &:hover {
+    background-color: rgba(255, 161, 0, 8) !important;
+  }
+}
+
+

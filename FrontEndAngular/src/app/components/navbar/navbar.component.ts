@@ -4,8 +4,8 @@ import { UserService } from 'src/app/service/utente.service';
 import { Utente } from 'src/app/module/utente.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { Subscription } from 'rxjs';
-import { Router } from '@angular/router';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+
 
 
 
@@ -19,8 +19,7 @@ export class NavbarComponent implements OnInit {
   utente: Utente | null = null;
   productsInOrder: any[] = [];
   private cartSubscription?: Subscription;
-  checkUtente!: string | null;
-  // singleId!: string | null;
+
 
 
   constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService, private route: ActivatedRoute) {
@@ -40,20 +39,13 @@ export class NavbarComponent implements OnInit {
       this.utente = _utente;
 
       console.log("NAV", _utente)
-      this.subscribeToCartItemList();
-
-      // this.route.paramMap.subscribe((data: ParamMap) => {
-      //   this.singleId =  data.get('id');
-
-      // })
+     this.subscribeToCartItemList();
 
 
-    });
-
-    this.checkUtente = localStorage.getItem('user');
-    console.log("checkUtente", this.checkUtente)
-
+    })
   }
+
+
 
   private subscribeToCartItemList(): void {
     this.cartSubscription = this.cartSrv.cartItemList$.subscribe(

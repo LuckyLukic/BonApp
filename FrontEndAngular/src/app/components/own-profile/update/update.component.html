@@ -1,6 +1,10 @@
 
 <div class="row d-flex justify-content-center">
-  <form class="col-6 mb-5" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+
+  <form class="col-10 mb-5 row" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
+    <h2 class="px-0 mb-4">AGGIORNA I TUOI DATI</h2>
+    <div class="datiPersonali col-md-6 ps-md-0">
+      <p class="titolo">DATI PERSONALI</p>
     <div class="mb-3">
       <label for="username" class="form-label">Username</label>
       <input type="text" class="form-control" id="username" aria-describedby="username" formControlName="username" placeholder="required, minimum 8 characters">
@@ -33,7 +37,12 @@
         <div *ngIf="registerForm.get('email')?.hasError('email')"> email format not valid</div>
       </div>
     </div>
-    <div formGroupName="indirizzo">
+  </div>
+
+
+
+    <div formGroupName="indirizzo" class="col-md-6 pe-md-0">
+      <p class="titolo">INDIRIZZO</p>
       <!-- Similar updates to the rest of the input fields within 'indirizzo' group -->
       <div class="mb-3">
         <label for="via" class="form-label">Via</label>
@@ -48,6 +57,35 @@
         <label for="civico" class="form-label">Civico</label>
         <input type="text" class="form-control" id="civico" formControlName="civico" placeholder="required">
         <div *ngIf="registerForm.get('indirizzo.civico')?.touched && registerForm.get('indirizzo.civico')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+
+      <div class="mb-3">
+        <label for="localita" class="form-label">LOCALITA'</label>
+        <input type="text" class="form-control" id="localita" formControlName="localita" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.localita')?.touched && registerForm.get('indirizzo.localita')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="cap" class="form-label">CAP</label>
+        <input type="text" class="form-control" id="cap" formControlName="cap" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.cap')?.touched && registerForm.get('indirizzo.cap')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="comune" class="form-label">COMUNE</label>
+        <input type="text" class="form-control" id="comune" formControlName="comune" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.comune')?.touched && registerForm.get('indirizzo.comune')?.invalid" class="alert alert-danger">
+          this field is required
+        </div>
+      </div>
+      <div class="mb-3">
+        <label for="provincia" class="form-label">PROVINCIA</label>
+        <input type="text" class="form-control" id="provincia" formControlName="provincia" placeholder="required">
+        <div *ngIf="registerForm.get('indirizzo.provincia')?.touched && registerForm.get('indirizzo.provincia')?.invalid" class="alert alert-danger">
           this field is required
         </div>
       </div>

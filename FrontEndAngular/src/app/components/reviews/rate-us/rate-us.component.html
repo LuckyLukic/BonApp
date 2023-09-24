@@ -1,18 +1,21 @@
-<form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class="p-4">
-  <div class="mb-3 row">
-    <div class="col-md-6">
-      <input type="text" class="form-control" placeholder="Title" formControlName="title" />
-    </div>
+<div class="contenitore row d-flex justify-content-center">
+<form [formGroup]="reviewForm" (ngSubmit)="onSubmit()" class=" col-md-8">
+  <h2>RACCONTACI COME E' ANDATA</h2>
+  <div class="mb-3 ">
+
+    <label for="titolo" class="form-label">TITOLO</label>
+      <input type="text" class="form-control" id="titolo" aria-describedby="titolo" placeholder="Title" formControlName="title" />
+
   </div>
   <div class="mb-3">
-    <textarea class="form-control" placeholder="Leave your comment here..." rows="4" formControlName="comment"></textarea>
+    <label for="commento" class="form-label">COMMENTO</label>
+    <textarea class="form-control" id="commento" aria-describedby="commento" placeholder="Leave your comment here..." rows="4" formControlName="comment"></textarea>
   </div>
-  <div class="mb-3 rating">
-    <span class="star" (click)="onStarClick(1)" [ngClass]="{'selected': reviewForm.value.rating >= 1}">★</span>
-    <span class="star" (click)="onStarClick(2)" [ngClass]="{'selected': reviewForm.value.rating >= 2}">★</span>
-    <span class="star" (click)="onStarClick(3)" [ngClass]="{'selected': reviewForm.value.rating >= 3}">★</span>
-    <span class="star" (click)="onStarClick(4)" [ngClass]="{'selected': reviewForm.value.rating >= 4}">★</span>
-    <span class="star" (click)="onStarClick(5)" [ngClass]="{'selected': reviewForm.value.rating >= 5}">★</span>
-  </div>
-  <button type="submit" class="btn btn-success">Submit Review</button>
+  <div class="mb-3">
+  <p>COME CI VALUTI?</p>
+  <ngb-rating  [max]= 5 [(rate)]="starRating" [readonly]="false"></ngb-rating>
+
+  <button type="submit" class="btn btn-success d-block w-100">Submit Review</button>
+</div>
 </form>
+</div>

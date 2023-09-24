@@ -34,6 +34,7 @@ export class HomeComponent implements OnInit {
 
     this.userSrv.getCurrentUser().subscribe((_utente) => {
       this.utente = _utente;
+
         this.userSrv.setUser(_utente);
 
       console.log("CIAO", this.utente)
@@ -55,6 +56,8 @@ export class HomeComponent implements OnInit {
 
 
   }
+
+
 
   getProductsInCart(userId: string): void {
     this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {

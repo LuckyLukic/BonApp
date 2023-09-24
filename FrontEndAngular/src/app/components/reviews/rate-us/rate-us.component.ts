@@ -24,41 +24,55 @@ export class RateUsComponent implements OnInit {
   utente!: Utente
   reviewForm!: FormGroup;
   date = new Date;
-  review!: Reviews
+  review!: Reviews;
+  starRating:number = 0;
 
   ngOnInit(): void {
 
-    this.userSrv.getCurrentUser().subscribe((_utente) => {
-      this.utente = _utente;
-      this.initializeForm();
+    this.initializeForm();
 
-    })
+    this.userSrv.getCurrentUser().subscribe((_utente) => {
+
+      this.utente = _utente;
+      this.reviewForm.patchValue({
+        username: this.utente.surname,
+
+    });
+  },
+  (error) => {
+    console.error('Error retrieving user:', error);
+    // Handle the error accordingly
   }
+);
+
+}
 
 
 
   initializeForm() {
     this.reviewForm = this.builder.group({
 
-      username: this.utente.surname,
-      date: this.date.getFullYear(),
+      username: [''],
+      date: [this.date.getFullYear()],
       title: ['', Validators.required],
       comment: ['', Validators.required],
-      rating: [0, Validators.required]
+      rating: ['', Validators.required]
 
     });
   }
 
 
+    onSubmit() {
+      this.reviewForm.patchValue({ rating: this.starRating });
 
-  onStarClick(rating: number) {
-    this.reviewForm.patchValue({ rating });
-  }
+      if (this.reviewForm.get('rating')?.errors) {
+        console.error('Rating has errors:', this.reviewForm.get('rating')?.errors);
+        return;
+      }
 
-
-  onSubmit() {
+      console.log('Form Status:', this.reviewForm.status);
     this.review = this.reviewForm.value as Reviews;
-
+    console.log("Valori", this.review)
     this.revSrv.saveOwnReview(this.utente.id!, this.review).
       subscribe(
         () =>{
@@ -72,6 +86,7 @@ export class RateUsComponent implements OnInit {
       );
   }
 }
+
 
 
 

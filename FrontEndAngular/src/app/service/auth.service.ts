@@ -76,9 +76,4 @@ export class AuthService {
     return this.http.put(`${this.baseURL}users/${userid}`, data )
   }
 
-
-
-  // triggerRefresh() {
-  //   this.refreshNavbarSubject.next();
-  // }
 }

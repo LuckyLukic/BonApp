@@ -21,6 +21,7 @@ export class UserService {
 
   constructor(private http: HttpClient) { }
 
+
   setUser(data: Partial<Utente> | null) {
     this.userSubject.next(data);
   }

@@ -1,36 +1,41 @@
-<div class="row d-flex justify-content-center">
-  <div class="col-8 row">
+<div class="row d-flex justify-content-center form-container">
+
+  <div class="col-8 row wrapper">
+    <h2 class="text-uppercase mb-4">Profilo personale</h2>
     <div class="col-6 ciccio">
-      <p class="card-text"><strong>Nome:</strong> {{ utente.name }}</p>
-      <p class="card-text"><strong>Cognome:</strong> {{ utente.surname }}</p>
-      <p class="card-text"><strong>Email:</strong> {{ utente.email }}</p>
-      <p class="card-text"><strong>Username:</strong> {{ utente.username }}</p>
+      <p class="dati text-uppercase">Dati Personali</p>
+      <p class="card-text text-uppercase"> <span>Nome:</span> {{ utente.name }}</p>
+      <p class="card-text text-uppercase"><span>Cognome:</span> {{ utente.surname }}</p>
+      <p class="card-text text-uppercase"><span>Email:</span> {{ utente.email }}</p>
+      <p class="card-text text-uppercase"><span>Username:</span> {{ utente.username }}</p>
     </div>
 
-    <div class="col-6 ciccio2 mb-3">
-      <p class="card-text"><strong>Nome:</strong> {{ utente.indirizzo.via }}</p>
-      <p class="card-text">
-        <strong>Cognome:</strong> {{ utente.indirizzo.civico }}
+    <div class="col-6 ciccio2 mb-5">
+      <p class="dati text-uppercase">Indirizzo</p>
+      <p class="card-text text-uppercase"> <span>via:</span> {{ utente.indirizzo.via }}</p>
+      <p class="card-text text-uppercase">
+        <span>civico:</span> {{ utente.indirizzo.civico }}
       </p>
-      <p class="card-text">
-        <strong>Email:</strong> {{ utente.indirizzo.localita }}
+      <p class="card-text text-uppercase">
+        <span>località:</span> {{ utente.indirizzo.localita }}
       </p>
-      <p class="card-text">
-        <strong>Username:</strong> {{ utente.indirizzo.provincia }}
+      <p class="card-text text-uppercase">
+        <span>provincia:</span> {{ utente.indirizzo.provincia }}
       </p>
-      <p class="card-text">
-        <strong>Email:</strong> {{ utente.indirizzo.comune }}
+      <p class="card-text text-uppercase">
+        <span>comune:</span> {{ utente.indirizzo.comune }}
       </p>
-      <p class="card-text">
-        <strong>Username:</strong> {{ utente.indirizzo.cap }}
+      <p class="card-text text-uppercase">
+        <span>cap:</span> {{ utente.indirizzo.cap }}
       </p>
     </div>
 
     <div class="d-flex column-gap-2">
-      <button type="button" class="btn btn-danger" (click)="deleteUser(utente.id!)">
+      <button type="button" class="btn btn-danger w-100" (click)="deleteUser(utente.id!)">
         Delete
       </button>
-      <a [routerLink]="['/ownprofile', utente.id, 'update']"><button type="button"  class="btn btn-primary">
+      <a [routerLink]="['/ownprofile', utente.id, 'update']" class="w-100">
+        <button type="button"  class="btn btn-primary w-100">
         Update
       </button></a>
     </div>

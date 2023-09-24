@@ -1,7 +1,8 @@
 
 <div class=" d-flex justify-content-center contenitore">
   <form class="col-10 mb-5 row" [formGroup]="registerForm" (ngSubmit)="onSubmit()">
-    <div formGroupName="newUserPayload" class="col-md-6 ps-md-0 formGroupName">
+    <h2 class="px-0 mb-4">REGISTRATI</h2>
+    <div formGroupName="newUserPayload" class="col-md-6 ps-0 formGroupName">
       <p>DATI PERSONALI</p>
     <div class="mb-3">
       <label for="username" class="form-label">USERNAME</label>
@@ -57,7 +58,7 @@
 
     </div>
 
-      <div formGroupName="newIndirizzoPayload" class="col-md-6 pe-md-0 formGroupIndirizzo">
+      <div formGroupName="newIndirizzoPayload" class="col-md-6 ps-0 ps-md-3 pe-md-0 formGroupIndirizzo">
         <p>INDIRIZZO</p>
         <div class="mb-3">
           <label for="via" class="form-label">VIA</label>

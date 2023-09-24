@@ -24,6 +24,7 @@ import { UpdateComponent } from './components/own-profile/update/update.componen
 import { RateUsComponent } from './components/reviews/rate-us/rate-us.component';
 import { OwnOrdersComponent } from './components/own-orders/own-orders.component';
 import { FooterComponent } from './components/footer/footer.component';
+import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
 
  const route: Route[] = [
    {
@@ -129,7 +130,8 @@ import { FooterComponent } from './components/footer/footer.component';
     RouterModule.forRoot(route),
     HttpClientModule,
     ReactiveFormsModule,
-    FormsModule
+    FormsModule,
+    NgbModule
   ],
   providers: [ {provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,
