@@ -3,69 +3,74 @@
 
 <ng-template #showfood>
 
-  <div class="container-fluid">
+  <div class="container-fluid px-0">
     <div class="row d-flex justify-content-between">
 
-      <div class="cardwrapper" *ngFor="let singleDish of dishesList">
-        <div class="card h-100">
+      <div class="cardwrapper col-md-6 col-xl-4 mb-4" *ngFor="let singleDish of dishesList; let i = index">
+        <div class="card h-100" [style.animation-delay]="i * 0.1 + 's'">
+
           <img src={{singleDish.imgUrl}} alt="ciccio">
           <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title">{{ singleDish.nome}}</h5>
+            <h6 class="text-uppercase"> Portata: {{singleDish.categoria}}</h6>
             <div class="d-flex flex-column">
-              <p class="card-text mb-2">prezzo: {{ singleDish.prezzo }}</p>
+              <p class="card-text mb-3">Euro: {{ singleDish.prezzo }}</p>
+              <div class="d-flex ">
+
               <a
                 [routerLink]="['/dishes', singleDish.id]"
-                class="btn btn-primary mb-2"
-
-                >DETAIL</a
+                class="btn bottoneDetail mb-2"
+                [ngClass]="{ 'w-100': !utente, 'w-50 me-1': utente }"
+                >DETTAGLIO</a
               >
 
               <ng-container *ngIf="utente">
+                <ng-container *ngIf="favoriteDishes; then dishes; else noDishes"></ng-container>
 
-                <button
-                class="btn btn-warning w-100 mb-2 position-relative"
-                type="button"
-                (click)="addToCart(singleDish.id!)" >
-                ADD TO CART
-                <span  class="badge bg-secondary position-absolute top-50 end-0">{{ getItemCount(singleDish.id!) }}</span>
-              </button>
-              <button *ngIf="isItemInArray(singleDish.id!)"
-                class="btn btn-danger w-100 mb-2"
-                type="button"
-                (click)="removeFromCart(singleDish.id!)" >
-                REMOVE FROM CART
-              </button>
-
-                <ng-container
-                  *ngIf="favoriteDishes; then dishes; else noDishes"
-                ></ng-container>
 
                 <ng-template #dishes>
-                  <div
-                    *ngIf="checkMatch(singleDish.id!) === true; else noDishes"
-                  >
-                    <button
-                      class="btn btn-danger w-100 mb-2"
-                      type="button"
-                      (click)="removeFavorite(singleDish.id!)"
+      <div *ngIf="checkMatch(singleDish.id!) === true; else noDishes" class="w-50">
+        <button
+          class="btn bottoneMinusFavorite w-100 mb-2"
+          type="button"
+          (click)="removeFavorite(singleDish.id!)"
+        >
+          <i class="fa-solid fa-heart-circle-minus fa-xl" style="color: #da1010;"></i>
+        </button>
+      </div>
+    </ng-template>
 
-                    >
-                      REMOVE FROM FAVORITES
-                    </button>
-                  </div>
-                </ng-template>
+    <ng-template #noDishes>
+      <button
+        class="btn bottonePlusFavorite w-50 mb-2"
+        type="button"
+        (click)="addFavorite(singleDish.id!)"
+      >
+        <i class="fa-solid fa-heart-circle-plus fa-xl" style="color: #da1010;"></i>
+      </button>
+    </ng-template>
+  </ng-container>
+</div>
 
-                <ng-template #noDishes>
-                  <button
-                    class="btn btn-success w-100 mb-2"
-                    type="button"
-                    (click)="addFavorite(singleDish.id!)"
-                  >
-                    ADD TO FAVORITES
-                  </button>
-                </ng-template>
 
-              </ng-container>
+<div class="d-flex">
+              <button
+              class="btn bottoneAdd mb-2 position-relative"
+              [ngClass]="{ 'w-100': !utente || utente && getItemCount(singleDish.id!) === 0, 'w-50 me-1': utente && getItemCount(singleDish.id!) > 0 }"
+              type="button"
+              (click)="addToCart(singleDish.id!)" >
+              <i class="fa-solid fa-cart-shopping" style="color: #fafafa;"></i> +
+              <span  *ngIf="getItemCount(singleDish.id!) > 0" class="translate-middle badge rounded-pill bg-secondary position-absolute top-50 start-0">{{ getItemCount(singleDish.id!) }}</span>
+            </button>
+
+              <button *ngIf="isItemInArray(singleDish.id!)"
+                class="btn btn-danger mb-2"
+                [ngClass]="{ 'd-none': !utente, 'w-50 me-1': utente }"
+                type="button"
+                (click)="removeFromCart(singleDish.id!)" >
+                <i class="fa-solid fa-cart-shopping" style="color: #fafafa;"></i> -
+              </button>
+            </div>
 
             </div>
           </div>
@@ -80,3 +85,4 @@
     Sorry, something is wrong. Please try later!
   </div>
 </ng-template>
+

@@ -33,11 +33,11 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-
+    this.userSrv.initializeLoginStatus()
     this.userSrv.getCurrentUser().subscribe((_utente) => {
       this.utente = _utente;
 
-        this.userSrv.setUser(_utente);
+
 
       console.log("CIAO", this.utente)
         if (this.utente && this.utente.id) {
@@ -71,26 +71,6 @@ export class HomeComponent implements OnInit {
       console.error('Error fetching products in cart', error);
     });
   }
-
-  // private transformProdottiList(response: any[]): Dish[] {
-  //   // Step 1: Create a map of all unique Dish objects by their id
-  //   const dishMap: { [id: string]: Dish } = {};
-  //   response.forEach((dish: Dish | string) => {
-  //     if (typeof dish !== 'string' && dish.id) {
-  //       dishMap[dish.id] = dish;
-  //     }
-  //   });
-
-  //   const dishList = response.map((dish: Dish | string) => {
-  //     if (typeof dish === 'string') {
-  //       return dishMap[dish] || { productId: dish };
-  //     } else {
-  //       return dish;
-  //     }
-  //   });
-
-  //   return dishList;
-  // }
 
 
    favoriti(id: string): void {
@@ -134,6 +114,7 @@ export class HomeComponent implements OnInit {
   }
 
   addToCart(itemId:string): void {
+    if(this.utente) {
     this.cartSrv.addToCart(this.utente.id!, itemId, 1).pipe(
       tap(() => {
         this.productsInOrder = [];
@@ -142,6 +123,9 @@ export class HomeComponent implements OnInit {
         this.getProductsInCart(this.utente.id!);
       })
     ).subscribe();
+    } else {
+      alert ("Per aggiungere un prodotto al carrello devi essere loggato")
+    }
   }
 
   removeFromCart(itemId:string): void {

@@ -24,7 +24,8 @@ import { UpdateComponent } from './components/own-profile/update/update.componen
 import { RateUsComponent } from './components/reviews/rate-us/rate-us.component';
 import { OwnOrdersComponent } from './components/own-orders/own-orders.component';
 import { FooterComponent } from './components/footer/footer.component';
-import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgbModule, NgbRatingModule } from '@ng-bootstrap/ng-bootstrap';
+import { NgIf } from '@angular/common';
 
  const route: Route[] = [
    {
@@ -122,6 +123,7 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     RateUsComponent,
     OwnOrdersComponent,
     FooterComponent,
+    SingleDishComponent
 
 
   ],
@@ -131,7 +133,9 @@ import { NgbModule } from '@ng-bootstrap/ng-bootstrap';
     HttpClientModule,
     ReactiveFormsModule,
     FormsModule,
-    NgbModule
+    NgbModule,
+    NgbRatingModule,
+    NgIf
   ],
   providers: [ {provide: HTTP_INTERCEPTORS,
     useClass: TokenInterceptor,

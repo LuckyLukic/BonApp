@@ -8,7 +8,7 @@ div.cardwrapper{
 }
 
 .card {
-  animation: fadeIn 0.8s ease-in both;
+  animation: fadeIn 0.5s ease-in both;
   background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 75%,rgba(175, 69, 17, 0.7)100%);
   border-top: none;
   border-left: none;
@@ -53,4 +53,18 @@ span.ingredienti{
   &:hover{
     background-color: rgba(255,255,255, 1)
   }
+}
+
+.bottoneAdd{
+  background-color: rgba(196, 65, 39, 0.6);
+  color: rgb(246, 242, 240);
+  transition: 0.4s;
+
+  &:hover {
+    background-color: rgba(196, 65, 39, 1)
+  }
+}
+
+span.badge {
+  background-color:  rgba( 42, 197, 22, 0.8) !important;
 }

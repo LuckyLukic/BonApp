@@ -4,7 +4,8 @@ div.container-fluid{
 
 .card {
   animation: fadeIn 0.2s ease-in both;
-  background-image: linear-gradient(to bottom, #ffffff 0%, #ffffff 70%,rgba(175, 69, 17, 0.7)100%);
+
+  background-image: linear-gradient(to top, #ffffff 0%, #ffffff 70%,rgba(24, 136, 42, 0.7)100%);
   border-top: none;
   border-left: none;
   box-shadow: 5px 5px 15px rgba(115, 109, 109, 0.6);
@@ -30,10 +31,37 @@ div.container-fluid{
   font-weight: 500;
 }
 
+.prodotti {
+  font-weight: 600;
+}
+
+.prodottiWrapper{
+  padding-bottom: 0;
+}
+
 p{
   color: rgb(94, 85, 85) !important;
+  margin-bottom: 0 !important;
 }
+
+.data {
+  font-weight: 600;
+  margin-bottom: 15px !important;
+  border-bottom: 1px solid rgba(0, 0, 0, 0.211);
+}
+
+
+.delivery {
+  padding-bottom: 0;
+  font-weight: 600;
+
+}
+
 
 span.ingredienti{
   color: rgb(68, 59, 59) !important
+}
+
+.prodottiWrapper,.delivery,.totalOrder{
+  color: rgb(94, 85, 85) !important;
 }

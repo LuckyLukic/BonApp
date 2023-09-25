@@ -3,9 +3,6 @@ import { HttpClient } from '@angular/common/http';
 import { Utente } from '../module/utente.interface';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
-import { OwnFavorite } from '../module/own-favorite.interface';
-
-import { Dish } from '../module/dish.interface';
 import { Favorite } from '../module/favorite.interface';
 import { BehaviorSubject } from 'rxjs';
 
@@ -16,11 +13,19 @@ export class UserService {
 
   baseUrl = environment.baseUrl
   private userSubject = new BehaviorSubject<Partial<Utente> | null>(null);
-  currentUser$ = this.userSubject.asObservable();
+  // currentUser$ = this.userSubject.asObservable();
 
 
-  constructor(private http: HttpClient) { }
+  constructor(private http: HttpClient) {
 
+
+    }
+
+    initializeLoginStatus(): void {
+      this.getCurrentUser().subscribe(status => {
+        this.userSubject.next(status)
+      })
+    }
 
   setUser(data: Partial<Utente> | null) {
     this.userSubject.next(data);

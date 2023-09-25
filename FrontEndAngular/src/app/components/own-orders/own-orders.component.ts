@@ -43,22 +43,8 @@ getAllCompletedOrder(userId: string) {
 }
 
 
-// transformOrderList(response: any[]): OrdineSingolo[] {
-//   console.log("transformOrderList input", response)
-//   const originalOrdine = response[0] as OrdineSingolo;
-
-//   const transformedArray = response.map((item: OrdineSingolo | string) => {
-//     if (typeof item === 'string') {
-//       return {
-//         ...originalOrdine,
-//         id: item
-//       };
-//     }
-//     return item;
-//   });
-
-//   console.log("transformOrderList result", transformedArray);
-//   return transformedArray;
+// get prodottiNames(): string {
+//     return this.ownOrder      (pro =>  {}.join(', ') || '';
 // }
 
 
