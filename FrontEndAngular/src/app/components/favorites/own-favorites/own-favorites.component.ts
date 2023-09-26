@@ -95,6 +95,11 @@ export class OwnFavoritesComponent implements OnInit {
       return item.prodotto.id;
     }
 
+    ngOnDestroy(): void {
+
+      this.subscription.unsubscribe();
+    }
+
 }
 
 

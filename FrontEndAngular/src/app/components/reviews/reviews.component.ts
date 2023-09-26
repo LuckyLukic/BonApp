@@ -31,6 +31,11 @@ export class ReviewsComponent implements OnInit {
     this.reviewList = allReviews.content;
    })
 }
+
+ngOnDestroy(): void {
+
+  this.subscription.unsubscribe();
+}
 }
 
 

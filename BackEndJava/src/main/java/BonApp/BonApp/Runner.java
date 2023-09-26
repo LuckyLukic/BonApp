@@ -85,7 +85,7 @@ public class Runner implements CommandLineRunner{
 	      List<Ingrediente> ingredients = ingredienteRepository.findAll();
 	      List<Prodotto> prodottoList = new ArrayList<>();
 	  
-	      for (int i = 0; i < 10; i++) {
+	      for (int i = 0; i < 30; i++) {
 	          int numberOfIngredients = faker.number().numberBetween(2, 5);
 	          Collections.shuffle(ingredients);
 	          List<Ingrediente> selectedIngredients = ingredients.subList(0, numberOfIngredients);
@@ -153,7 +153,7 @@ public class Runner implements CommandLineRunner{
 	                  review.setReviewDate(LocalDate.now());
 	                  review.setRating(faker.number().numberBetween(1, 6));
 	                  review.setUsername(user.getUsername());
-	                  reviews.add(review); // Add the review to the list
+	                  reviews.add(review); 
 	                  
 	                  user.addReview(review);
 	              }

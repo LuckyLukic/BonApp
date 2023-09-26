@@ -29,6 +29,7 @@ export class OwnOrdersComponent implements OnInit {
       this.utente = utente;
 
 
+
         this.getAllCompletedOrder(this.utente!.id!)
         console.log(" OwnOrders", this.ownOrders)
 
@@ -44,9 +45,10 @@ getAllCompletedOrder(userId: string) {
 }
 
 
-// get prodottiNames(): string {
-//     return this.ownOrder      (pro =>  {}.join(', ') || '';
-// }
+ngOnDestroy(): void {
+
+  this.subscription.unsubscribe();
+}
 
 
 }

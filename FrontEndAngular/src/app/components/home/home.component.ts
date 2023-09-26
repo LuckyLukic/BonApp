@@ -8,6 +8,7 @@ import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
 import { Subscription } from 'rxjs';
+import { DropdownMenuService } from 'src/app/service/dropdown-menu.service';
 import { StripeService } from 'src/app/service/stripe.service';
 
 @Component({
@@ -23,11 +24,13 @@ export class HomeComponent implements OnInit {
   singleDish!:Favorite;
   productsInOrder: Dish[] = [];
   private subscription!: Subscription;
+  private categorySubscription!: Subscription;
 
   constructor(
     private dishes: MenuService,
     private userSrv:UserService,
     private cartSrv:CartService,
+    private ddMenuSrv: DropdownMenuService,
     private router:Router
 
 
@@ -45,19 +48,33 @@ export class HomeComponent implements OnInit {
         if (this.utente && this.utente.id) {
           this.favoriti(this.utente.id);
           this.getProductsInCart(this.utente.id);
+
         }
+
 
         });
 
-    this.dishes.getMenu().subscribe((allDishes: Dish) => {
-      this.dishesList = allDishes.content;
+        this.subscription.add(
+          this.ddMenuSrv.selectedCategory$.subscribe(
+            (selectedDishes: Dish[]) => {
+              if (selectedDishes.length > 0) {
 
-    });
+                this.dishesList = selectedDishes;
+              } else {
+
+                this.dishes.getMenu().subscribe((allDishes: Dish) => {
+                  this.dishesList = allDishes.content;
+                });
+
+              }
+            }
+          )
+        );
+
+
 
 
   }
-
-
 
   getProductsInCart(userId: string): void {
     this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {
@@ -151,6 +168,11 @@ export class HomeComponent implements OnInit {
     const currentUrl = this.router.url;
     this.router.navigate(['/dishes/:id'], { state: { returnUrl: currentUrl } })
 
+}
+
+ngOnDestroy(): void {
+
+  this.subscription.unsubscribe();
 }
 
 }

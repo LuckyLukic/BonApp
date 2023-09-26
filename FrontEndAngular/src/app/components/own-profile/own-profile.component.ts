@@ -32,4 +32,8 @@ deleteUser(id:string):void {
   this.router.navigate(['/']);
 
 }
+
+ngOnDestroy(): void {
+  this.subscription.unsubscribe();
+}
 }

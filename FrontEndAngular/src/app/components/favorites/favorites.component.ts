@@ -62,6 +62,11 @@ export class FavoritesComponent implements OnInit {
 
 }
 
+ngOnDestroy(): void {
+
+  this.subscription.unsubscribe();
+}
+
   }
 
 

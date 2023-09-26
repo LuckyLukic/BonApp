@@ -5,6 +5,7 @@ import { Utente } from 'src/app/module/utente.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { Subscription } from 'rxjs';
 import { ActivatedRoute, ParamMap } from '@angular/router';
+import { DropdownMenuService } from 'src/app/service/dropdown-menu.service';
 
 
 
@@ -24,7 +25,11 @@ export class NavbarComponent implements OnInit {
   itemsInCart!: number;
 
 
-  constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService, private route: ActivatedRoute) {
+  constructor(private authSrv: AuthService,
+              private userSrv: UserService,
+              private cartSrv: CartService,
+              private route: ActivatedRoute,
+              private ddMenuSrv: DropdownMenuService) {
 
    }
 
@@ -38,19 +43,10 @@ export class NavbarComponent implements OnInit {
       this.subscribeToCartItemList();
       this.numberItemsInCart();
     })
+  }
 
-    // this.userSrv.getUser().subscribe((_utente) => {
-    //   this.utente = _utente;
-
-    //  this.userSrv.getCurrentUser().subscribe((_utente) => {
-
-    //   this.utente = _utente;
-
-    //   console.log("NAV", _utente)
-    //  this.subscribeToCartItemList();
-
-
-
+  filterCategory(category: string) {
+    this.ddMenuSrv.filterByCategory(category);
   }
 
 

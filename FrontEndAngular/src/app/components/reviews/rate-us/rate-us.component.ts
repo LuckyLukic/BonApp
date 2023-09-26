@@ -85,6 +85,8 @@ export class RateUsComponent implements OnInit {
     }
       );
   }
+
+
 }
 
 

@@ -28,4 +28,6 @@ export class SingleUserComponent implements OnInit {
     this.userSrv.deleteUser(this.singleId).subscribe()
     this.router.navigate(['/users'])
     };
+
+
 }
