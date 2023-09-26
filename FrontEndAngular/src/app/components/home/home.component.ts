@@ -7,6 +7,7 @@ import { CartService } from 'src/app/service/cart.service';
 import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
 import { Router } from '@angular/router';
+import { Subscription } from 'rxjs';
 import { StripeService } from 'src/app/service/stripe.service';
 
 @Component({
@@ -17,11 +18,11 @@ import { StripeService } from 'src/app/service/stripe.service';
 export class HomeComponent implements OnInit {
   dishesList: Dish[] = [];
 
-  utente!: Partial<Utente>;
+  utente!: Partial<Utente> | null;
   favoriteDishes!: Favorite[];
   singleDish!:Favorite;
   productsInOrder: Dish[] = [];
-
+  private subscription!: Subscription;
 
   constructor(
     private dishes: MenuService,
@@ -33,23 +34,20 @@ export class HomeComponent implements OnInit {
   ) {}
 
   ngOnInit(): void {
-    this.userSrv.initializeLoginStatus()
-    this.userSrv.getCurrentUser().subscribe((_utente) => {
-      this.utente = _utente;
 
+
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
 
 
       console.log("CIAO", this.utente)
         if (this.utente && this.utente.id) {
           this.favoriti(this.utente.id);
           this.getProductsInCart(this.utente.id);
-
-
         }
 
-
-
-    });
+        });
 
     this.dishes.getMenu().subscribe((allDishes: Dish) => {
       this.dishesList = allDishes.content;
@@ -90,7 +88,7 @@ export class HomeComponent implements OnInit {
       this.dishes.addFavorite(this.utente.id, dishId).subscribe(response => {
         console.log('Favorite added', response);
 
-        this.favoriti(this.utente.id!);
+        this.favoriti(this.utente!.id!);
 
       }, error => {
         console.error('Error adding favorite', error);
@@ -120,7 +118,7 @@ export class HomeComponent implements OnInit {
         this.productsInOrder = [];
       }),
       tap(() => {
-        this.getProductsInCart(this.utente.id!);
+        this.getProductsInCart(this.utente!.id!);
       })
     ).subscribe();
     } else {
@@ -129,12 +127,12 @@ export class HomeComponent implements OnInit {
   }
 
   removeFromCart(itemId:string): void {
-    this.cartSrv.removeFromCart(this.utente.id!, itemId, 1).pipe(
+    this.cartSrv.removeFromCart(this.utente!.id!, itemId, 1).pipe(
       tap(() => {
         this.productsInOrder = [];
       }),
       tap(() => {
-        this.getProductsInCart(this.utente.id!);
+        this.getProductsInCart(this.utente!.id!);
       })
     ).subscribe();
   }

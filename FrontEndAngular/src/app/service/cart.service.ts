@@ -1,10 +1,9 @@
 import { Injectable } from '@angular/core';
-import { HttpBackend, HttpClient } from '@angular/common/http';
+import { HttpClient } from '@angular/common/http';
 import { Dish } from '../module/dish.interface';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
 import { BehaviorSubject } from 'rxjs';
-import { OrdineSingolo } from '../module/ordine-singolo.interface';
 
 @Injectable({
   providedIn: 'root'
@@ -13,8 +12,9 @@ export class CartService {
 
   url = environment.baseUrl;
   private cartItemListSource = new BehaviorSubject<Dish[]>([]);
-  cartItemList$ = this.cartItemListSource.asObservable();
+  cartItemList$: Observable <Dish[]> = this.cartItemListSource.asObservable();
   //public productList = new BehaviorSubject<any[]>([]);
+
 
   constructor(private http: HttpClient) { }
 

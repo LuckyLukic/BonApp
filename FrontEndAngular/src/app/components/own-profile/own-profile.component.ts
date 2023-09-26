@@ -4,6 +4,7 @@ import { Router } from '@angular/router';
 import { UserService } from 'src/app/service/utente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-own-profile',
@@ -12,20 +13,17 @@ import { AuthService } from 'src/app/service/auth.service';
 })
 export class OwnProfileComponent implements OnInit {
 
-  utenti!: Utente [];
-  utente!: Utente;
+  utente!: Partial <Utente> | null;
+  private subscription!: Subscription;
 
   constructor(private route: ActivatedRoute, private userSrv: UserService, private authSrv: AuthService, private router: Router) { }
 
   ngOnInit(): void {
-    this.route.paramMap.subscribe((data: ParamMap) => {
-      const singleId = data.get('id')!;
-      this.userSrv.getSingleUsers(singleId).subscribe((data: Utente) => {
-        this.utente = data
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
 
     })
-  })
-
 }
 
 deleteUser(id:string):void {

@@ -9,6 +9,7 @@ import { ActivatedRoute, ParamMap } from '@angular/router';
 
 
 
+
 @Component({
   selector: 'app-navbar',
   templateUrl: './navbar.component.html',
@@ -19,20 +20,23 @@ export class NavbarComponent implements OnInit {
   utente!: Partial<Utente>| null;
   productsInOrder: any[] = [];
   private cartSubscription?: Subscription;
-
+  private subscription!: Subscription;
+  itemsInCart!: number;
 
 
   constructor(private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService, private route: ActivatedRoute) {
 
    }
 
+
   ngOnInit(): void {
 
 
 
-    this.userSrv.getUser().subscribe(_utente =>{
-      this.utente = _utente;
+    this.subscription = this.userSrv.currentUser$.subscribe(_utente =>{
+     this.utente = _utente;
       this.subscribeToCartItemList();
+      this.numberItemsInCart();
     })
 
     // this.userSrv.getUser().subscribe((_utente) => {
@@ -66,12 +70,14 @@ export class NavbarComponent implements OnInit {
     this.utente = null;
   }
 
-  refresh():void {
-    this.userSrv.getCurrentUser().subscribe((_utente) => {
+  numberItemsInCart():void {
+    for (let i of this.utente!.singleOrders!) {
+      if (i.status==="IN_CART") {
+        this.productsInOrder = i.prodotti
 
-      this.utente = _utente;
-  })
-}
+      }
+    }
+  }
 
 }
 

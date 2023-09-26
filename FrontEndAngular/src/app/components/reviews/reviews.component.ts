@@ -3,6 +3,8 @@ import { Reviews } from 'src/app/module/reviews.interface';
 import { Utente } from 'src/app/module/utente.interface';
 import { AuthService } from 'src/app/service/auth.service';
 import { ReviewsService } from 'src/app/service/reviews.service';
+import { Subscription } from 'rxjs';
+import { UserService } from 'src/app/service/utente.service';
 
 
 @Component({
@@ -13,17 +15,18 @@ import { ReviewsService } from 'src/app/service/reviews.service';
 export class ReviewsComponent implements OnInit {
 
   reviewList!: Reviews[];
-  utente!: Utente;
+  utente!: Partial<Utente> | null;
+  private subscription!: Subscription;
 
-  constructor(private authSrv : AuthService, private revSrv : ReviewsService) { }
+  constructor(private userSrv : UserService, private revSrv : ReviewsService) { }
 
   ngOnInit(): void {
 
-    this.authSrv.user$.subscribe((_utente) => {
-      if (_utente) {
-        this.utente = _utente.user;
-  }
-});
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
+    });
+
    this.revSrv.getAllReviews().subscribe((allReviews: Reviews) => {
     this.reviewList = allReviews.content;
    })

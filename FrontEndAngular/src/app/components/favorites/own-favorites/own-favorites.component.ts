@@ -7,6 +7,8 @@ import { Dish } from 'src/app/module/dish.interface';
 import { UserService } from 'src/app/service/utente.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { CartService } from 'src/app/service/cart.service';
+import { Subscription } from 'rxjs';
+
 
 @Component({
   selector: 'app-own-favorites',
@@ -15,25 +17,31 @@ import { CartService } from 'src/app/service/cart.service';
 })
 export class OwnFavoritesComponent implements OnInit {
 
-  utente!: Partial<Utente>;
+
   favoriteDishes: Favorite[] = [];
   productsInOrder: Dish[] = [];
+  private subscription!: Subscription;
+  utente!: Partial<Utente> | null;
 
 
-  constructor(private route: ActivatedRoute, private dishes: MenuService,private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) { }
+  constructor( private dishes: MenuService,private authSrv: AuthService, private userSrv: UserService, private cartSrv: CartService) { }
 
   ngOnInit(): void {
 
-    this.userSrv.getCurrentUser().subscribe((_utente) => {
-      this.utente = _utente;
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
       if (this.utente && this.utente.id) {
         this.getProductsInCart(this.utente.id!);
         this.getOwnFavorites(this.utente.id!)
+    }
+  });
+
 
 
       }
-    })
-    }
+
+
 
 
   getProductsInCart(userId:string): void {

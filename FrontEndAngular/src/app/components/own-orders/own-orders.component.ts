@@ -4,8 +4,7 @@ import { Utente } from 'src/app/module/utente.interface';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/utente.service';
 import { OrdiniService } from 'src/app/service/ordini.service';
-import { Observable } from 'rxjs';
-import {map} from 'rxjs';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-own-orders',
@@ -14,8 +13,9 @@ import {map} from 'rxjs';
 })
 export class OwnOrdersComponent implements OnInit {
 
-  utente!: Partial<Utente>;
+  utente!: Partial<Utente> | null;
   ownOrders!: OrdineSingolo[];
+  private subscription!: Subscription;
 
   constructor(private route: ActivatedRoute, private userSrv: UserService, private ordineSrv: OrdiniService) { }
 
@@ -24,11 +24,12 @@ export class OwnOrdersComponent implements OnInit {
 
 
 
-      this.userSrv.getCurrentUser().subscribe((_utente) => {
-        this.utente = _utente;
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
 
 
-        this.getAllCompletedOrder(this.utente.id!)
+        this.getAllCompletedOrder(this.utente!.id!)
         console.log(" OwnOrders", this.ownOrders)
 
 })

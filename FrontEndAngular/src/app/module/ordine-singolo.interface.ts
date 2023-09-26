@@ -1,4 +1,5 @@
 import { Dish } from "./dish.interface";
+import { Status } from "./status.enum";
 
 
 export interface OrdineSingolo {
@@ -9,4 +10,5 @@ export interface OrdineSingolo {
   oraOrdine: Date;
   userId: string|null;
   shippingCost: number;
+  status: Status;
 }

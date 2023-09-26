@@ -5,8 +5,8 @@
   <div class="container-fluid px-0">
     <div class="row d-flex justify-content-between">
       <div class="cardwrapper col-md-6 col-lg-4 mb-4" *ngFor="let singleDish of favoriteDishes; trackBy: trackByFunction; let i = index">
-        <div class="card h-100 d-flex flex-column" [style.animation-delay]="i * 0.2 + 's'">
-          <img src="{{ singleDish.prodotto.imgUrl}}" class="card-img-top" alt="movie poster" />
+        <div class="card h-100 d-flex flex-column rounded-top-5" [style.animation-delay]="i * 0.2 + 's'">
+          <img src="{{ singleDish.prodotto.imgUrl}}" class="card-img-top rounded-top-5" alt="movie poster" />
           <div class="card-body d-flex flex-column justify-content-between pb-0">
             <h4 class="card-title text-uppercase mb-1">{{ singleDish.prodotto.nome}}</h4>
           </div>

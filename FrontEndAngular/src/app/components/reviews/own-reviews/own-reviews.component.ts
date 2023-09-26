@@ -4,6 +4,7 @@ import { Utente } from 'src/app/module/utente.interface';
 import { ReviewsService } from 'src/app/service/reviews.service';
 import { ActivatedRoute, ParamMap } from '@angular/router';
 import { UserService } from 'src/app/service/utente.service';
+import { Subscription } from 'rxjs';
 
 @Component({
   selector: 'app-own-reviews',
@@ -13,8 +14,9 @@ import { UserService } from 'src/app/service/utente.service';
 
 export class OwnReviewsComponent implements OnInit {
 
-  utente!: Partial<Utente>;
+  utente!: Partial<Utente> | null;
   ownReviewsList!: Reviews[];
+  private subscription!: Subscription;
 
   constructor(private revService: ReviewsService, private route: ActivatedRoute, private userSrv: UserService) { }
 
@@ -23,8 +25,10 @@ export class OwnReviewsComponent implements OnInit {
 
 
 
-      this.userSrv.getCurrentUser().subscribe((_utente) => {
-        this.utente = _utente;
+    this.userSrv.initializeLoginStatus()
+    this.subscription = this.userSrv.currentUser$.subscribe(utente => {
+      this.utente = utente;
+
         if (this.utente && this.utente.id) {
 
 
@@ -54,11 +58,11 @@ export class OwnReviewsComponent implements OnInit {
       this.revService.deleteOwnReview(this.utente.id, reviewId).subscribe(
         response => {
           alert("Recensione rimossa correttamente")
-          this.getOwnReviews(this.utente.id!); // Refresh the list
+          this.getOwnReviews(this.utente!.id!); // Refresh the list
         },
         error => {
           console.error('Error deleting this review', error);
-          this.getOwnReviews(this.utente.id!); // Still refresh the list even if an error occurs
+          this.getOwnReviews(this.utente!.id!); // Still refresh the list even if an error occurs
         }
       );
   }

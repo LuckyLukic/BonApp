@@ -8,7 +8,7 @@
         <div class="card w-100 h-100 d-flex justify-content-between flex-column" [style.animation-delay]="i * 0.2 + 's'">
 
           <div class="card-body">
-            <p class="rating" > <ngb-rating  [max]= 5 [(rate)]="singleReview.rating" [readonly]="false"></ngb-rating></p>
+            <p class="rating" > <ngb-rating  [max]= 5 [(rate)]="singleReview.rating" [readonly]="true"></ngb-rating></p>
             <h5 class="card-title">{{ singleReview.title}}</h5>
             <p class="card-title">{{ singleReview.comment}}</p>
           </div>
