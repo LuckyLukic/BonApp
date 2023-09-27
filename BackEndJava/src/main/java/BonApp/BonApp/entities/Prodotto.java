@@ -6,10 +6,10 @@ import java.util.List;
 import java.util.UUID;
 
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
+
 import com.fasterxml.jackson.annotation.JsonIgnore;
 
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
 
 import BonApp.BonApp.Enum.Categoria;
 import jakarta.persistence.CascadeType;
@@ -23,7 +23,7 @@ import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
-import jakarta.persistence.ManyToOne;
+
 import jakarta.persistence.Table;
 
 import lombok.Getter;
@@ -35,7 +35,7 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 @Table(name = "prodotto")
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 public class Prodotto {
     
     @Id
@@ -43,8 +43,12 @@ public class Prodotto {
     @Column(name = "id")
     private UUID id;
     private String nome;
+    
+    @Column(length=500)
     private String descrizione;
     private double prezzo;
+    
+    @Column(length = 500)
     private String imgUrl;
 
     @Enumerated(EnumType.STRING)
@@ -59,7 +63,6 @@ public class Prodotto {
     private List<Ingrediente> ingredienti = new ArrayList<>();
     
     @JsonIgnore
-    //@ManyToMany(mappedBy = "prodotti")
     @ManyToMany(mappedBy = "prodotti", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
     private List<OrdineSingolo> orders = new ArrayList<>();
     

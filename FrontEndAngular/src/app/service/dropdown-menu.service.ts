@@ -19,6 +19,7 @@ export class DropdownMenuService {
   ) {
     this.getMenu().subscribe((data:Dish) =>{
       this.products = data.content;
+      this.selectedCategorySubject.next(this.products);
     });
   }
 
@@ -36,5 +37,10 @@ export class DropdownMenuService {
 
   getMenu() {
     return this.http.get<Dish>(this.url + "prodotti");
+  }
+
+  resetCategory() {
+    // Reset the selected category to the full product list
+    this.selectedCategorySubject.next(this.products);
   }
 }

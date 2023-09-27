@@ -1,13 +1,11 @@
 <nav class="navbar navbar-expand-lg bg-body-tertiary sticky-top py-5">
   <div class="container-fluid">
-    <a class="navbar-brand me-5" [routerLink]="['/']">BONAPP</a>
+    <a class="navbar-brand me-5" [routerLink]="['/']" (click)="onBonappClick()">BONAPP</a>
 
     <div class="collapse navbar-collapse" id="navbarNav">
       <ul class="navbar-nav d-flex w-100 justify-content-between">
         <div class="d-flex column-gap-3 links">
-        <!-- <li class="nav-item">
-          <a class="nav-link active" aria-current="page" [routerLink]="['/']" routerLinkActive="active"  >HOME</a>
-        </li> -->
+
         <li class="nav-item">
           <a class="nav-link active" aria-current="page" [routerLink]="['top-favoriti']" routerLinkActive="active"  >TOP FAVORITI</a>
         </li>
@@ -76,7 +74,7 @@
 
     <ng-container *ngIf="utente then carrello"></ng-container>
     <ng-template #carrello>
-    <div class="position-relative ms-auto">
+    <div class="position-relative ms-auto me-3">
       <button class="btn btn-link" [routerLink]="['/cart', utente!.id]">
         <i class="fa-solid fa-cart-plus fa-xl"></i>
       </button>
@@ -87,6 +85,10 @@
     </span>
         </div>
       </ng-template>
+
+      <form class="d-flex" role="search" (submit)="$event.preventDefault()">
+        <input class="form-control " type="search" placeholder="Search" aria-label="Search" [formControl]="searchControl">
+    </form>
 
       <button class="navbar-toggler ms-4" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
         <span class="navbar-toggler-icon"></span>

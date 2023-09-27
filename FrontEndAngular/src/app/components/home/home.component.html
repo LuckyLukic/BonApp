@@ -1,9 +1,9 @@
-<ng-container *ngIf="dishesList; then showfood; else sorry"></ng-container>
+<ng-container *ngIf="dishesList.length>0; then showfood; else sorry"></ng-container>
 
 
 <ng-template #showfood>
 
-  <div class="container-fluid px-0">
+  <div class="container px-0">
     <div class="row d-flex justify-content-between">
 
       <div class="cardwrapper col-md-6 col-xl-4 mb-4" *ngFor="let singleDish of dishesList; let i = index">
@@ -82,7 +82,7 @@
 
 <ng-template #sorry>
   <div class="row d-flex justify-content-center align-items-center col-4">
-    Sorry, something is wrong. Please try later!
+    Non ci sono prodotti disponibili
   </div>
 </ng-template>
 

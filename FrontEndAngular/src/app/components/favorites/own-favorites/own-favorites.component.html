@@ -2,7 +2,7 @@
 <ng-container *ngIf="favoriteDishes; then showdishes; else sorry"></ng-container>
 
 <ng-template #showdishes>
-  <div class="container-fluid px-0">
+  <div class="container px-0">
     <div class="row d-flex justify-content-between">
       <div class="cardwrapper col-md-6 col-lg-4 mb-4" *ngFor="let singleDish of favoriteDishes; trackBy: trackByFunction; let i = index">
         <div class="card h-100 d-flex flex-column rounded-top-5" [style.animation-delay]="i * 0.2 + 's'">

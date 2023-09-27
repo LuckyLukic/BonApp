@@ -1,5 +1,4 @@
 
-
 .navbar {
   background-color: #3c3d41 !important;
   margin-bottom: 80px;
@@ -19,6 +18,7 @@ div.container-fluid {
 }
 
 a {
+  font-size: 14px;
   color: rgba(255,255,255,0.8) !important;
   transition: color 0.3s ease;
 
@@ -46,6 +46,12 @@ a {
 
 .spanBar{
   color: rgba(255,255,255,0.8);
+
+}
+
+.btn-outline-offWhite {
+  color:  rgba(255,255,255,0.8);
+  border-color:  rgba(255,255,255,0.5);
 }
 
 span.badge {
@@ -54,6 +60,10 @@ span.badge {
 
 .navbar-toggler{
   filter: invert(1);
+}
+
+@media screen {
+
 }
 
 

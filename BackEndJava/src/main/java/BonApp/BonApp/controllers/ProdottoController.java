@@ -44,7 +44,7 @@ public class ProdottoController {
 
     @GetMapping("")
     public Page<Prodotto> getProdotti(@RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "10") int size,
+                                      @RequestParam(defaultValue = "100") int size,
                                       @RequestParam(defaultValue = "id") String sortBy) {
         return prodottoService.find(page, size, sortBy);
     }

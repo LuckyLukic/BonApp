@@ -6,9 +6,10 @@ import { Favorite } from 'src/app/module/favorite.interface';
 import { CartService } from 'src/app/service/cart.service';
 import { UserService } from 'src/app/service/utente.service';
 import { tap } from 'rxjs';
-import { Router } from '@angular/router';
+import { Router, NavigationEnd } from '@angular/router';
 import { Subscription } from 'rxjs';
 import { DropdownMenuService } from 'src/app/service/dropdown-menu.service';
+import { filter } from 'rxjs';
 import { StripeService } from 'src/app/service/stripe.service';
 
 @Component({
@@ -24,7 +25,7 @@ export class HomeComponent implements OnInit {
   singleDish!:Favorite;
   productsInOrder: Dish[] = [];
   private subscription!: Subscription;
-  private categorySubscription!: Subscription;
+
 
   constructor(
     private dishes: MenuService,
@@ -38,49 +39,59 @@ export class HomeComponent implements OnInit {
 
   ngOnInit(): void {
 
+    this.dishes.searchResults$.subscribe(results => {
+      this.dishesList = results.length > 0 ? results : [];
+    });
+
 
     this.userSrv.initializeLoginStatus()
+
     this.subscription = this.userSrv.currentUser$.subscribe(utente => {
       this.utente = utente;
-
-
-      console.log("CIAO", this.utente)
         if (this.utente && this.utente.id) {
           this.favoriti(this.utente.id);
           this.getProductsInCart(this.utente.id);
 
         }
-
-
         });
+
+        this.subscription.add(
+          this.router.events.pipe(
+            filter(event => event instanceof NavigationEnd)
+          ).subscribe(() => {
+            this.loadAllProducts();
+          })
+        );
 
         this.subscription.add(
           this.ddMenuSrv.selectedCategory$.subscribe(
             (selectedDishes: Dish[]) => {
               if (selectedDishes.length > 0) {
-
                 this.dishesList = selectedDishes;
               } else {
-
-                this.dishes.getMenu().subscribe((allDishes: Dish) => {
-                  this.dishesList = allDishes.content;
-                });
-
+                this.loadAllProducts();
               }
             }
           )
         );
 
+        if (this.dishesList.length === 0) {
+          this.loadAllProducts();
+        }
+   }
 
-
-
-  }
+   loadAllProducts() {
+    this.dishes.getMenu().subscribe((allDishes: Dish) => {
+      this.dishesList = allDishes.content;
+    },
+    error => console.error('Error fetching all dishes', error)
+  );
+}
 
   getProductsInCart(userId: string): void {
     this.cartSrv.getProductsInOrder(userId).subscribe((data: any[]) => {
       this.productsInOrder = data;
       this.cartSrv.setCartItemList(this.productsInOrder);
-      console.log(this.productsInOrder);
     },
     error => {
       console.error('Error fetching products in cart', error);
@@ -163,12 +174,6 @@ export class HomeComponent implements OnInit {
 
   }
 
-  navigateToDestination() {
-
-    const currentUrl = this.router.url;
-    this.router.navigate(['/dishes/:id'], { state: { returnUrl: currentUrl } })
-
-}
 
 ngOnDestroy(): void {
 

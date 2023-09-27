@@ -22,8 +22,6 @@ export class CartComponent implements OnInit {
   loaded: boolean = false;
 
 
-  // productCount: number = 1;
-
   constructor(private userSrv: UserService, private cartSrv: CartService, private stripeService: StripeService ) { }
 
   ngOnInit(): void {
@@ -35,7 +33,6 @@ export class CartComponent implements OnInit {
         this.getOrdineInCart(this.utente.id!);
 
       }
-
 
   })
 
@@ -50,25 +47,6 @@ export class CartComponent implements OnInit {
     error => {
       console.error('Error fetching products in cart', error);
     });
-  }
-
-  private transformProdottiList(response: any[]): Dish[] {
-    // Step 1: Create a map of all unique Dish objects by their id
-    const dishMap: { [id: string]: Dish } = {};
-    response.forEach((dish: Dish | string) => {
-      if (typeof dish !== 'string' && dish.id) {
-        dishMap[dish.id] = dish;
-      }
-    });
-    // Step 2: Create a new list of Dishes, replacing string ids with Dish objects from the map
-    const dishList = response.map((dish: Dish | string) => {
-      if (typeof dish === 'string') {
-        return dishMap[dish] || { productId: dish };
-      } else {
-        return dish;
-      }
-    });
-    return dishList;
   }
 
 
@@ -124,7 +102,7 @@ getGroupedProducts(): (Dish & { count: number })[] {
     }
   });
 
-  // Convert the map back to an array
+
   return Object.values(groupedProductsMap);
 }
 
@@ -136,14 +114,12 @@ checkout():void {
 
 
 handlePayment() {
-  // if (this.loaded) {
+
      this.checkout();
      this.stripeService.redirectToCheckout(this.ordineInCart.totalPrice);
 
-  // } else {
-  //   console.error('Total price data not loaded yet.');
-  // }
 }
+
 
 }
 

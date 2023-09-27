@@ -1,7 +1,7 @@
 import { Component, OnInit } from '@angular/core';
 import { Utente } from 'src/app/module/utente.interface';
 import { FormBuilder, Validators} from '@angular/forms';
-import { UserService } from 'src/app/service/utente.service'; 
+import { UserService } from 'src/app/service/utente.service';
 import { Router } from '@angular/router';
 import { AuthService } from 'src/app/service/auth.service';
 import { FormGroup } from '@angular/forms';
@@ -19,7 +19,7 @@ export class UpdateComponent implements OnInit {
     private route: Router,
     private userSrv: UserService,
     private authSrv: AuthService
-    
+
   ) { }
 
 utente!: Utente
