@@ -1,15 +1,15 @@
 package BonApp.BonApp.service;
 
-import java.math.BigInteger;
+
 import java.util.List;
-import java.util.Map;
-import java.util.Optional;
+
+
 import java.util.UUID;
-import java.util.stream.Collectors;
+
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -22,7 +22,7 @@ import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewProdottoPayload;
-import BonApp.BonApp.payload.TopFavoritePayload;
+
 import BonApp.BonApp.repositories.IngredienteRepository;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;

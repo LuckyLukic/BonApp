@@ -93,17 +93,7 @@ public class ProdottoController {
         return ResponseEntity.ok(prodotti);
     }
     
-//	@GetMapping("/cicale")
-//	public ResponseEntity<Page<TopFavoritePayload>> getTopFavoriteProducts(
-//    		@RequestParam(defaultValue = "0") int page, 
-//			@RequestParam(defaultValue = "10") int size) {
-//        Page<TopFavoritePayload> topFavoriteProducts = userService.getTopFavoriteProducts(page, size);
-//        if (topFavoriteProducts.isEmpty()) {
-//          return ResponseEntity.noContent().build();
-//          } else {
-//        return ResponseEntity.ok(topFavoriteProducts);
-//    }
-//	}
+
 	}
 	
 

@@ -53,16 +53,23 @@ export class NavbarComponent implements OnInit {
       distinctUntilChanged()
     ).subscribe(value => {
       if (value) {
+
         this.menuSrv.searchByPartialName(value)
           .subscribe(results => {
             this.menuSrv.setSearchResults(results.content);
           });
       } else {
-        this.menuSrv.setSearchResults([]);
+
+        this.menuSrv.getMenu()
+          .subscribe(menu => {
+            this.menuSrv.setSearchResults(menu.content); // Assuming menu is an array. Adjust as needed based on the actual response structure.
+          });
       }
     });
 
   }
+
+
 
 
 

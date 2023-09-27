@@ -8,10 +8,9 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import java.util.UUID;
-import java.util.stream.Collectors;
 
-import com.fasterxml.jackson.annotation.JsonIdentityInfo;
-import com.fasterxml.jackson.annotation.ObjectIdGenerators;
+
+
 import com.sendgrid.Method;
 import com.sendgrid.Request;
 import com.sendgrid.Response;
@@ -33,15 +32,14 @@ import jakarta.persistence.JoinColumn;
 import jakarta.persistence.JoinTable;
 import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
+
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
 @Entity
 @Data
 @NoArgsConstructor
-//@JsonIdentityInfo(generator = ObjectIdGenerators.PropertyGenerator.class, property = "id")
+
 
 public class OrdineSingolo {
 
@@ -49,8 +47,6 @@ public class OrdineSingolo {
 	@GeneratedValue
 	private UUID id;
 
-//	@ManyToOne
-//	@JoinColumn(name = "user_id", nullable = false)
 	@ManyToOne
 	@JoinColumn(name = "user_id", nullable = true)
 	private User user;
@@ -125,7 +121,7 @@ public class OrdineSingolo {
 	    }
 	    
 	    if(this.prodotti.isEmpty()) {
-	        this.totalPrice = 0.0; // Set total price to zero if the list is empty
+	        this.totalPrice = 0.0; 
 	    }	    
 	    calculateShippingCost();
 	    
@@ -147,12 +143,7 @@ public class OrdineSingolo {
 			this.status = StatusOrdine.COMPLETATO;
 			this.dataOrdine = LocalDate.now();
 			this.oraOrdine = LocalTime.now();
-			//this.shippingCost = calculateShippingCost();
-//
-//			User user = this.getUser();
-//			OrdineSingolo newOrdineSingolo = new OrdineSingolo();
-//			newOrdineSingolo.setUser(user); 
-//			user.addSingleOrder(newOrdineSingolo);
+	
 		} else {
 			throw new IllegalStateException("Cannot checkout a cart that is not in IN_CART status");
 		}

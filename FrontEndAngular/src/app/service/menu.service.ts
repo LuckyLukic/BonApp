@@ -24,7 +24,6 @@ export class MenuService {
 
   getMenu() {
     return this.http.get<Dish>(this.url+"prodotti")
-
   }
 
   getDishDetail (id:string) {
@@ -45,7 +44,7 @@ export class MenuService {
     }
 
 
-    removeFavorite(userId: string, dishId: string) {
+  removeFavorite(userId: string, dishId: string) {
       return this.http.delete(this.url + `users/${userId}/remove-favorite/${dishId}`);
     }
 
