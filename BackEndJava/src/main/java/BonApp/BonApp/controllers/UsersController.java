@@ -3,7 +3,7 @@ package BonApp.BonApp.controllers;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
+
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -24,7 +24,7 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 
-import BonApp.BonApp.Enum.StatusOrdine;
+
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
 import BonApp.BonApp.entities.Review;
@@ -202,6 +202,7 @@ public class UsersController {
         return ResponseEntity.ok().build();
     }
     
+    
     //GET PRODUCTS FROM CART
     @GetMapping("/{userId}/cart/products")
     public ResponseEntity<List<Prodotto>> getProductsInOrder(@PathVariable UUID userId) {
@@ -221,34 +222,13 @@ public class UsersController {
     
     @GetMapping("/{userId}/completed")
     public ResponseEntity<List<OrdineSingolo>> getAllCompletedOrdersForUser(@PathVariable UUID userId) {
-        // Fetch the User entity using the userId (you might have a UserService for this)
-        User user = userService.findById(userId);  // This is just a hypothetical method.
+        
+        User user = userService.findById(userId);  
         List<OrdineSingolo> completedOrders = ordineSingoloService.findAllCompletedOrdersForUser(userId);
         return ResponseEntity.ok(completedOrders);
     }
     
     
-    //GET THE QUANTITY OF A ITEM IN A CART
-//    @GetMapping("/product-quantity")
-//    public int getProductQuantityInCart(@RequestParam UUID userId, @RequestParam UUID productId) {
-//        return ordineSingoloService.getProductQuantityInCart(userId, productId);
-//    }
-    
-//    @GetMapping("/{userId}/ordine-singolo-incart")
-//    public List<OrdineSingolo> getCartInStatus(@PathVariable UUID userId) {
-//        return ordineSingoloService.getCartInStatus(userId);
-//    }
-    
-   
-    
-//    @GetMapping("/search")
-//	public ResponseEntity<Page<User>> searchUsers(@RequestParam(required = false) String cap,
-//			@RequestParam(required = false) String localita, @RequestParam(required = false) String comune,
-//			Pageable pageable) {
-//
-//		Page<User> users = userService.searchUsers(cap, localita, comune, pageable);
-//		return ResponseEntity.ok(users);
-//	}
 }
 
 

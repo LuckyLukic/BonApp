@@ -10,7 +10,7 @@ import java.util.stream.Collectors;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
-import org.springframework.data.domain.PageImpl;
+
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Sort;
@@ -23,13 +23,13 @@ import BonApp.BonApp.Enum.StatusOrdine;
 import BonApp.BonApp.entities.Indirizzo;
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
-import BonApp.BonApp.entities.Review;
+
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.BadRequestException;
 import BonApp.BonApp.exceptions.ForbiddenException;
 import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewPreferiti;
-import BonApp.BonApp.payload.NewReviewPayload;
+
 import BonApp.BonApp.payload.NewUserPayload;
 import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.NewIndirizzoPayload;
@@ -37,10 +37,11 @@ import BonApp.BonApp.payload.TopFavoritePayload;
 import BonApp.BonApp.repositories.IndirizzoRepository;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
-import BonApp.BonApp.repositories.ReviewRepository;
+
 import BonApp.BonApp.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
+
 
 @Service
 public class UsersService {
@@ -56,37 +57,35 @@ public class UsersService {
 
 	@Autowired
 	private OrdineSingoloRepository ordineSingoloRepository;
+	
 
 	// SALVA NUOVO UTENTE + ECCEZIONE SE VIENE USATA LA STESSA EMAIL
 	public User save(RegistrationPayload registrationPayload) {
 		NewUserPayload userPayload = registrationPayload.getNewUserPayload();
 		NewIndirizzoPayload indirizzoPayload = registrationPayload.getNewIndirizzoPayload();
 
-		// Check if the email is already in use
 		if (userRepository.findByEmail(userPayload.getEmail()).isPresent()) {
 			throw new BadRequestException("L'email " + userPayload.getEmail() + " è già stata utilizzata");
 		}
 
-		// Create a new Indirizzo entity from the Indirizzo payload
 		Indirizzo indirizzo = new Indirizzo(indirizzoPayload.getCap(), indirizzoPayload.getCivico(),
 				indirizzoPayload.getLocalita(), indirizzoPayload.getVia(), indirizzoPayload.getComune(),
 				indirizzoPayload.getProvincia());
 
-		// Save the Indirizzo entity
 		indirizzoRepository.save(indirizzo);
 
-		// Create a new User entity and associate it with the saved Indirizzo
 		User newUser = new User(userPayload.getUsername(), userPayload.getName(), userPayload.getSurname(),
 				userPayload.getEmail(), indirizzo, userPayload.getPassword());
 
-		// Save the User entity
 		return userRepository.save(newUser);
 	}
+	
 
 	// TORNA LA LISTA DEGLI UTENTI
 	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
+	
 
 	// TORNA LA LISTA DEGLI UTENTI CON L'IMPAGINAZIONE
 	public Page<User> find(int page, int size, String sort) {
@@ -94,11 +93,13 @@ public class UsersService {
 
 		return userRepository.findAll(pageable);
 	}
+	
 
 	// CERCA UTENTE TRAMITE ID
 	public User findById(UUID id) throws NotFoundException {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
+	
 
 	// CERCA E MODIFICA UTENTE TRAMITE ID
 	public User findByIdAndUpdate(UUID id, NewUserPayload body) throws NotFoundException {
@@ -110,6 +111,7 @@ public class UsersService {
 		found.setIndirizzo(body.getIndirizzo());
 		return userRepository.save(found);
 	}
+	
 
 	// CERCA E CANCELLA UTENTE TRAMITE ID
 	@Transactional
@@ -117,24 +119,23 @@ public class UsersService {
 	    User user = userRepository.findById(id)
 	            .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	    // Clean up references in the orders
 	    for (OrdineSingolo ordine : user.getSingleOrders()) {
-	        // This should clear the entries in the join table "ordinesingolo_prodotto"
+	       
 	        ordine.getProdotti().clear();
-	        ordine.setUser(null);  // This removes the reference to the user in each order
+	        ordine.setUser(null);  
 	    }
 
-	    // Now it should be safe to delete the user
 	    userRepository.delete(user);
 
 	}
 	
 	
-
+   //FIND USER BY EMAIL
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
 	}
+	
 
 	// METODO PER IL TEST LOGIN
 	public static boolean authenticateUser(User inputUser, User userFromDatabase,
@@ -152,6 +153,7 @@ public class UsersService {
 
 		return passwordEncoder.matches(rawPassword, encryptedPasswordFromDatabase);
 	}
+	
 
 	// PRENDI L'ID DELL'UTENTE LOGGATO
 	public User getCurrentUser() {
@@ -160,7 +162,9 @@ public class UsersService {
 		return userRepository.findByEmail(currentUserName)
 				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
 	}
-
+	
+	
+    //ADD PRODUCT TO FAVORITE
 	public NewPreferiti addProductToFavorites(UUID userId, UUID productId)
 			throws NotFoundException, ForbiddenException {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -173,7 +177,9 @@ public class UsersService {
 
 		return new NewPreferiti(productId, "Product successfully added to favorites");
 	}
-
+	
+	
+    //REMOVE OWN FAVORITE PRODUCT
 	public NewPreferiti removeProductFromFavorites(UUID productId) throws NotFoundException, ForbiddenException {
 
 		User user = this.getCurrentUser();
@@ -296,8 +302,9 @@ public class UsersService {
 	        }
 	        return null;
 	    }
+	   
 	    
-//	    GET PRODUCTS FROM CART OF A LOGGED USER
+       //GET PRODUCTS FROM CART OF A LOGGED USER
 	    public List<Prodotto> getProductsInOrder(UUID userId) {
 	        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
 	        System.out.println("User retrieved: " + user);
@@ -313,26 +320,6 @@ public class UsersService {
 
 	        return ordineSingolo.getProdotti();
 	    }
-	    
-	    
-	  
-	
-	
-
-	
-	
-	
-	
-	
-	    
-	    
-//		public Page<User> searchUsers(String cap, String localita, String comune, Pageable pageable) {
-//			return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
-//		}
-
-//		public Page<User> findUsersByAddress(String cap, String localita, String comune, Pageable pageable) {
-//			return userRepository.findByCapLocalitaAndComune(cap, localita, comune, pageable);
-//		}
 
 }
 	    

@@ -38,11 +38,10 @@ public class OrdineSingoloService {
 
 	@Autowired
 	UsersService userService;
-	
+
 	@Autowired
 	ProdottoRepository prodottoRepository;
 
-	
 	public OrdineSingolo save(NewOrdineSingoloPayload body) throws NotFoundException {
 		User user = userRepository.findById(body.getUserId())
 				.orElseThrow(() -> new NotFoundException("User not found with ID: " + body.getUserId()));
@@ -72,7 +71,6 @@ public class OrdineSingoloService {
 				.orElseThrow(() -> new NotFoundException("Single Order not found with ID: " + id));
 	}
 
-	
 	public OrdineSingolo findByIdAndUpdate(UUID id, NewOrdineSingoloPayload body) throws NotFoundException {
 		OrdineSingolo existingSingleOrder = findById(id);
 
@@ -106,88 +104,73 @@ public class OrdineSingoloService {
 		ordineSingoloRepository.delete(existingSingleOrder);
 	}
 
+	
 	public OrdineSingolo processCheckout(UUID userId, UUID ordineSingoloId) throws IllegalStateException {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 		OrdineSingolo ordineSingolo = ordineSingoloRepository.findById(ordineSingoloId)
 				.orElseThrow(() -> new NotFoundException("Order not found"));
 
 		ordineSingolo.checkout();
-		
+
 		userService.initializeUserCart(userId);
 		return ordineSingoloRepository.save(ordineSingolo);
-		
-		
-	}
-	
-	
 
-	public Page<OrdineSingolo> findByMultipleCriteria(String cap, String localita, String comune, Double minPrice, Double maxPrice, LocalDate startDate, LocalDate endDate, Pageable pageable) {
-	    return ordineSingoloRepository.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate, endDate, pageable);
 	}
-	
 
+	
+	public Page<OrdineSingolo> findByMultipleCriteria(String cap, String localita, String comune, Double minPrice,
+			Double maxPrice, LocalDate startDate, LocalDate endDate, Pageable pageable) {
+		return ordineSingoloRepository.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate,
+				endDate, pageable);
+	}
+
+	
 	public Page<OrdineSingolo> findOrdersByUserId(UUID userId, Pageable pageable) {
 		return ordineSingoloRepository.findByUserId(userId, pageable);
-	    }
-	
-	public double calculateShippingCost(double totalPrice) {
-        if (totalPrice > 15) {
-            return 0.0;
-        } else {
-            return 2.5;
-        }
-    }
-	
-	
-	public void checkStatusSendEmail() throws IOException {
-        List<OrdineSingolo> ordiniCompletati = ordineSingoloRepository.findByStatus(StatusOrdine.COMPLETATO);
-
-        for (OrdineSingolo ordine : ordiniCompletati) {
-            LocalDate currentDate = LocalDate.now();
-            
-            if (currentDate.isEqual(ordine.getDataOrdine())) {
-                ordine.invioEmail(ordine); 
-            
-    }
-        }
-        
 	}
 
 	
-   //	GET ALL ORDER OF GIVE USER WITH STATUS COMPLETATO
-//    public List<OrdineSingolo> findAllCompletedOrdersForUser(User user) {
-//        return ordineSingoloRepository.findByUserAndStatus(user, StatusOrdine.COMPLETATO);
-//    }
 	
+	public double calculateShippingCost(double totalPrice) {
+		if (totalPrice > 15) {
+			return 0.0;
+		} else {
+			return 2.5;
+		}
+	}
+	
+	
+   //INVIO EMAIL CON SENDGRID
+	public void checkStatusSendEmail() throws IOException {
+		List<OrdineSingolo> ordiniCompletati = ordineSingoloRepository.findByStatus(StatusOrdine.COMPLETATO);
 
+		for (OrdineSingolo ordine : ordiniCompletati) {
+			LocalDate currentDate = LocalDate.now();
 
+			if (currentDate.isEqual(ordine.getDataOrdine())) {
+				ordine.invioEmail(ordine);
 
-public List<OrdineSingolo> findAllCompletedOrdersForUser(UUID userId) {
-    User user = userService.findById(userId);
-    if (user == null) {
-        // Handle the case where no user is found. You could return an empty list or throw an exception.
-        return Collections.emptyList();
-    }
-    
-    return user.getSingleOrders().stream()
-        .filter(order -> order.getStatus() == StatusOrdine.COMPLETATO)
-        .collect(Collectors.toList());
+			}
+		}
+
+	}
+	
+	
+   //RICERCA TUTTI GLI ORDINI DI UN UTENTE CON STATUS COMPLETATO
+	public List<OrdineSingolo> findAllCompletedOrdersForUser(UUID userId) {
+		User user = userService.findById(userId);
+		if (user == null) {
+			
+			return Collections.emptyList();
+		}
+
+		return user.getSingleOrders().stream().filter(order -> order.getStatus() == StatusOrdine.COMPLETATO)
+				.collect(Collectors.toList());
+	}
+
 }
 
-}
 
-
-
-
-	
-	
-//    public int getProductQuantityInCart(UUID userId, UUID productId) {
-//        OrdineSingolo cart = getCartByStatus(StatusOrdine.IN_CART);
-//        if (cart != null) {
-//            return cart.getProductQuantity(productId);
-//        }
-//        return 0;
-//    }
 
 
 

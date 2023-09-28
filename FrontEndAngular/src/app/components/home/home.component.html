@@ -9,7 +9,7 @@
       <div class="cardwrapper col-md-6 col-xl-4 mb-4" *ngFor="let singleDish of dishesList; let i = index">
         <div class="card h-100 rounded-top-5" [style.animation-delay]="i * 0.1 + 's'">
 
-          <img src={{singleDish.imgUrl}} alt="ciccio" class="rounded-top-5">
+          <img src={{singleDish.imgUrl}} alt="picture" class="rounded-top-5">
           <div class="card-body d-flex flex-column justify-content-between">
             <h5 class="card-title">{{ singleDish.nome}}</h5>
             <h6 class="text-uppercase"> Portata: {{singleDish.categoria}}</h6>

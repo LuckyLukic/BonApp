@@ -11,7 +11,7 @@ import org.springframework.data.repository.query.Param;
 
 import BonApp.BonApp.Enum.Categoria;
 import BonApp.BonApp.entities.Prodotto;
-import BonApp.BonApp.entities.User;
+
 
 
 public interface ProdottoRepository extends JpaRepository<Prodotto, UUID> {
