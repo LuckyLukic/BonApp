@@ -22,6 +22,7 @@ export class OwnProfileComponent implements OnInit {
     this.userSrv.initializeLoginStatus()
     this.subscription = this.userSrv.currentUser$.subscribe(utente => {
       this.utente = utente;
+      console.log("OWN USER", this.utente)
 
     })
 }
@@ -29,6 +30,7 @@ export class OwnProfileComponent implements OnInit {
 deleteUser(id:string):void {
   this.userSrv.deleteUser(id).subscribe()
   this.authSrv.logout()
+  this.utente = null;
   this.router.navigate(['/']);
 
 }

@@ -3,7 +3,7 @@
 
 <ng-template #showreview>
   <div class="container px-0">
-    <div class="row row-gap-3">
+    <div class="row row-gap-3 mb-4" >
       <div class="cardwrapper col-lg-6 d-flex flex-column justify-content-between" *ngFor="let singleReview of reviewList; let i = index">
         <div class="card w-100 h-100 d-flex justify-content-between flex-column" [style.animation-delay]="i * 0.2 + 's'">
 
@@ -21,6 +21,11 @@
             </div>
           </div>
         </div>
+      </div>
+      <div class="pagination d-flex justify-content-center">
+        <button class="text-black-50 border-0 bg-transparent" type="button"  (click)="previousPage()" >< previous</button>
+        <span class="align-self-center mx-2"> page {{page + 1}} </span>
+        <button class="text-black-50 border-0 bg-transparent" (click)="nextPage()">next ></button>
       </div>
     </div>
 

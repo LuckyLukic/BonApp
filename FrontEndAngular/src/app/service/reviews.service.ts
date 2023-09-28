@@ -3,6 +3,8 @@ import { HttpClient } from '@angular/common/http';
 import { Reviews } from '../module/reviews.interface';
 import { environment } from 'src/environments/environment';
 import { Observable } from 'rxjs';
+import { HttpParams } from '@angular/common/http';
+
 @Injectable({
   providedIn: 'root'
 })
@@ -12,8 +14,12 @@ export class ReviewsService {
 
   constructor(private http : HttpClient) { }
 
-  getAllReviews () {
-    return this.http.get<Reviews>(this.url+"reviews")
+  getAllReviews (page: number, size: number, sortBy: string): Observable<Reviews> {
+    const params = new HttpParams()
+      .set('page', page.toString())
+      .set('size', size.toString())
+      .set('sortBy', sortBy);
+    return this.http.get<Reviews>(this.url+"reviews", {params})
   }
 
   getOwnReviews (id:string) {

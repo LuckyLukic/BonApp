@@ -17,7 +17,7 @@ import { CartService } from 'src/app/service/cart.service';
 export class FavoritesComponent implements OnInit {
 
 
-  topFavoriteDishes: Favorite[] = []
+  topFavoriteDishes!: Favorite[];
   productsInOrder: Dish[] = [];
   private subscription!: Subscription;
   private cartSubscription?: Subscription;

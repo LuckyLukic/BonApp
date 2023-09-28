@@ -32,7 +32,12 @@
 </ng-template>
 
 <ng-template #sorry>
-  <div class="row d-flex justify-content-center align-items-center col-4">
-    Sorry, something is wrong. Please try later!
+  <div class="row d-flex justify-content-center noFavorites">
+    <div class="col-4 noCart d-flex flex-column justify-content-center text-center">
+      <p>  Sorry, you don't have any favorite product yet!</p>
+
+      <a  class="btn text-uppercase w-50 btn-primary text-white mt-5 backShopping mx-auto" [routerLink]="['/']" routerLinkActive="active">&leftarrow; Back to shop</a>
+
+    </div>
   </div>
 </ng-template>

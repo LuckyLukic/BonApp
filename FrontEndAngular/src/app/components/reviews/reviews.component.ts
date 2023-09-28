@@ -13,6 +13,9 @@ import { UserService } from 'src/app/service/utente.service';
   styleUrls: ['./reviews.component.scss']
 })
 export class ReviewsComponent implements OnInit {
+  page = 0;
+  pageSize = 10;
+  totalPage = 0;
 
   reviewList!: Reviews[];
   utente!: Partial<Utente> | null;
@@ -27,10 +30,32 @@ export class ReviewsComponent implements OnInit {
       this.utente = utente;
     });
 
-   this.revSrv.getAllReviews().subscribe((allReviews: Reviews) => {
-    this.reviewList = allReviews.content;
-   })
+   this.allReviews();
 }
+
+allReviews() {
+  this.revSrv.getAllReviews(this.page, this.pageSize, "reviewDate").subscribe((allReviews: Reviews) => {
+  this.reviewList = allReviews.content;
+  this.totalPage = allReviews.totalPages
+
+ })
+}
+
+previousPage(): void {
+  if(this.page>0) {
+    this.page--;
+    this.allReviews();
+
+  }
+}
+
+nextPage(): void {
+    if(this.page < this.totalPage - 1) {
+    this.page++;
+    this.allReviews();
+  }
+}
+
 
 ngOnDestroy(): void {
 

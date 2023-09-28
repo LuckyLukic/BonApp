@@ -18,7 +18,7 @@ import { Subscription } from 'rxjs';
 export class OwnFavoritesComponent implements OnInit {
 
 
-  favoriteDishes: Favorite[] = [];
+  favoriteDishes!: Favorite[];
   productsInOrder: Dish[] = [];
   private subscription!: Subscription;
   utente!: Partial<Utente> | null;

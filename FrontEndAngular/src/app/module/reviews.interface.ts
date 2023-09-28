@@ -9,5 +9,6 @@ export interface Reviews {
   rating: number;
   reviewDate: Date;
   id?: string;
+  totalPages: number;
 
 }

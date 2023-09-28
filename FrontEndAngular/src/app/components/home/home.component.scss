@@ -1,5 +1,5 @@
 
-div.container-fluid{
+.container{
   margin-bottom: 60px;
 }
 
@@ -10,11 +10,6 @@ div.container-fluid{
   border-left: none;
   box-shadow: 5px 5px 15px rgba(115, 109, 109, 0.6);
 
-}
-
-.card-body {
-  border-top: none;
-  border-left: none;
 }
 
 @keyframes fadeIn {
