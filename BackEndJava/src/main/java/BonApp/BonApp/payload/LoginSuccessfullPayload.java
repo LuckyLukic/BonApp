@@ -1,7 +1,5 @@
 package BonApp.BonApp.payload;
 
-import java.util.UUID;
-
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 
@@ -9,5 +7,5 @@ import lombok.Getter;
 @Getter
 public class LoginSuccessfullPayload {
 	String accessToken;
-	
+
 }

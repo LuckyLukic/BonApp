@@ -17,16 +17,16 @@
           <div class="card-body prodottiWrapper" *ngFor="let product of singleOrder.prodotti">
             <div class="d-flex justify-content-between">
               <p class="card-text">{{ product.nome }}: </p>
-              <p class="card-text mb-3 ">{{ product.prezzo }} - Euro</p>
+              <p class="card-text mb-3 ">{{ product.prezzo | number:'1.2-2'}} Euro</p>
             </div>
           </div>
           <div class="d-flex card-body justify-content-between delivery">
             <p class="card-text delivery text-uppercase">Delivery: </p>
-            <p class="card-text delivery">{{ singleOrder.shippingCost }} - Euro</p> <!-- Replace with actual property name -->
+            <p class="card-text delivery">{{ singleOrder.shippingCost | number:'1.2-2'}} Euro</p> <!-- Replace with actual property name -->
           </div>
           <div class="d-flex card-body justify-content-between totalOrder">
             <p class="card-text delivery text-uppercase">Total Order: </p>
-            <p class="card-text delivery">{{ singleOrder.totalPrice }} - Euro</p> <!-- Replace with actual property name -->
+            <p class="card-text delivery">{{ singleOrder.totalPrice | number:'1.2-2'}} Euro</p> <!-- Replace with actual property name -->
           </div>
         </div>
       </div>

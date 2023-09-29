@@ -7,7 +7,6 @@ import java.util.List;
 import java.util.Optional;
 import java.util.UUID;
 
-
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -68,19 +67,14 @@ public class User implements UserDetails {
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch= FetchType.EAGER)
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
 
 	private List<OrdineSingolo> singleOrders = new ArrayList<>();
 
-	
 	private LocalDate dataRegistrazione;
 
-	 @ManyToMany(cascade = {CascadeType.REMOVE})
-	    @JoinTable(
-	            name = "user_prodotti_preferiti",
-	            joinColumns = @JoinColumn(name = "user_id"),
-	            inverseJoinColumns = @JoinColumn(name = "prodotto_id"))
+	@ManyToMany(cascade = { CascadeType.REMOVE })
+	@JoinTable(name = "user_prodotti_preferiti", joinColumns = @JoinColumn(name = "user_id"), inverseJoinColumns = @JoinColumn(name = "prodotto_id"))
 	private List<Prodotto> prodottiPreferiti = new ArrayList<>();
 
 	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL)
@@ -136,16 +130,14 @@ public class User implements UserDetails {
 	}
 
 	public void addProductToFavorites(Prodotto prodotto) {
-            this.prodottiPreferiti.add(prodotto);
-            prodotto.getUsersFavouriteProducts().add(this);
-        }
-   
+		this.prodottiPreferiti.add(prodotto);
+		prodotto.getUsersFavouriteProducts().add(this);
+	}
 
-    
-    public void removeProductFromFavorites(Prodotto prodotto) {
-            this.prodottiPreferiti.remove(prodotto);
-            prodotto.getUsersFavouriteProducts().remove(this);  
-    }
+	public void removeProductFromFavorites(Prodotto prodotto) {
+		this.prodottiPreferiti.remove(prodotto);
+		prodotto.getUsersFavouriteProducts().remove(this);
+	}
 
 	public void addReview(Review review) {
 		this.reviews.add(review);
@@ -156,7 +148,7 @@ public class User implements UserDetails {
 		this.reviews.remove(review);
 		review.setUser(null);
 	}
-	
+
 	public void initializeCart() {
 		Optional<OrdineSingolo> cart = this.singleOrders.stream()
 				.filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART).findFirst();
@@ -166,21 +158,21 @@ public class User implements UserDetails {
 			this.addSingleOrder(newCart);
 		}
 	}
-	
+
 	public OrdineSingolo getCart() {
-	    for (OrdineSingolo ordine : this.singleOrders) {  
-	        if (ordine.getStatus() == StatusOrdine.IN_CART) {
-	            return ordine;
-	        }
-	    }
-	    return null;
+		for (OrdineSingolo ordine : this.singleOrders) {
+			if (ordine.getStatus() == StatusOrdine.IN_CART) {
+				return ordine;
+			}
+		}
+		return null;
 	}
-	
-	 @PreRemove
-	    private void preRemove() {
-	        for (OrdineSingolo ordineSingolo : singleOrders) {
-	            ordineSingolo.setUser(null);
-	        }
-	    }
+
+	@PreRemove
+	private void preRemove() {
+		for (OrdineSingolo ordineSingolo : singleOrders) {
+			ordineSingolo.setUser(null);
+		}
+	}
 
 }

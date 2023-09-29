@@ -1,6 +1,5 @@
 package BonApp.BonApp.service;
 
-
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
@@ -42,7 +41,6 @@ import BonApp.BonApp.repositories.UserRepository;
 import jakarta.persistence.EntityNotFoundException;
 import jakarta.transaction.Transactional;
 
-
 @Service
 public class UsersService {
 
@@ -57,7 +55,6 @@ public class UsersService {
 
 	@Autowired
 	private OrdineSingoloRepository ordineSingoloRepository;
-	
 
 	// SALVA NUOVO UTENTE + ECCEZIONE SE VIENE USATA LA STESSA EMAIL
 	public User save(RegistrationPayload registrationPayload) {
@@ -79,13 +76,11 @@ public class UsersService {
 
 		return userRepository.save(newUser);
 	}
-	
 
 	// TORNA LA LISTA DEGLI UTENTI
 	public List<User> getUsers() {
 		return userRepository.findAll();
 	}
-	
 
 	// TORNA LA LISTA DEGLI UTENTI CON L'IMPAGINAZIONE
 	public Page<User> find(int page, int size, String sort) {
@@ -93,13 +88,11 @@ public class UsersService {
 
 		return userRepository.findAll(pageable);
 	}
-	
 
 	// CERCA UTENTE TRAMITE ID
 	public User findById(UUID id) throws NotFoundException {
 		return userRepository.findById(id).orElseThrow(() -> new NotFoundException(id));
 	}
-	
 
 	// CERCA E MODIFICA UTENTE TRAMITE ID
 	public User findByIdAndUpdate(UUID id, NewUserPayload body) throws NotFoundException {
@@ -111,31 +104,27 @@ public class UsersService {
 		found.setIndirizzo(body.getIndirizzo());
 		return userRepository.save(found);
 	}
-	
 
 	// CERCA E CANCELLA UTENTE TRAMITE ID
 	@Transactional
 	public void findByIdAndDelete(UUID id) throws NotFoundException {
-	    User user = userRepository.findById(id)
-	            .orElseThrow(() -> new EntityNotFoundException("User not found"));
+		User user = userRepository.findById(id).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	    for (OrdineSingolo ordine : user.getSingleOrders()) {
-	       
-	        ordine.getProdotti().clear();
-	        ordine.setUser(null);  
-	    }
+		for (OrdineSingolo ordine : user.getSingleOrders()) {
 
-	    userRepository.delete(user);
+			ordine.getProdotti().clear();
+			ordine.setUser(null);
+		}
+
+		userRepository.delete(user);
 
 	}
-	
-	
-   //FIND USER BY EMAIL
+
+	// FIND USER BY EMAIL
 	public User findByEmail(String email) {
 		return userRepository.findByEmail(email)
 				.orElseThrow(() -> new NotFoundException("Utente con email " + email + " non trovato"));
 	}
-	
 
 	// METODO PER IL TEST LOGIN
 	public static boolean authenticateUser(User inputUser, User userFromDatabase,
@@ -153,7 +142,6 @@ public class UsersService {
 
 		return passwordEncoder.matches(rawPassword, encryptedPasswordFromDatabase);
 	}
-	
 
 	// PRENDI L'ID DELL'UTENTE LOGGATO
 	public User getCurrentUser() {
@@ -162,9 +150,8 @@ public class UsersService {
 		return userRepository.findByEmail(currentUserName)
 				.orElseThrow(() -> new NotFoundException("Utente con email " + currentUserName + " non trovato"));
 	}
-	
-	
-    //ADD PRODUCT TO FAVORITE
+
+	// ADD PRODUCT TO FAVORITE
 	public NewPreferiti addProductToFavorites(UUID userId, UUID productId)
 			throws NotFoundException, ForbiddenException {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
@@ -177,9 +164,8 @@ public class UsersService {
 
 		return new NewPreferiti(productId, "Product successfully added to favorites");
 	}
-	
-	
-    //REMOVE OWN FAVORITE PRODUCT
+
+	// REMOVE OWN FAVORITE PRODUCT
 	public NewPreferiti removeProductFromFavorites(UUID productId) throws NotFoundException, ForbiddenException {
 
 		User user = this.getCurrentUser();
@@ -197,8 +183,8 @@ public class UsersService {
 
 		return new NewPreferiti(productId, "Product successfully removed from favorites");
 	}
-	
-    // GET OWN FAVORITE PRODUCTS
+
+	// GET OWN FAVORITE PRODUCTS
 	public Page<TopFavoritePayload> getFavoriteProducts(UUID userId, Pageable pageable) throws NotFoundException {
 		User user = userRepository.findById(userId)
 				.orElseThrow(() -> new NotFoundException("L'utente con l'ID " + userId + " non è stato trovato."));
@@ -211,9 +197,8 @@ public class UsersService {
 
 		return favorites.map(prodotto -> new TopFavoritePayload(prodotto, 0L));
 	}
-	
-	
-    //GET TOP FAVORITE PRODUCTS
+
+	// GET TOP FAVORITE PRODUCTS
 	public Page<TopFavoritePayload> getTopFavoriteProducts(int page, int size) {
 		Pageable pageable = PageRequest.of(page, size);
 		Page<Object[]> result = userRepository.findTopFavoriteProducts(pageable);
@@ -237,90 +222,78 @@ public class UsersService {
 		return topProducts;
 	}
 
-	//INITIALISE THE CART
+	// INITIALISE THE CART
 	public void initializeUserCart(UUID userId) {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 		user.initializeCart();
 		userRepository.save(user);
 	}
-	
-	
-	  //ADD TO CART
-	  @Transactional
-	   public void addProductToCart(UUID userId, UUID productId, int quantity) {
-	        User user = userRepository.findById(userId)
-	                .orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	        Prodotto prodotto = prodottoRepository.findById(productId)
-	                .orElseThrow(() -> new EntityNotFoundException("Product not found"));
+	// ADD TO CART
+	@Transactional
+	public void addProductToCart(UUID userId, UUID productId, int quantity) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	        OrdineSingolo cart = user.getSingleOrders().stream()
-	                .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
-	                .findFirst()
-	                .orElseGet(() -> {
-	                    OrdineSingolo newCart = new OrdineSingolo(user, new ArrayList<>());
-	                    user.addSingleOrder(newCart);
-	                    return newCart;
-	                });
+		Prodotto prodotto = prodottoRepository.findById(productId)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-	        cart.addProduct(prodotto, quantity);
-	        ordineSingoloRepository.save(cart);
-	        userRepository.save(user);
-	    }
+		OrdineSingolo cart = user.getSingleOrders().stream()
+				.filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART).findFirst().orElseGet(() -> {
+					OrdineSingolo newCart = new OrdineSingolo(user, new ArrayList<>());
+					user.addSingleOrder(newCart);
+					return newCart;
+				});
 
-	   
-	  //REMOVE FROM CART
-	   @Transactional
-	   public void removeProductFromCart(UUID userId, UUID productId, int quantity) {
-		    if (quantity <= 0) {
-		        throw new IllegalArgumentException("Quantity must be greater than zero");
-		    }
+		cart.addProduct(prodotto, quantity);
+		ordineSingoloRepository.save(cart);
+		userRepository.save(user);
+	}
 
-		    User user = userRepository.findById(userId)
-		            .orElseThrow(() -> new EntityNotFoundException("User not found"));
-
-		    Prodotto prodotto = prodottoRepository.findById(productId)
-		            .orElseThrow(() -> new EntityNotFoundException("Product not found"));
-
-		    OrdineSingolo cart = user.getSingleOrders().stream()
-		            .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
-		            .findFirst()
-		            .orElseThrow(() -> new EntityNotFoundException("Cart not found"));
-
-		    cart.removeProduct(prodotto, quantity);
-		    ordineSingoloRepository.save(cart);
+	// REMOVE FROM CART
+	@Transactional
+	public void removeProductFromCart(UUID userId, UUID productId, int quantity) {
+		if (quantity <= 0) {
+			throw new IllegalArgumentException("Quantity must be greater than zero");
 		}
-	   
-	   
-	   //GET ORDINE WITH STATUS IN_CART
-	   public List<OrdineSingolo> findCartByUserId(UUID userId) {
-	        User user = userRepository.findById(userId).orElse(null);
-	        if (user != null) {
-	            return user.getSingleOrders().stream()
-	                    .filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
-	                    .collect(Collectors.toList());
-	        }
-	        return null;
-	    }
-	   
-	    
-       //GET PRODUCTS FROM CART OF A LOGGED USER
-	    public List<Prodotto> getProductsInOrder(UUID userId) {
-	        User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
-	        System.out.println("User retrieved: " + user);
 
-	        List<OrdineSingolo> ordineSingoloList = ordineSingoloRepository.findByUserAndStatus(user, StatusOrdine.IN_CART);
-	        System.out.println("Orders retrieved: " + ordineSingoloList);
-	        
-	        if(ordineSingoloList.isEmpty()) {
-	            throw new RuntimeException("No orders in cart found");
-	        }
+		User user = userRepository.findById(userId).orElseThrow(() -> new EntityNotFoundException("User not found"));
 
-	        OrdineSingolo ordineSingolo = ordineSingoloList.get(0);
+		Prodotto prodotto = prodottoRepository.findById(productId)
+				.orElseThrow(() -> new EntityNotFoundException("Product not found"));
 
-	        return ordineSingolo.getProdotti();
-	    }
+		OrdineSingolo cart = user.getSingleOrders().stream()
+				.filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART).findFirst()
+				.orElseThrow(() -> new EntityNotFoundException("Cart not found"));
+
+		cart.removeProduct(prodotto, quantity);
+		ordineSingoloRepository.save(cart);
+	}
+
+	// GET ORDINE WITH STATUS IN_CART
+	public List<OrdineSingolo> findCartByUserId(UUID userId) {
+		User user = userRepository.findById(userId).orElse(null);
+		if (user != null) {
+			return user.getSingleOrders().stream().filter(ordine -> ordine.getStatus() == StatusOrdine.IN_CART)
+					.collect(Collectors.toList());
+		}
+		return null;
+	}
+
+	// GET PRODUCTS FROM CART OF A LOGGED USER
+	public List<Prodotto> getProductsInOrder(UUID userId) {
+		User user = userRepository.findById(userId).orElseThrow(() -> new RuntimeException("User not found"));
+		System.out.println("User retrieved: " + user);
+
+		List<OrdineSingolo> ordineSingoloList = ordineSingoloRepository.findByUserAndStatus(user, StatusOrdine.IN_CART);
+		System.out.println("Orders retrieved: " + ordineSingoloList);
+
+		if (ordineSingoloList.isEmpty()) {
+			throw new RuntimeException("No orders in cart found");
+		}
+
+		OrdineSingolo ordineSingolo = ordineSingoloList.get(0);
+
+		return ordineSingolo.getProdotti();
+	}
 
 }
-	    
-

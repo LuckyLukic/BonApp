@@ -37,49 +37,43 @@ import lombok.Setter;
 @Table(name = "prodotto")
 
 public class Prodotto {
-    
-    @Id
-    @GeneratedValue
-    @Column(name = "id")
-    private UUID id;
-    private String nome;
-    
-    @Column(length=500)
-    private String descrizione;
-    private double prezzo;
-    
-    @Column(length = 500)
-    private String imgUrl;
 
-    @Enumerated(EnumType.STRING)
-    private Categoria categoria;
-    
-  
-    @ManyToMany (cascade = {CascadeType.MERGE})
-    @JoinTable(
-      name = "prodotto_ingrediente", 
-      joinColumns = @JoinColumn(name = "prodotto_id"), 
-      inverseJoinColumns = @JoinColumn(name = "ingrediente_id"))
-    private List<Ingrediente> ingredienti = new ArrayList<>();
-    
-    @JsonIgnore
-    @ManyToMany(mappedBy = "prodotti", cascade = {CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH})
-    private List<OrdineSingolo> orders = new ArrayList<>();
-    
-   @JsonIgnore
-    @ManyToMany(mappedBy = "prodottiPreferiti")
-    private List<User> usersFavouriteProducts = new ArrayList<>();
+	@Id
+	@GeneratedValue
+	@Column(name = "id")
+	private UUID id;
+	private String nome;
 
-    
-    
-    public Prodotto(String nome, String descrizione, double prezzo, Categoria categoria, List<Ingrediente> ingredienti, String imgUrl) {
-        this.nome = nome;
-        this.descrizione = descrizione;
-        this.prezzo = prezzo;
-        this.categoria = categoria;
-        this.ingredienti = ingredienti;
-        this.imgUrl = imgUrl;
-    }
-    
-    
+	@Column(length = 500)
+	private String descrizione;
+	private double prezzo;
+
+	@Column(length = 500)
+	private String imgUrl;
+
+	@Enumerated(EnumType.STRING)
+	private Categoria categoria;
+
+	@ManyToMany(cascade = { CascadeType.MERGE })
+	@JoinTable(name = "prodotto_ingrediente", joinColumns = @JoinColumn(name = "prodotto_id"), inverseJoinColumns = @JoinColumn(name = "ingrediente_id"))
+	private List<Ingrediente> ingredienti = new ArrayList<>();
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "prodotti", cascade = { CascadeType.MERGE, CascadeType.PERSIST, CascadeType.REFRESH })
+	private List<OrdineSingolo> orders = new ArrayList<>();
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "prodottiPreferiti")
+	private List<User> usersFavouriteProducts = new ArrayList<>();
+
+	public Prodotto(String nome, String descrizione, double prezzo, Categoria categoria, List<Ingrediente> ingredienti,
+			String imgUrl) {
+		this.nome = nome;
+		this.descrizione = descrizione;
+		this.prezzo = prezzo;
+		this.categoria = categoria;
+		this.ingredienti = ingredienti;
+		this.imgUrl = imgUrl;
+	}
+
 }

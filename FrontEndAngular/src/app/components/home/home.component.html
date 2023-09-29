@@ -14,7 +14,7 @@
             <h5 class="card-title">{{ singleDish.nome}}</h5>
             <h6 class="text-uppercase"> Portata: {{singleDish.categoria}}</h6>
             <div class="d-flex flex-column">
-              <p class="card-text mb-3">Euro: {{ singleDish.prezzo }}</p>
+              <p class="card-text mb-3">Euro: {{ singleDish.prezzo | number:'1.2-2' }}</p>
               <div class="d-flex ">
 
               <a

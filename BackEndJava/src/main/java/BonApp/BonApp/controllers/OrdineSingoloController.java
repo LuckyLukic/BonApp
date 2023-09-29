@@ -1,8 +1,7 @@
 package BonApp.BonApp.controllers;
 
-import java.math.BigDecimal;
 import java.time.LocalDate;
-import java.util.List;
+
 import java.util.UUID;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -21,6 +20,7 @@ import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.exceptions.NotFoundException;
@@ -43,27 +43,27 @@ public class OrdineSingoloController {
 	}
 
 	@GetMapping("")
-	// @PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public Page<OrdineSingolo> getSingleOrders(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size, @RequestParam(defaultValue = "id") String sortBy) {
 		return ordineSingoloService.find(page, size, sortBy);
 	}
 
 	@GetMapping("/{singleOrderId}")
-	// @PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public OrdineSingolo findById(@PathVariable UUID singleOrderId) {
 		return ordineSingoloService.findById(singleOrderId);
 	}
 
 	@PutMapping("/{singleOrderId}")
-	// @PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public OrdineSingolo updateSingleOrder(@PathVariable UUID singleOrderId,
 			@RequestBody NewOrdineSingoloPayload body) {
 		return ordineSingoloService.findByIdAndUpdate(singleOrderId, body);
 	}
 
 	@DeleteMapping("/{singleOrderId}")
-	// @PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteSingleOrder(@PathVariable UUID singleOrderId) {
 		ordineSingoloService.findByIdAndDelete(singleOrderId);
@@ -81,32 +81,28 @@ public class OrdineSingoloController {
 	}
 
 	@GetMapping("/search")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Page<OrdineSingolo>> findByMultipleCriteria(
-	        @RequestParam(value = "cap", required = false) String cap,
-	        @RequestParam(value = "localita", required = false) String localita,
-	        @RequestParam(value = "comune", required = false) String comune,
-	        @RequestParam(value = "minPrice", required = false) Double minPrice,
-	        @RequestParam(value = "maxPrice", required = false) Double maxPrice,
-	        @RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
-	        @RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
-	        Pageable pageable) {
+			@RequestParam(value = "cap", required = false) String cap,
+			@RequestParam(value = "localita", required = false) String localita,
+			@RequestParam(value = "comune", required = false) String comune,
+			@RequestParam(value = "minPrice", required = false) Double minPrice,
+			@RequestParam(value = "maxPrice", required = false) Double maxPrice,
+			@RequestParam(value = "startDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate startDate,
+			@RequestParam(value = "endDate", required = false) @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate endDate,
+			Pageable pageable) {
 
-	    Page<OrdineSingolo> ordini = ordineSingoloService.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate, endDate, pageable);
-	    return ResponseEntity.ok(ordini);
+		Page<OrdineSingolo> ordini = ordineSingoloService.findByMultipleCriteria(cap, localita, comune, minPrice,
+				maxPrice, startDate, endDate, pageable);
+		return ResponseEntity.ok(ordini);
 	}
-	
-	 @GetMapping("/searchByUserId")
-	    public ResponseEntity<Page<OrdineSingolo>> findByUserId(
-	            @RequestParam("userId") UUID userId,
-	            Pageable pageable) {
-	        
-	        Page<OrdineSingolo> ordini = ordineSingoloService.findOrdersByUserId(userId, pageable);
-	        return ResponseEntity.ok(ordini);
-	    }
-	 
-	
+
+	@GetMapping("/searchByUserId")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public ResponseEntity<Page<OrdineSingolo>> findByUserId(@RequestParam("userId") UUID userId, Pageable pageable) {
+
+		Page<OrdineSingolo> ordini = ordineSingoloService.findOrdersByUserId(userId, pageable);
+		return ResponseEntity.ok(ordini);
+	}
+
 }
-
-
-
-

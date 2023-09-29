@@ -25,75 +25,68 @@ import BonApp.BonApp.exceptions.NotFoundException;
 import BonApp.BonApp.payload.NewProdottoPayload;
 
 import BonApp.BonApp.service.ProdottoService;
-import BonApp.BonApp.service.UsersService;
 
 @RestController
 @RequestMapping("/prodotti")
 public class ProdottoController {
 
-    @Autowired
-    private ProdottoService prodottoService;
-    
- 
-    @PostMapping("")
-    @ResponseStatus(HttpStatus.CREATED)
-    public Prodotto saveProdotto(@RequestBody NewProdottoPayload body) {
-    	Prodotto createdProdotto = prodottoService.save(body);
-        return createdProdotto;
-    }
+	@Autowired
+	private ProdottoService prodottoService;
 
-    @GetMapping("")
-    public Page<Prodotto> getProdotti(@RequestParam(defaultValue = "0") int page,
-                                      @RequestParam(defaultValue = "100") int size,
-                                      @RequestParam(defaultValue = "id") String sortBy) {
-        return prodottoService.find(page, size, sortBy);
-    }
-
-    @GetMapping("/{prodottoId}")
-    //@PreAuthorize("hasAuthority('ADMIN')")
-    public Prodotto findById(@PathVariable UUID prodottoId) throws NotFoundException {
-        return prodottoService.findById(prodottoId);
-    }
-
-    @PutMapping("/{prodottoId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    public Prodotto updateProdotto(@PathVariable UUID prodottoId, @RequestBody Prodotto updatedProdotto) throws NotFoundException {
-        return prodottoService.findByIdAndUpdate(prodottoId, updatedProdotto);
-    }
-
-    @DeleteMapping("/{prodottoId}")
-    @PreAuthorize("hasAuthority('ADMIN')")
-    @ResponseStatus(HttpStatus.NO_CONTENT)
-    public void deleteProdotto(@PathVariable UUID prodottoId) throws NotFoundException {
-        prodottoService.findByIdAndDelete(prodottoId);
-    }
-    
-    @GetMapping("/partialName")
-    public ResponseEntity<Page<Prodotto>> getProdottoByPartialName(@RequestParam String partialName,
-            @RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
-            @RequestParam(defaultValue = "nome") String sortBy) {
-        Page<Prodotto> prodottoByPartialName = prodottoService.findByPartialName(partialName, page, size, sortBy);
-
-        if (prodottoByPartialName.isEmpty()) {
-            return ResponseEntity.notFound().build();
-        } else {
-            return ResponseEntity.ok(prodottoByPartialName);
-        }
-    }
-    
-    
-    @GetMapping("/search")
-    public ResponseEntity<List<Prodotto>> getProdottiByCriteria(
-            @RequestParam(required = false) Categoria categoria, 
-            @RequestParam(required = false) Double minPrice, 
-            @RequestParam(required = false) Double maxPrice,
-            @RequestParam(required = false) String ingredienteName) {
-        
-        List<Prodotto> prodotti = prodottoService.findByCriteria(categoria, minPrice, maxPrice, ingredienteName);
-        return ResponseEntity.ok(prodotti);
-    }
-    
-
+	@PostMapping("")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@ResponseStatus(HttpStatus.CREATED)
+	public Prodotto saveProdotto(@RequestBody NewProdottoPayload body) {
+		Prodotto createdProdotto = prodottoService.save(body);
+		return createdProdotto;
 	}
-	
 
+	@GetMapping("")
+	public Page<Prodotto> getProdotti(@RequestParam(defaultValue = "0") int page,
+			@RequestParam(defaultValue = "100") int size, @RequestParam(defaultValue = "nome") String sortBy) {
+		return prodottoService.find(page, size, sortBy);
+	}
+
+	@GetMapping("/{prodottoId}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Prodotto findById(@PathVariable UUID prodottoId) throws NotFoundException {
+		return prodottoService.findById(prodottoId);
+	}
+
+	@PutMapping("/{prodottoId}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	public Prodotto updateProdotto(@PathVariable UUID prodottoId, @RequestBody Prodotto updatedProdotto)
+			throws NotFoundException {
+		return prodottoService.findByIdAndUpdate(prodottoId, updatedProdotto);
+	}
+
+	@DeleteMapping("/{prodottoId}")
+	@PreAuthorize("hasAuthority('ADMIN')")
+	@ResponseStatus(HttpStatus.NO_CONTENT)
+	public void deleteProdotto(@PathVariable UUID prodottoId) throws NotFoundException {
+		prodottoService.findByIdAndDelete(prodottoId);
+	}
+
+	@GetMapping("/partialName")
+	public ResponseEntity<Page<Prodotto>> getProdottoByPartialName(@RequestParam String partialName,
+			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
+			@RequestParam(defaultValue = "nome") String sortBy) {
+		Page<Prodotto> prodottoByPartialName = prodottoService.findByPartialName(partialName, page, size, sortBy);
+
+		if (prodottoByPartialName.isEmpty()) {
+			return ResponseEntity.notFound().build();
+		} else {
+			return ResponseEntity.ok(prodottoByPartialName);
+		}
+	}
+
+	@GetMapping("/search")
+	public ResponseEntity<List<Prodotto>> getProdottiByCriteria(@RequestParam(required = false) Categoria categoria,
+			@RequestParam(required = false) Double minPrice, @RequestParam(required = false) Double maxPrice,
+			@RequestParam(required = false) String ingredienteName) {
+
+		List<Prodotto> prodotti = prodottoService.findByCriteria(categoria, minPrice, maxPrice, ingredienteName);
+		return ResponseEntity.ok(prodotti);
+	}
+
+}

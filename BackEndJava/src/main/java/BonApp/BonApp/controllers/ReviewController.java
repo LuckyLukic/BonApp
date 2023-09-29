@@ -10,7 +10,7 @@ import org.springframework.data.domain.Page;
 
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
-import org.springframework.web.bind.annotation.DeleteMapping;
+
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -47,16 +47,16 @@ public class ReviewController {
 	}
 
 	@GetMapping("/{reviewId}")
+	@PreAuthorize("isAuthenticated()")
 	public ResponseEntity<Review> findReviewById(@PathVariable UUID reviewId) {
 		return ResponseEntity.ok(reviewService.findReviewById(reviewId));
 	}
 
 	@PutMapping("/{reviewId}")
-	@PreAuthorize("isAuthenticated()")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public ResponseEntity<Review> updateReview(@PathVariable UUID reviewId, @RequestBody @Valid NewReviewPayload body) {
 		return ResponseEntity.ok(reviewService.updateReview(reviewId, body));
 	}
-
 
 	@GetMapping("/search")
 	public ResponseEntity<List<Review>> findReviewsByCriteria(
@@ -81,4 +81,3 @@ public class ReviewController {
 	}
 
 }
-

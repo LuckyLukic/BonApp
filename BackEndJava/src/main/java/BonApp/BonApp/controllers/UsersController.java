@@ -12,7 +12,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -23,7 +23,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
-
 
 import BonApp.BonApp.entities.OrdineSingolo;
 import BonApp.BonApp.entities.Prodotto;
@@ -54,34 +53,34 @@ public class UsersController {
 
 	@Autowired
 	ReviewRepository reviewRepository;
-	
+
 	@Autowired
 	OrdineSingoloService ordineSingoloService;
 
-    //SAVE USER
+	// SAVE USER
 	@PostMapping("")
 	@ResponseStatus(HttpStatus.CREATED)
 	public User saveUser(@RequestBody @Valid RegistrationPayload registrationPayload) {
 		User createdUser = userService.save(registrationPayload);
 		return createdUser;
 	}
-	
-    //GET USER
+
+	// GET USER
 	@GetMapping("")
-	// @PreAuthorize("hasAuthority('ADMIN')")
+	@PreAuthorize("hasAuthority('ADMIN')")
 	public Page<User> getUsers(@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size,
 			@RequestParam(defaultValue = "id") String sortBy) {
 		return userService.find(page, size, sortBy);
 
 	}
 
-	//FIND USER BY ID
+	// FIND USER BY ID
 	@GetMapping("/{userId}")
 	public User findById(@PathVariable UUID userId) {
 		return userService.findById(userId);
 	}
-    
-	//GET CURRENT USER
+
+	// GET CURRENT USER
 	@GetMapping("/current")
 	public ResponseEntity<User> getCurrentUser() {
 		try {
@@ -99,29 +98,29 @@ public class UsersController {
 		return userService.findByIdAndUpdate(userId, body);
 	}
 
-	//DELTE USER
+	// DELTE USER
 	@DeleteMapping("/{userId}")
 	// @PreAuthorize("hasAuthority('ADMIN')")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void deleteUser(@PathVariable UUID userId) {
 		userService.findByIdAndDelete(userId);
 	}
-    
-	//ADD OWN FAVORITE PORDUCT
+
+	// ADD OWN FAVORITE PORDUCT
 	@PostMapping("/{userId}/add-favorite/{productId}")
 	public NewPreferiti addProductToFavorites(@PathVariable UUID userId, @PathVariable UUID productId)
 			throws NotFoundException, ForbiddenException {
 		return userService.addProductToFavorites(userId, productId);
 	}
-	
-    //REMOVE OWN FAVORITE PRODUCT
+
+	// REMOVE OWN FAVORITE PRODUCT
 	@DeleteMapping("/{userId}/remove-favorite/{productId}")
 	public ResponseEntity<Void> removeProductFromFavorites(@PathVariable UUID userId, @PathVariable UUID productId) {
 		userService.removeProductFromFavorites(productId);
 		return ResponseEntity.status(HttpStatus.NO_CONTENT).build();
 	}
-    
-	//GET OWN ALL FAVORITE PRODUCTS
+
+	// GET OWN ALL FAVORITE PRODUCTS
 	@GetMapping("/{userId}/favorites")
 	public ResponseEntity<Page<TopFavoritePayload>> getFavoriteProducts(@PathVariable UUID userId, Pageable pageable)
 			throws NotFoundException {
@@ -130,7 +129,7 @@ public class UsersController {
 		return ResponseEntity.ok(favorites);
 	}
 
-	//GET TOP 10 FAVORITE PRODUCTS
+	// GET TOP 10 FAVORITE PRODUCTS
 	@GetMapping("/top-favorites")
 	public ResponseEntity<Page<TopFavoritePayload>> getTopFavoriteProducts(@RequestParam(defaultValue = "0") int page,
 			@RequestParam(defaultValue = "10") int size) {
@@ -142,15 +141,14 @@ public class UsersController {
 		}
 	}
 
-	//INITIALIZE CART
+	// INITIALIZE CART
 	@PostMapping("/{userId}/initialize-cart")
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void initializeCart(@PathVariable UUID userId) {
 		userService.initializeUserCart(userId);
 	}
 
-	
-   //CREATE OWN REVIEW
+	// CREATE OWN REVIEW
 	@PostMapping("/{userId}/new-review")
 	public ResponseEntity<Review> createReview(@PathVariable UUID userId,
 			@Valid @RequestBody NewReviewPayload newReviewPayload) {
@@ -159,7 +157,7 @@ public class UsersController {
 		return new ResponseEntity<>(review, HttpStatus.CREATED);
 	}
 
-	//GET OWN REVIEWS
+	// GET OWN REVIEWS
 	@GetMapping("/{userId}/getOwnReviews")
 	public ResponseEntity<Page<Review>> getAllReviewsByUserId(@PathVariable UUID userId,
 			@RequestParam(defaultValue = "0") int page, @RequestParam(defaultValue = "10") int size) {
@@ -169,7 +167,7 @@ public class UsersController {
 		return new ResponseEntity<>(reviews, HttpStatus.OK);
 	}
 
-	//DELETE OWN REVIEWS
+	// DELETE OWN REVIEWS
 	@DeleteMapping("/{userId}/delete-own-review/{reviewId}")
 	public ResponseEntity<String> deleteReview(@PathVariable UUID userId, @PathVariable UUID reviewId) {
 		try {
@@ -183,53 +181,48 @@ public class UsersController {
 
 	}
 
-	//ADD PRODUCT TO OWN CART
+	// ADD PRODUCT TO OWN CART
 	@PostMapping("/{userId}/add-to-cart/{productId}")
-	public ResponseEntity<Map<String, String>> addProductToCart(@PathVariable UUID userId, @PathVariable UUID productId, @RequestParam int quantity) {
-	    userService.addProductToCart(userId, productId, quantity);
-	    
-	    Map<String, String> response = new HashMap<>();
-	    response.put("message", "Product added to cart successfully");
-	    
-	    return ResponseEntity.ok(response);
+	public ResponseEntity<Map<String, String>> addProductToCart(@PathVariable UUID userId, @PathVariable UUID productId,
+			@RequestParam int quantity) {
+		userService.addProductToCart(userId, productId, quantity);
+
+		Map<String, String> response = new HashMap<>();
+		response.put("message", "Product added to cart successfully");
+
+		return ResponseEntity.ok(response);
 	}
 
+	// REMOVE PRODUCT FROM OWN CART
+	@DeleteMapping("/{userId}/remove-from-cart/{productId}")
+	public ResponseEntity<Void> removeProductFromCart(@PathVariable UUID userId, @PathVariable UUID productId,
+			@RequestParam int quantity) {
+		userService.removeProductFromCart(userId, productId, quantity);
+		return ResponseEntity.ok().build();
+	}
 
-	//REMOVE PRODUCT FROM OWN CART
-    @DeleteMapping("/{userId}/remove-from-cart/{productId}")
-    public ResponseEntity<Void> removeProductFromCart(@PathVariable UUID userId, @PathVariable UUID productId, @RequestParam int quantity) {
-        userService.removeProductFromCart(userId, productId, quantity);
-        return ResponseEntity.ok().build();
-    }
-    
-    
-    //GET PRODUCTS FROM CART
-    @GetMapping("/{userId}/cart/products")
-    public ResponseEntity<List<Prodotto>> getProductsInOrder(@PathVariable UUID userId) {
-        
-        List<Prodotto> prodottoList = userService.getProductsInOrder(userId);
+	// GET PRODUCTS FROM CART
+	@GetMapping("/{userId}/cart/products")
+	public ResponseEntity<List<Prodotto>> getProductsInOrder(@PathVariable UUID userId) {
 
-        return ResponseEntity.ok(prodottoList);
+		List<Prodotto> prodottoList = userService.getProductsInOrder(userId);
+
+		return ResponseEntity.ok(prodottoList);
+
+	}
+
+	// FIND ORDINE SINGOLO BY USER ID AND STATUS
+	@GetMapping("/{userId}/ordine-singolo-incart")
+	public List<OrdineSingolo> getCartByUserId(@PathVariable UUID userId) {
+		return userService.findCartByUserId(userId);
+	}
+
+	@GetMapping("/{userId}/completed")
+	public ResponseEntity<List<OrdineSingolo>> getAllCompletedOrdersForUser(@PathVariable UUID userId) {
+
+		User user = userService.findById(userId);
+		List<OrdineSingolo> completedOrders = ordineSingoloService.findAllCompletedOrdersForUser(userId);
+		return ResponseEntity.ok(completedOrders);
+	}
 
 }
-    
-    //FIND ORDINE SINGOLO BY USER ID AND STATUS
-    @GetMapping("/{userId}/ordine-singolo-incart")
-    public List<OrdineSingolo> getCartByUserId(@PathVariable UUID userId) {
-        return userService.findCartByUserId(userId);
-    }
-    
-    
-    @GetMapping("/{userId}/completed")
-    public ResponseEntity<List<OrdineSingolo>> getAllCompletedOrdersForUser(@PathVariable UUID userId) {
-        
-        User user = userService.findById(userId);  
-        List<OrdineSingolo> completedOrders = ordineSingoloService.findAllCompletedOrdersForUser(userId);
-        return ResponseEntity.ok(completedOrders);
-    }
-    
-    
-}
-
-
-

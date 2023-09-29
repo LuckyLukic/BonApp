@@ -5,7 +5,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.Collections;
 import java.util.List;
-import java.util.Optional;
+
 import java.util.UUID;
 import java.util.stream.Collectors;
 
@@ -25,7 +25,6 @@ import BonApp.BonApp.payload.NewOrdineSingoloPayload;
 import BonApp.BonApp.repositories.OrdineSingoloRepository;
 import BonApp.BonApp.repositories.ProdottoRepository;
 import BonApp.BonApp.repositories.UserRepository;
-import ch.qos.logback.core.status.Status;
 
 @Service
 public class OrdineSingoloService {
@@ -104,7 +103,6 @@ public class OrdineSingoloService {
 		ordineSingoloRepository.delete(existingSingleOrder);
 	}
 
-	
 	public OrdineSingolo processCheckout(UUID userId, UUID ordineSingoloId) throws IllegalStateException {
 		User user = userRepository.findById(userId).orElseThrow(() -> new NotFoundException("User not found"));
 		OrdineSingolo ordineSingolo = ordineSingoloRepository.findById(ordineSingoloId)
@@ -117,20 +115,16 @@ public class OrdineSingoloService {
 
 	}
 
-	
 	public Page<OrdineSingolo> findByMultipleCriteria(String cap, String localita, String comune, Double minPrice,
 			Double maxPrice, LocalDate startDate, LocalDate endDate, Pageable pageable) {
 		return ordineSingoloRepository.findByMultipleCriteria(cap, localita, comune, minPrice, maxPrice, startDate,
 				endDate, pageable);
 	}
 
-	
 	public Page<OrdineSingolo> findOrdersByUserId(UUID userId, Pageable pageable) {
 		return ordineSingoloRepository.findByUserId(userId, pageable);
 	}
 
-	
-	
 	public double calculateShippingCost(double totalPrice) {
 		if (totalPrice > 15) {
 			return 0.0;
@@ -138,9 +132,8 @@ public class OrdineSingoloService {
 			return 2.5;
 		}
 	}
-	
-	
-   //INVIO EMAIL CON SENDGRID
+
+	// INVIO EMAIL CON SENDGRID
 	public void checkStatusSendEmail() throws IOException {
 		List<OrdineSingolo> ordiniCompletati = ordineSingoloRepository.findByStatus(StatusOrdine.COMPLETATO);
 
@@ -154,13 +147,12 @@ public class OrdineSingoloService {
 		}
 
 	}
-	
-	
-   //RICERCA TUTTI GLI ORDINI DI UN UTENTE CON STATUS COMPLETATO
+
+	// RICERCA TUTTI GLI ORDINI DI UN UTENTE CON STATUS COMPLETATO
 	public List<OrdineSingolo> findAllCompletedOrdersForUser(UUID userId) {
 		User user = userService.findById(userId);
 		if (user == null) {
-			
+
 			return Collections.emptyList();
 		}
 
@@ -169,9 +161,3 @@ public class OrdineSingoloService {
 	}
 
 }
-
-
-
-
-
-	

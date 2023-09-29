@@ -8,7 +8,6 @@ import jakarta.validation.constraints.NotNull;
 import jakarta.validation.constraints.Size;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
-import lombok.NoArgsConstructor;
 import lombok.Setter;
 
 @Getter
@@ -32,7 +31,6 @@ public class NewProdottoPayload {
 
 	@NotNull(message = "inserisci almento 1 ingrediente")
 	private List<Ingrediente> ingredienti;
-	
 
 	private String imgUrl;
 }

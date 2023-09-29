@@ -20,7 +20,7 @@ import BonApp.BonApp.payload.NewReviewPayload;
 
 import BonApp.BonApp.repositories.ReviewRepository;
 import BonApp.BonApp.repositories.UserRepository;
-import jakarta.persistence.EntityNotFoundException;
+
 
 @Service
 public class ReviewService {

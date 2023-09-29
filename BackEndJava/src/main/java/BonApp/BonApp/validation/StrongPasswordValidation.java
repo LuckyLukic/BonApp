@@ -5,8 +5,6 @@ import java.util.regex.Pattern;
 import jakarta.validation.ConstraintValidator;
 import jakarta.validation.ConstraintValidatorContext;
 
-
-
 public class StrongPasswordValidation implements ConstraintValidator<StrongPassword, String> {
 
 	private static final Pattern PASSWORD_PATTERN = Pattern

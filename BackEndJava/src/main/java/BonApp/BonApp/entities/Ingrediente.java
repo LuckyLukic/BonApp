@@ -4,11 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-
-
 import com.fasterxml.jackson.annotation.JsonIgnore;
-
-
 
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -24,17 +20,17 @@ import lombok.Setter;
 @Setter
 @NoArgsConstructor
 public class Ingrediente {
-    
-    @Id
-    @GeneratedValue
-    private UUID id;
-    private String nome;
-    
-    @JsonIgnore
-    @ManyToMany(mappedBy = "ingredienti")
-    private List<Prodotto> prodotti = new ArrayList<>();
 
-    public Ingrediente(String nome) {
-        this.nome = nome;
-    }
+	@Id
+	@GeneratedValue
+	private UUID id;
+	private String nome;
+
+	@JsonIgnore
+	@ManyToMany(mappedBy = "ingredienti")
+	private List<Prodotto> prodotti = new ArrayList<>();
+
+	public Ingrediente(String nome) {
+		this.nome = nome;
+	}
 }
