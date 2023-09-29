@@ -171,6 +171,8 @@ Endpoint: POST http://localhost:3001/auth/register
 Descrizione: Questo endpoint permette ad un nuovo utente di registrarsi. L'utente deve fornire i propri dati personali e le informazioni di indirizzo.
 Body della richiesta:
 
+```json
+
 {
     "newUserPayload": {
         "username": "example",
@@ -193,6 +195,7 @@ Body della richiesta:
 Endpoint: POST http://localhost:3001/auth/login
 Descrizione: Questo endpoint permette agli utenti registrati di effettuare il login inserendo email e password. In caso di successo, viene restituito un token di autenticazione.
 Body della richiesta:
+
 
 {
     "email": "luca@gmail.com",
