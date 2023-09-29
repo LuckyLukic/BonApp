@@ -16,7 +16,7 @@
                {{ingredientiNames()}}
               </p>
               <p class="card-text mb-3">{{dish.descrizione}}</p>
-              <p class="card-title text-uppercase mb-3">Euro: {{ dish.prezzo | number:'1.2-2' }}</p>
+              <p class="card-title text-uppercase mb-3">Prezzo: {{dish.prezzo}} &#8364;</p>
             </ng-container>
           </div>
           <a  class="btn bottone mb-2 mt-auto" (click)="goBack()">BACK
@@ -46,6 +46,3 @@
     </div>
   </div>
 </div>
-
-
-

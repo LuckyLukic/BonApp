@@ -48,7 +48,6 @@ public class ProdottoController {
 	}
 
 	@GetMapping("/{prodottoId}")
-	@PreAuthorize("hasAuthority('ADMIN')")
 	public Prodotto findById(@PathVariable UUID prodottoId) throws NotFoundException {
 		return prodottoService.findById(prodottoId);
 	}
