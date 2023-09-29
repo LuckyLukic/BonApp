@@ -190,18 +190,19 @@ Body della richiesta:
         "provincia": "EX"
     }
 }
+```
 
 2. Login Utente
 Endpoint: POST http://localhost:3001/auth/login
 Descrizione: Questo endpoint permette agli utenti registrati di effettuare il login inserendo email e password. In caso di successo, viene restituito un token di autenticazione.
 Body della richiesta:
 
-
+```json
 {
     "email": "luca@gmail.com",
     "password": "Infedele1980!"
 }
-
+```
 
 3. Visualizzare i Top 10 Prodotti Preferiti
 Endpoint: GET http://localhost:3001/users/top-favorites
@@ -211,7 +212,7 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
-          
+  ```json        
 "prodotto": {
                 "id": "3d6f9ac1-6489-4620-a992-734000f9c938",
                 "nome": "Heavy Duty Marble Knife",
@@ -235,7 +236,7 @@ Contenuto:
                 ]
             },
             "favoriteCount": 5
-
+```
 
 4. Visualizzare tutte le Recensioni degli Utenti
 Endpoint: GET http://localhost:3001/reviews
@@ -244,6 +245,8 @@ Parametri della richiesta: Nessuno
 Risposta di successo:
 Codice: 200 OK
 Contenuto:
+
+```json
 [
     {
         "id": "a857054f-2097-4131-8a8c-5e9d12266343",
@@ -269,7 +272,7 @@ Contenuto:
     },
     // Altre recensioni...
 ]
-
+```
 
 5. Visualizzare Tutti i Prodotti
 Endpoint: GET http://localhost:3001/prodotti
@@ -279,6 +282,7 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 [ 
     { "id": “03ad34a7-72e2-4966-bd2f-beea56bff91d",
  "nome": "Rustic Wooden Lamp”,
@@ -298,6 +302,7 @@ Contenuto:
 },
  // Altri prodotti... ] 
 
+```
 
 6. Ricerca Multipla del Prodotto
 Endpoint: GET http://localhost:3001/prodotti/search
@@ -317,6 +322,7 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 [
     {
         "id": "095d4956-0255-4dde-b801-c64d2eac3560",
@@ -343,7 +349,7 @@ Contenuto:
         ]
     }
 ]
-
+```
 
 
 7. Cercare Utente per ID
@@ -355,6 +361,7 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "id": "07fa0876-c06c-43fc-afbb-1bf047e05a74",
     "username": "eliziario.fabbri@gmail.com",
@@ -372,6 +379,7 @@ Contenuto:
     "enabled": true,
     "cart": null
 }
+```
 
 8. Aggiornare il Proprio Profilo
 Endpoint: PUT http://localhost:3001/users/{UserId}
@@ -383,6 +391,7 @@ Parametri del Percorso:
 UserId: ID dell'utente il cui profilo si vuole aggiornare.
 Esempio Body della Richiesta:
 
+```json
 {
 "username" : "Ciccio",
 "name" : "Luca",
@@ -390,11 +399,13 @@ Esempio Body della Richiesta:
 "email" : "luca@gmail.com"
 }
 
+```
 Risposta di successo:
 
 Codice: 200 OK
 Contenuto:
 
+```json
 {
   "id": "07fa0876-c06c-43fc-afbb-1bf047e05a74",
   "username": "Ciccio",
@@ -403,7 +414,7 @@ Contenuto:
   "email": "luca@gmail.com",
   // Altri campi del profilo utente...
 }
-
+```
 
 9. Aggiungere un Prodotto ai Favoriti
 Endpoint: POST http://localhost:3001/users/{userId}/add-favorite/{prodottoId}
@@ -425,11 +436,12 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "productId": "2852eb7c-04f7-4d30-9735-feebb144940b",
     "message": "Product successfully added to favorites"
 }
-
+```
 
 10. Recuperare i propri Favoriti
 Endpoint: GET http://localhost:3001/users/{userID}/favorites
@@ -447,6 +459,7 @@ Risposta di successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "content": [
         {
@@ -479,7 +492,7 @@ Contenuto:
     ], 
 // ALTRE VOCI....
 }
-
+```
 
 11. Rimuovere un Prodotto dai Propri Favoriti
 Endpoint: DELETE http://localhost:3001/users/{userId}/remove-favorite/{prodottoId}
@@ -508,17 +521,20 @@ Parametri del Percorso:
 userId: ID dell'utente che desidera aggiungere una nuova recensione.
 Corpo della Richiesta:
 
+```json
 { 
     "title": "Nuova Review versione 2",
     "comment" : "Lorem Ipsum...",
     "rating" : 4
 }
 
+```
 Risposta di Successo:
 
 Codice: 201 Created
 Contenuto:
 
+```json
 {
     "id": "4060d195-898d-4d7f-98ca-b1f22dd76193",
     "title": "Nuova Review versione 2",
@@ -539,7 +555,7 @@ Contenuto:
         ]
     }
 }
-
+```
 
 13. Vedere Tutte le Proprie Review
 Endpoint: GET http://localhost:3001/users/{userId}/getOwnReviews
@@ -557,6 +573,7 @@ Risposta di Successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "reviews": [
         {
@@ -571,6 +588,7 @@ Contenuto:
         // ALTRI OGGETTI REVIEW...
     ]
 }
+```
 
 14. Aggiungere un Prodotto al Carrello
 Endpoint: POST http://localhost:3001/users/{userId}/add-to-cart/{productId}?quantity=1
@@ -592,9 +610,11 @@ Risposta di Successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "message": "Product added to cart successfully"
 }
+```
 
 15. Rimuovere un Prodotto dal Carrello
 Endpoint: DELETE http://localhost:3001/users/{userId}/remove-from-cart/{productId}?quantity=1
@@ -632,6 +652,7 @@ Risposta di Successo:
 Codice: 200 OK
 Contenuto:
 
+```json
 {
     "singleOrders": [
         {
@@ -660,6 +681,7 @@ Contenuto:
         }
     ]
 }
+```
 
 🖊️ Author
 Luca Iannice
