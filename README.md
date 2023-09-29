@@ -283,21 +283,33 @@ Contenuto:
 
 ```json
 [ 
-    { "id": “03ad34a7-72e2-4966-bd2f-beea56bff91d",
- "nome": "Rustic Wooden Lamp”,
- "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed purus at turpis egestas feugiat. Donec commodo hendrerit ex, vitae viverra erat congue ac. Aliquam erat volutpat. In rhoncus, nunc ut gravida tincidunt”,
- "prezzo": 9.9,
- "imgUrl": “https://www.foodblog.it/wp-content/uploads/2019/12/antipasti-di-natale-e-capodanno.jpg.webp",
- "categoria": “ANTIPASTO",
- "ingredienti": [ 
-{ "id": “f2bdfbc5-1586-4ff7-962b-c1d6d5830674",
- "nome": "Limes" },
- { "id": “342bf2ad-47dc-4b65-a25c-ab854ad99f1c",
- "nome": "Chickpea" },
- { "id": “4d6d64b3-539f-4c45-aa89-4ce765b5f4fe",
- "nome": "Sweet Potato" },
- { "id": "2d158521-60c7-4f9c-8d59-2c7865294a8e", "nome": "Brazil Nut" }
- ] 
+    { 
+        "id": "03ad34a7-72e2-4966-bd2f-beea56bff91d",
+        "nome": "Rustic Wooden Lamp",
+        "descrizione": "Lorem ipsum dolor sit amet, consectetur adipiscing elit. Nullam sed purus at turpis egestas feugiat. Donec commodo hendrerit ex, vitae viverra erat congue ac. Aliquam erat volutpat. In rhoncus, nunc ut gravida tincidunt",
+        "prezzo": 9.9,
+        "imgUrl": "https://www.foodblog.it/wp-content/uploads/2019/12/antipasti-di-natale-e-capodanno.jpg.webp",
+        "categoria": "ANTIPASTO",
+        "ingredienti": [ 
+            { 
+                "id": "f2bdfbc5-1586-4ff7-962b-c1d6d5830674",
+                "nome": "Limes" 
+            },
+            { 
+                "id": "342bf2ad-47dc-4b65-a25c-ab854ad99f1c",
+                "nome": "Chickpea" 
+            },
+            { 
+                "id": "4d6d64b3-539f-4c45-aa89-4ce765b5f4fe",
+                "nome": "Sweet Potato" 
+            },
+            { 
+                "id": "2d158521-60c7-4f9c-8d59-2c7865294a8e", 
+                "nome": "Brazil Nut" 
+            }
+        ] 
+    }
+]
 ```
 
 6. Ricerca Multipla del Prodotto
