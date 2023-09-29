@@ -11,7 +11,7 @@
           <div class="title">
               <div class="row">
                   <div class="col"><h4><b>Shopping Cart</b></h4></div>
-                  <!-- <div class="col align-self-center text-right text-muted text-uppercase">{{productsInOrder.length}} items</div> -->
+
               </div>
           </div>
           <div class="row border-top border-bottom" *ngFor="let singleDish of getGroupedProducts()">
@@ -23,7 +23,7 @@
                   <div class="col">
                       <a href="#" (click)="removeFromCart(singleDish.id!); $event.preventDefault() ">-</a><a class="border">{{ singleDish.count}}</a><a href="#" (click)="addToCart(singleDish.id!); $event.preventDefault() ">+</a>
                   </div>
-                  <div class="col">{{singleDish.prezzo}} <a href="#" (click)="removeFromCart(singleDish.id!); $event.preventDefault()"><span class="close">&#10005;</span></a> </div>
+                  <div class="col">{{singleDish.prezzo | currency:'EUR':'symbol-narrow':'1.2-2'}} <a href="#" (click)="removeFromCart(singleDish.id!); $event.preventDefault()"><span class="close">&#10005;</span></a> </div>
               </div>
           </div>
 
@@ -37,7 +37,7 @@
           <hr>
           <div class="row total">
               <p class="col-12 ps-0 mb-1 text-uppercase totItems" >tot items: {{productsInOrder.length}}</p>
-              <p class="col-12 ps-0 text-uppercase totItems">tot cost {{ordineInCart.totalPrice}} Eruo</p>
+              <p class="col-12 ps-0 text-uppercase totItems">tot cost {{ordineInCart.totalPrice | number:'1.2-2'}} Euro</p>
           </div>
           <div class="text-uppercase delivery mb-2">
             <p class="mb-sm-1">Delivery cost: {{ordineInCart.shippingCost}} Euro</p>

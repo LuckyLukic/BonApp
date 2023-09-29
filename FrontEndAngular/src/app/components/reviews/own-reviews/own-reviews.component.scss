@@ -1,3 +1,5 @@
+
+
 ngb-rating {
   color: #FFC107;
   font-size: 20px;
@@ -5,10 +7,12 @@ ngb-rating {
 
 .container {
   margin-bottom: 80px;
+  height: 35vh !important;
 }
 
 .noReviews {
-  margin-bottom: 60px;
+  margin-bottom: 80px;
+  height: 34vh !important;
 }
 
 .card {
@@ -39,4 +43,7 @@ button {
   }
 }
 
+#modalConfirmWithdraw {
+  margin-top: 50vh;
+}
 

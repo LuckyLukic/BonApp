@@ -3,7 +3,7 @@ package BonApp.BonApp.security;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.validation.annotation.Validated;
+
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -13,8 +13,7 @@ import org.springframework.web.bind.annotation.RestController;
 import BonApp.BonApp.entities.User;
 import BonApp.BonApp.exceptions.UnauthorizedException;
 import BonApp.BonApp.payload.LoginSuccessfullPayload;
-import BonApp.BonApp.payload.NewIndirizzoPayload;
-import BonApp.BonApp.payload.NewUserPayload;
+
 import BonApp.BonApp.payload.RegistrationPayload;
 import BonApp.BonApp.payload.UserLoginPayload;
 import BonApp.BonApp.service.UsersService;
@@ -50,6 +49,7 @@ public class AuthController {
 
 		if (bcrypt.matches(body.getPassword(), user.getPassword())) {
 			
+			//IF THERE ARE NO CART WITH IN_CART STATUS IT INITIALIZES A NEW ONE AT THE LOGIN
 			userService.initializeUserCart(user.getId());
 			
 			String token = jwtTools.createToken(user);

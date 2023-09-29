@@ -72,7 +72,7 @@ public class OrdineSingolo {
 
 		this.user = user;
 		this.prodotti = prodotti;
-		this.totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum();
+		this.totalPrice = prodotti.stream().mapToDouble(Prodotto::getPrezzo).sum() + this.shippingCost;
 		this.dataOrdine = LocalDate.now();
 		this.oraOrdine = LocalTime.now();
 		this.status = StatusOrdine.IN_CART;
@@ -104,9 +104,9 @@ public class OrdineSingolo {
 
 	public void removeProduct(Prodotto prodotto, int quantity) {
 	    Integer currentQuantity = this.productQuantities.getOrDefault(prodotto.getId(), 0);
-//	    if(currentQuantity < quantity) {
-//	        throw new IllegalArgumentException("Cannot remove more products than present in the cart");
-//	    }
+	    if(currentQuantity < quantity) {
+	        throw new IllegalArgumentException("Cannot remove more products than present in the cart");
+	    }
 	    
 	    currentQuantity -= quantity;
 	    this.productQuantities.put(prodotto.getId(), currentQuantity);
@@ -118,16 +118,14 @@ public class OrdineSingolo {
 	    
 	    if(currentQuantity == 0) {
 	        this.productQuantities.remove(prodotto.getId());  
+	        this.prodotti.remove(prodotto);
 	    }
 	    
 	    if(this.prodotti.isEmpty()) {
 	        this.totalPrice = 0.0; 
 	    }	    
 	    calculateShippingCost();
-	    
-//	    if(currentQuantity == 0) {
-//	        this.prodotti.remove(prodotto);
-//	        this.productQuantities.remove(prodotto.getId());  
+	     
 	}
 	
 	

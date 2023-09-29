@@ -1,5 +1,5 @@
 
-<ng-container *ngIf="ownReviewsList; then showreview; else sorry"></ng-container>
+<ng-container *ngIf="ownReviewsList.length>0; then showreview; else sorry"></ng-container>
 
 <ng-template #showreview>
   <div class="container px-0">
@@ -14,10 +14,36 @@
                         class="btn  ms-auto"
                         id="removeButton"
                         type="button"
-                        (click)="removeOwnReview(singleReview.id!)"
+                        (click)="modalConfirmWithdraw()"
                       >
                         REMOVE
             </button>
+
+            <div id="modalConfirmWithdraw" class="modal fade modal-lg">
+              <div class="modal-dialog p-0">
+                <div class="modal-content">
+                  <!--<div class="modal-header">
+                    <h5
+                      class="modal-title bannercontrolpaneltext"
+                      id="modal-title-add"
+                    >
+
+                    </h5>
+                  </div>-->
+                  <div class="modal-body">
+                    <h3
+                      id="add-modal "
+                      class="text-success text-center"
+                    >
+                    SUCESSFUL WITHDRAW
+                  </h3>
+            <button class="btn btn-danger" (click)="removeOwnReview(singleReview.id!); closeModal()"> CONFERMA</button>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+
 
             </div>
 
@@ -46,4 +72,5 @@
     </div>
     </div>
 </ng-template>
+
 
