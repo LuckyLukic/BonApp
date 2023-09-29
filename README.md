@@ -1,6 +1,6 @@
 # BonApp
 
-# Applicazione Fullstack - Shop Online per Ristoranti
+💻 Full Stack Capstone Project - Shop Online per Ristoranti
 
 ## Descrizione
 Questa è un'applicazione fullstack per uno shop online dedicato ai ristoranti, che permette agli utenti registrati di visualizzare il menu, i dettagli dei prodotti, i prodotti più amati dagli utenti, leggere e scrivere recensioni, accedere alla propria area personale, aggiungere prodotti al carrello, effettuare pagamenti tramite Stripe e ricevere email post-acquisto per la richiesta di recensioni.
@@ -18,8 +18,9 @@ Gli utenti non registrati hanno accesso al menu, ai dettagli dei prodotti, ai pr
 - Bootstrap
 - CSS/SCSS
 
-## Funzionalità
+📋 Functionality
 ### Utenti Registrati
+_ Login con JWT token
 - Accesso al menu e dettagli dei prodotti
 - Visualizzazione dei prodotti top e delle recensioni degli altri utenti
 - Area personale per visualizzare ordini, prodotti favoriti, recensioni e modificare i dati personali
@@ -28,6 +29,7 @@ Gli utenti non registrati hanno accesso al menu, ai dettagli dei prodotti, ai pr
 - Ricezione di email post-acquisto per la richiesta di recensioni con sistema di rating
 
 ### Utenti Non Registrati
+- Registrazione
 - Accesso al menu e dettagli dei prodotti
 - Visualizzazione dei prodotti top e delle recensioni degli altri utenti
 
@@ -56,7 +58,18 @@ Assicurati che entrambe le applicazioni (frontend e backend) siano in esecuzione
 
 ## Backend
 
-Il backend dell'applicazione è costruito utilizzando Java e Spring Boot e si basa su sei classi principali, che rappresentano anche le entità dell’applicazione che vengono salvate nel database PostgresSql
+Il backend dell'applicazione è realizzato con Java e Spring Boot e si articola intorno a sei classi principali, le quali rappresentano anche le entità dell’applicazione che vengono salvate nel database PostgreSQL. 
+
+All'avvio del main, il runner si avvierà automaticamente, popolando le varie tabelle grazie all'utilizzo di Faker. Il runner è strutturato in modo tale da popolare le tabelle solamente se queste sono vuote; in caso contrario, il runner ometterà il processo di popolamento. Alcuni campi dei prodotti sono stati intenzionalmente lasciati vuoti per permettere personalizzazioni e test sulle card del frontend.
+
+Come feature aggiuntiva, il sistema può inviare una mail per la richiesta di una review dopo il check-out. A tale scopo, è stata utilizzata l'API di SendGrid per l'automazione delle email e ChroneJob per eseguire quotidianamente la ricerca degli ordini con status "COMPLETATO". A fini dimostrativi, il ChroneJob è configurato per scandagliare il database ogni 20 secondi ed inviare le email agli utenti che hanno ordini completati in data odierna.
+
+Per modificare l'intervallo di fetch del database, è necessario settare il file `ChroneJob.Java` nel package principale. Per alterare i criteri di ricerca, si deve modificare il metodo `checkStatusSendEmail()` situato nel package `OrdineService`.
+
+Per personalizzare il contenuto delle email, è possibile modificare il metodo `invioEmail()` nella classe `OrdineSingolo` all'interno del package `entities`.
+
+Per utilizzare il servizio di invio email, è necessario inserire la propria API KEY di SendGrid in una variabile d'ambiente. Ho incluso una chiave dedicata nel file `properties.env`, dove è possibile trovare anche tutti gli altri settaggi dell'applicazione.
+
 
 ### Classi/Entità
 
@@ -77,7 +90,7 @@ Rappresenta un utente dell'applicazione e ha i seguenti attributi:
 Relazioni:
 - `ManyToOne` con `Indirizzo`.
 - `OneToMany` con `OrdineSingolo`.
-`ManyToMany` con `Prodotto` (per i prodotti preferiti).
+- `ManyToMany` con `Prodotto` (per i prodotti preferiti).
 
 
 #### 2. `Indirizzo`
@@ -644,4 +657,7 @@ Contenuto:
         }
     ]
 }
+
+🖊️ Author
+Luca Iannice
 

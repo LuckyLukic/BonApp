@@ -84,7 +84,7 @@ public class OrdineSingolo {
         if (this.totalPrice > 15) {
             this.shippingCost = 0.0;
         } else {
-            this.shippingCost = 2.5;
+            this.shippingCost = 2.50;
         }
         return this.shippingCost;
     }

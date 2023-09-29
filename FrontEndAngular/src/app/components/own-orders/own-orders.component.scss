@@ -2,6 +2,11 @@ div.container-fluid{
   margin-bottom: 80px;
 }
 
+.noOrders {
+  height: 34vh !important;
+  margin-bottom: 80px !important;
+}
+
 .card {
   animation: fadeIn 0.2s ease-in both;
 
@@ -12,10 +17,6 @@ div.container-fluid{
 
 }
 
-.card-body {
-  border-top: none;
-  border-left: none;
-}
 
 @keyframes fadeIn {
   from {

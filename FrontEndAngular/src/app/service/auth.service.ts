@@ -9,6 +9,7 @@ import { tap, catchError } from 'rxjs/operators';
 import { JwtHelperService } from '@auth0/angular-jwt';
 import { Registrazione } from '../module/registrazione.interface';
 import { Subject } from 'rxjs';
+import { UserService } from './utente.service';
 
 @Injectable({
   providedIn: 'root',
@@ -24,7 +25,7 @@ export class AuthService {
   private refreshNavbarSubject = new Subject<void>();
   refreshNavbar$ = this.refreshNavbarSubject.asObservable();
 
-  constructor(private http: HttpClient, private route: Router) {
+  constructor(private http: HttpClient, private route: Router, private userSrv: UserService) {
     this.restore()
   }
 
@@ -44,6 +45,8 @@ export class AuthService {
     this.authSubj.next(null);
     localStorage.removeItem('user');
     this.route.navigate(['/login'])
+    this.userSrv.setUser(null);
+
   }
 
   autologout(data: AuthData) {
