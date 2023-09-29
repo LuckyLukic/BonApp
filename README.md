@@ -299,9 +299,7 @@ Contenuto:
  "nome": "Sweet Potato" },
  { "id": "2d158521-60c7-4f9c-8d59-2c7865294a8e", "nome": "Brazil Nut" }
  ] 
-},
  // Altri prodotti... ] 
-
 ```
 
 6. Ricerca Multipla del Prodotto
