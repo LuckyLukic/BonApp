@@ -68,7 +68,7 @@ Per modificare l'intervallo di fetch del database, è necessario settare il file
 
 Per personalizzare il contenuto delle email, è possibile modificare il metodo `invioEmail()` nella classe `OrdineSingolo` all'interno del package `entities`.
 
-Per utilizzare il servizio di invio email, è necessario inserire la propria API KEY di SendGrid in una variabile d'ambiente. Ho incluso una chiave dedicata nel file `properties.env`, dove è possibile trovare anche tutti gli altri settaggi dell'applicazione.
+Per utilizzare il servizio di invio email, è necessario inserire la propria API KEY di SendGrid in una variabile d'ambiente. 
 
 
 ### Classi/Entità
