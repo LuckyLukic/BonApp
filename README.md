@@ -691,6 +691,6 @@ Contenuto:
 }
 ```
 
-🖊️ Author
+🖊️ AUTHOR <br>
 Luca Iannice
 
