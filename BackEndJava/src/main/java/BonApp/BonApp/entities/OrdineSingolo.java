@@ -141,7 +141,14 @@ public class OrdineSingolo {
 		Email from = new Email("lucabjjiannice@gmail.com");
 		String subject = "Sending with SendGrid is Fun";
 		Email to = new Email("luca.iannice@icloud.com");
-		Content content = new Content("text/plain", "http://localhost:4200/rate-us/" + ordine.getUser().getId());
+		String message = "Hi " + ordine.getUser().getName() + ",\n\n" +
+                "Thank you for your recent order. We'd love to hear your thoughts!\n" +
+                "Please leave a review at the following link:\n " +
+                "http://localhost:4200/rate-us/" + ordine.getUser().getId() + "\n\n" +
+                "Best Regards,\nBonApp";
+	
+	    Content content = new Content("text/plain", message);
+
 		Mail mail = new Mail(from, subject, to, content);
 
 		SendGrid sg = new SendGrid(System.getenv("API_KEY_SENDGRID"));
