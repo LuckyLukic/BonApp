@@ -120,7 +120,7 @@ public class Runner implements CommandLineRunner {
 			}
 
 			indirizzoRepository.saveAll(indirizzi);
-			indirizzoRepository.flush();
+			indirizzoRepository.flush(); //aggiorno il DB con il PC
 
 			for (int i = 0; i < 15; i++) {
 				User user = new User();

@@ -67,7 +67,7 @@ public class IndirizzoService {
 	}
 
 	private void validateIndirizzoPayload(NewIndirizzoPayload body) {
-		// Here you can add further validation logic if necessary
+		
 		if (body == null || body.getCap().trim().isEmpty() || body.getCivico().trim().isEmpty()
 				|| body.getLocalita().trim().isEmpty() || body.getVia().trim().isEmpty()
 				|| body.getComune().trim().isEmpty() || body.getProvincia().trim().isEmpty()) {

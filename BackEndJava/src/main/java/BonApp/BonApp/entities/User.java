@@ -62,13 +62,12 @@ public class User implements UserDetails {
 	@JoinColumn(name = "indirizzo_id", nullable = true)
 	private Indirizzo indirizzo;
 
-	@JsonIgnore
+//	@JsonIgnore
 	private String password;
 	@Enumerated(EnumType.STRING)
 	private Role role;
 
-	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true, fetch = FetchType.EAGER)
-
+	@OneToMany(mappedBy = "user", cascade = CascadeType.ALL, orphanRemoval = true)
 	private List<OrdineSingolo> singleOrders = new ArrayList<>();
 
 	private LocalDate dataRegistrazione;
