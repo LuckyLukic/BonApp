@@ -82,7 +82,7 @@ public class OrdineSingolo {
 		return this.shippingCost;
 	}
 
-	@ElementCollection
+	@ElementCollection //mappatura come tabella separata nel DB
 	private Map<UUID, Integer> productQuantities = new HashMap<>();
 
 	public void addProduct(Prodotto prodotto, int quantity) {
@@ -96,6 +96,7 @@ public class OrdineSingolo {
 	}
 
 	public void removeProduct(Prodotto prodotto, int quantity) {
+		
 		Integer currentQuantity = this.productQuantities.getOrDefault(prodotto.getId(), 0);
 		if (currentQuantity < quantity) {
 			throw new IllegalArgumentException("Cannot remove more products than present in the cart");
